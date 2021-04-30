@@ -17,10 +17,10 @@
 
   "test": {
     "export_db": {
-      "username" : "root",
-      "password" : "",
-      "database" : "demo",
-      "host" : "localhost"
+      "username" : "remote_1",
+      "password" : "Nidhi$2255",
+      "database" : "clinic",
+      "host" : "143.110.185.24"
     },
     "import_db": {
       "username" : "root",

@@ -25,7 +25,6 @@
     "mysql-events": "0.0.11",
     "nodemon": "^2.0.4",
     "pug": "2.0.0-beta11",
-    "sqlite3": "^5.0.2",
     "twilio": "^3.40.0"
   },
   "devDependencies": {

@@ -1,6 +1,6 @@
 var mysql = require('mysql');
-let common = require('./common');
-var config = common.config();
+let config = require('./config').config();
+
 
 var pool = mysql.createPool({
     connectionLimit: 100, //important

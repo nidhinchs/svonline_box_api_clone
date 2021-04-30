@@ -4,12 +4,7 @@ const ERROR_EMPTY = "500"
 const SUCCESS = "200"
 const log = require("./log");
 
-var env = require('../config/config.json');
 
-exports.config = function() {
-    var node_env = process.env.NODE_ENV || 'development';
-    return env[node_env];
-};
 
 exports.insert = function (object, table, callback) {
     //todo example of object
