@@ -1,0 +1,50 @@
+{
+  "development": {
+    "export_db": {
+      "username" : "root",
+      "password" : "",
+      "database" : "demo",
+     "host" : "localhost"
+    },
+    "import_db": {
+      "username" : "root",
+      "password" : "",
+      "database" : "lms",
+      "host" : "localhost"
+    },
+    "dumpFile":"dump.sql"
+  },
+
+  "test": {
+    "export_db": {
+      "username" : "root",
+      "password" : "",
+      "database" : "demo",
+      "host" : "localhost"
+    },
+    "import_db": {
+      "username" : "root",
+      "password" : "",
+      "database" : "lms",
+      "host" : "localhost"
+    },
+    "dumpFile":"dump.sql"
+  },
+  "production": {
+    "export_db": {
+      "username" : "root",
+      "password" : "",
+      "database" : "demo",
+      "host" : "localhost"
+    },
+    "import_db": {
+      "username" : "root",
+      "password" : "",
+      "database" : "lms",
+      "host" : "localhost"
+    },
+    "dumpFile":"dump.sql"
+  },
+  "use_env_variable":"development",
+  "dumpFile":"dump.sql"
+}
