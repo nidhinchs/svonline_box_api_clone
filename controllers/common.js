@@ -1,10 +1,14 @@
 let connection = require('../config/db');
-const ERROR = "400"
-const ERROR_EMPTY = "500"
-const SUCCESS = "200"
+global.ERROR = "400";
+global.SUCCESS = "200";
+global.ERROR_EMPTY = "500"
 const log = require("./log");
 
+let moment = require("moment-timezone");
 
+global.getCurrentDateTime = function () {
+    return moment.tz(new Date(), "Asia/Kolkata").format("YYYY-MM-DD HH:mm:ss");
+}
 
 exports.insert = function (object, table, callback) {
     //todo example of object
@@ -82,7 +86,7 @@ exports.delete_direct = function (query, callback) {
     };*/
     // console.log(site);
 
-    connection.query(query,  function (error, results, fields) {
+    connection.query(query, function (error, results, fields) {
         console.log(query);
         if (error) {
             callback({"status": "fail", "code": ERROR, "error": error.message});
