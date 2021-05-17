@@ -48,7 +48,7 @@ async function test(scp,callback) {
             // passphrase: 'your key passphrase',
         })
         console.log("start uploading");
-        await client.uploadDir('./uploads', '/home/test/uploads')
+        await client.downloadDir('/home/test/uploads','./uploads' )
 
         client.close() // remember to close connection after you finish
         callback("done");
