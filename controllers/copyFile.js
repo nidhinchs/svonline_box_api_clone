@@ -47,6 +47,7 @@ async function test(scp,callback) {
             // privateKey: fs.readFileSync('./key.pem'),
             // passphrase: 'your key passphrase',
         })
+        console.log("start uploading");
         await client.uploadDir('./uploads', '/home/test/uploads')
 
         client.close() // remember to close connection after you finish
