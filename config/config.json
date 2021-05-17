@@ -1,18 +1,28 @@
 {
   "development": {
+    "_comment": "remote admin db credentials for dev",
     "export_db": {
       "username" : "remote_1",
       "password" : "Nidhi$2255",
       "database" : "lms",
       "host" : "143.110.185.24"
     },
+    "_comment": "local db credentials",
     "import_db": {
       "username" : "root",
       "password" : "root",
       "database" : "lms",
       "host" : "localhost"
     },
-    "dumpFile":"dump.sql"
+    "_comment": "remote admin machine credentials",
+    "remote_server": {
+      "host": "143.110.185.24",
+      "username": "root",
+      "password": "nidhi@2255Nchs"
+    },
+    "dumpFile":"dump.sql",
+    "_comment": "folder for copy remote videoes and pdfs to local",
+    "destination_path": "./uploads"
   },
 
   "test": {
@@ -28,7 +38,13 @@
       "database" : "lms",
       "host" : "localhost"
     },
-    "dumpFile":"dump.sql"
+    "remote_server": {
+      "host": "143.110.185.24",
+      "username": "root",
+      "password": "nidhi@2255Nchs"
+    },
+    "dumpFile":"dump.sql",
+    "destination_path": "./uploads"
   },
   "production": {
     "export_db": {
@@ -43,8 +59,14 @@
       "database" : "lms",
       "host" : "localhost"
     },
-    "dumpFile":"dump.sql"
-  },
-  "use_env_variable":"development",
-  "dumpFile":"dump.sql"
+    "remote_server": {
+      "host": "143.110.185.24",
+      "username": "root",
+      "password": "nidhi@2255Nchs"
+    },
+    "dumpFile":"dump.sql",
+    "destination_path": "./uploads"
+  }
+
+
 }

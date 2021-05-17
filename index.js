@@ -8,6 +8,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const upload = require('express-fileupload');
 
 // Firebase App (the core Firebase SDK) is always required and
 // must be listed before other Firebase SDKs
@@ -39,11 +40,36 @@ app.use(cookieParser());
 app.use(express.static(path.join(process.cwd(), 'public')));
 
 app.use('/', indexRouter);
+app.use(upload(
+    {
+        limits: {filesize: 50 * 1024 * 1024},
+    }
+));
+app.get('/upload', function (req, res) {
+    res.sendFile(__dirname + '/index.html');
+});
+app.post('/upload', (req, res) => {
+    if (req.files) {
+        console.log(req.files);
+        var file = req.files.file;
+        var filename = file.name;
+        console.log(filename);
+
+        file.mv('G:/uploads/' + filename, function (err) {
+            if (err) {
+                res.send(err);
+            } else {
+                res.send({message: "file uploaded"});
+            }
+        })
+    }
+});
+
 app.all('/*', function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "http://localhost:63342");
-  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-  res.header("Access-Control-Allow-Headers", "X-Requested-With,     Content-Type");
-  next();
+    res.header("Access-Control-Allow-Origin", "http://localhost:63342");
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+    res.header("Access-Control-Allow-Headers", "X-Requested-With,     Content-Type");
+    next();
 });
 
 // indexRouter.initialize(app);
@@ -51,18 +77,18 @@ app.all('/*', function (req, res, next) {
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
 
-  next(createError(404));
+    next(createError(404));
 });
 
 // error handler
 app.use(function (err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+    // set locals, only providing error in development
+    res.locals.message = err.message;
+    res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+    // render the error page
+    res.status(err.status || 500);
+    res.render('error');
 });
 
 // var app = require('./app');
@@ -86,7 +112,7 @@ var server = http.createServer(app);
 /**
  * Listen on provided port, on all network interfaces.
  */
-server.listen(port,hostname,()=>console.log(`Hello world app listening on port ${port}!`));
+server.listen(port, hostname, () => console.log(`Hello world app listening on port ${port}!`));
 // server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
@@ -96,19 +122,19 @@ server.on('listening', onListening);
  */
 
 function normalizePort(val) {
-  var port = parseInt(val, 10);
+    var port = parseInt(val, 10);
 
-  if (isNaN(port)) {
-    // named pipe
-    return val;
-  }
+    if (isNaN(port)) {
+        // named pipe
+        return val;
+    }
 
-  if (port >= 0) {
-    // port number
-    return port;
-  }
+    if (port >= 0) {
+        // port number
+        return port;
+    }
 
-  return false;
+    return false;
 }
 
 /**
@@ -116,27 +142,27 @@ function normalizePort(val) {
  */
 
 function onError(error) {
-  if (error.syscall !== 'listen') {
-    throw error;
-  }
+    if (error.syscall !== 'listen') {
+        throw error;
+    }
 
-  var bind = typeof port === 'string'
-    ? 'Pipe ' + port
-    : 'Port ' + port;
+    var bind = typeof port === 'string'
+        ? 'Pipe ' + port
+        : 'Port ' + port;
 
-  // handle specific listen errors with friendly messages
-  switch (error.code) {
-    case 'EACCES':
-      console.error(bind + ' requires elevated privileges');
-      process.exit(1);
-      break;
-    case 'EADDRINUSE':
-      console.error(bind + ' is already in use');
-      process.exit(1);
-      break;
-    default:
-      throw error;
-  }
+    // handle specific listen errors with friendly messages
+    switch (error.code) {
+        case 'EACCES':
+            console.error(bind + ' requires elevated privileges');
+            process.exit(1);
+            break;
+        case 'EADDRINUSE':
+            console.error(bind + ' is already in use');
+            process.exit(1);
+            break;
+        default:
+            throw error;
+    }
 }
 
 /**
@@ -144,13 +170,13 @@ function onError(error) {
  */
 
 function onListening() {
-  var addr = server.address();
-  var bind = typeof addr === 'string'
-    ? 'pipe ' + addr
-    : 'port ' + addr.port;
-  debug('Listening on ' + bind);
+    var addr = server.address();
+    var bind = typeof addr === 'string'
+        ? 'pipe ' + addr
+        : 'port ' + addr.port;
+    debug('Listening on ' + bind);
 }
 
 module.exports = {
-  app
+    app
 };
