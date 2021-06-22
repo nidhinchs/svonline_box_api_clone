@@ -10,7 +10,7 @@
     "_comment": "local db credentials",
     "import_db": {
       "username" : "root",
-      "password" : "root",
+      "password" : "sv$2255",
       "database" : "lms",
       "host" : "localhost"
     },
