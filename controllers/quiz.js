@@ -57,10 +57,35 @@ exports.get_note = function (req, res) {
     let subject_id = req.query.subject_id;
 
     common.selectAll("select * from note where subject_id = " + subject_id, function (callback) {
-        console.log(callback);
+        console.log(callback.code);
         res.json(callback);
     });
 
+}
+
+exports.get_result = function (req, res) {
+
+    let student_id = req.query.student_id;
+
+    common.selectAll("select * from quiz_results where student_id = " + student_id, function (call) {
+        res.json(call);
+    });
+}
+exports.get_quiz_detail = function (req, res) {
+
+    let result_id = req.query.result_id;
+
+    common.select_first("select * from quiz_results where result_id = " + result_id, function (call) {
+        if (call.code == SUCCESS) {
+            common.selectAll("select * from quiz_result_details where result_id = " + result_id, function (call2) {
+                call.result['quiz'] = call2.result;
+                res.json(call);
+            });
+        } else {
+            res.json(call);
+        }
+
+    });
 }
 
 exports.add_result = function (req, res) {
@@ -87,7 +112,7 @@ exports.add_result = function (req, res) {
                     callback1.cust_id,
                     result_detail,
                     function (callback2) {
-                        if (idx == result.result_detail.length-1) {
+                        if (idx == result.result_detail.length - 1) {
                             res.json(callback1);
                         }
                     });

@@ -9,7 +9,7 @@
     },
     "_comment": "local db credentials",
     "import_db": {
-      "username" : "root",
+      "username" : "phpmyadmin",
       "password" : "sv$2255",
       "database" : "lms",
       "host" : "localhost"
