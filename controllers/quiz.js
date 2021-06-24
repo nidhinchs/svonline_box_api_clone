@@ -71,14 +71,14 @@ exports.get_result = function (req, res) {
         res.json(call);
     });
 }
-exports.get_quiz_detail = function (req, res) {
+exports.get_result_detail = function (req, res) {
 
     let result_id = req.query.result_id;
 
-    common.select_first("select * from quiz_results where result_id = " + result_id, function (call) {
+    common.selectAll("select * from quiz_results where result_id = " + result_id, function (call) {
         if (call.code == SUCCESS) {
             common.selectAll("select * from quiz_result_details where result_id = " + result_id, function (call2) {
-                call.result['quiz'] = call2.result;
+                call.result[0]['quiz'] = call2.result;
                 res.json(call);
             });
         } else {

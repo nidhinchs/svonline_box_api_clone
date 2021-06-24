@@ -32,8 +32,8 @@ router.get('/api/get_subject',quiz.get_subject);
 router.get('/api/get_video',quiz.get_video);
 router.get('/api/get_note',quiz.get_note);
 router.post('/api/add_result',quiz.add_result);
-// router.get('/api/get_result',quiz.get_regetgegsult);
-router.get('/api/get_quiz_detail',quiz.get_quiz_detail);
+router.get('/api/get_result',quiz.get_result);
+router.get('/api/get_result_detail',quiz.get_result_detail);
 
 router.get('/api/login',student.login);
 
