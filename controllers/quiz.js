@@ -34,7 +34,7 @@ exports.get_subject = function (req, res) {
 
     let course_id = req.query.course_id;
 
-    common.selectAll("select * from subject where course_id = " + course_id, function (callback) {
+    common.selectAll("select * from subjects where course_id = " + course_id, function (callback) {
         console.log(callback);
         res.json(callback);
     });
@@ -45,7 +45,7 @@ exports.get_video = function (req, res) {
 
     let subject_id = req.query.subject_id;
 
-    common.selectAll("select * from video where subject_id = " + subject_id, function (callback) {
+    common.selectAll("select * from videos where subject_id = " + subject_id, function (callback) {
         console.log(callback);
         res.json(callback);
     });
@@ -88,6 +88,27 @@ exports.get_result_detail = function (req, res) {
     });
 }
 
+exports.add_progress = function(req,res){
+    let result = req.body;
+
+    let obj = {
+        box_id : result.box_id,
+        student_id: result.student_id,
+        subject_id : result.subject_id,
+        type : result.type,
+        type_id : result.type_id,
+        progress: result.progress,
+        is_active: 1,
+        is_delete: 1,
+        created_by: result.student_id,
+        created_date: getCurrentDateTime()
+    };
+    common.insert(obj, "student_progress", function (callback1) {
+        res.json(callback1);
+    });
+
+}
+
 exports.add_result = function (req, res) {
     let result = req.body;
 
@@ -122,6 +143,8 @@ exports.add_result = function (req, res) {
         }
     })
 }
+
+
 
 function insert_result_detail(student_id, result_id, result_detail, callback) {
     let obj = {
