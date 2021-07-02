@@ -30,8 +30,8 @@ process.env.TZ = 'Asia/Kolkata'
 app.engine('pug', require('pug').__express)
 // app.set('views', path.join(__dirname, 'views'));
 //if we create exe file then this line is required with pkg
-app.set('views', path.join(process.cwd(), 'views'));
-app.set('views', __dirname + '/views');
+app.set('views', path.join(process.cwd(), './views'));
+// app.set('views', __dirname + '/views');
 app.set('view engine', 'pug');
 
 app.use(logger('dev'));
