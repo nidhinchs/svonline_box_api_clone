@@ -3,6 +3,7 @@
 /**
  * Module dependencies.
  */
+let config = require('./config/config').config();
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
@@ -30,7 +31,7 @@ process.env.TZ = 'Asia/Kolkata'
 app.engine('pug', require('pug').__express)
 // app.set('views', path.join(__dirname, 'views'));
 //if we create exe file then this line is required with pkg
-app.set('views', path.join(process.cwd(), './views'));
+app.set('views', path.join(process.cwd(), config.base_path + "views"));
 // app.set('views', __dirname + '/views');
 app.set('view engine', 'pug');
 
@@ -38,7 +39,7 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
-app.use(express.static(path.join(process.cwd(), 'public')));
+app.use(express.static(path.join(process.cwd(), config.base_path + 'public')));
 
 app.use('/', indexRouter);
 app.use(upload(

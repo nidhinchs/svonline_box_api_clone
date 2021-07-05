@@ -37,5 +37,6 @@ router.get('/api/get_result',quiz.get_result);
 router.get('/api/get_result_detail',quiz.get_result_detail);
 
 router.get('/api/login',student.login);
+router.get('/api/get_profile',student.get_profile);
 
 module.exports = router;
