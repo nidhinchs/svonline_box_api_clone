@@ -30,25 +30,147 @@ exports.get_course = function (req, res) {
 
 }
 
-exports.get_subject = function (req, res) {
+exports.get_subject = async function (req, res) {
 
     let course_id = req.query.course_id;
+    let student_id = req.query.student_id;
 
-    common.selectAll("select * from subjects where course_id = " + course_id, function (callback) {
+    common.selectAll("select * from subject where course_id = " + course_id, function (callback) {
         console.log(callback);
-        res.json(callback);
-    });
+        if (callback.code == SUCCESS) {
+            callback.result.forEach(async (subject, index) => {
+                await common.select_first("select sum(progress) as total_progress,total_video from video_progress where subject_id = " + subject.subject_id + " and student_id = " + student_id, async function (call1) {
+                    if (call1.code == SUCCESS) {
+                        subject['video_progress'] = call1.result.total_progress / call1.result.total_video;
+                    } else {
+                        subject['video_progress'] = 0;
+                    }
 
+                    await common.select_first("select score,quiz_attempt_count from quiz_scores where subject_id = " + subject.subject_id + " and student_id = " + student_id, function (call2) {
+                        console.log(call2)
+                        if (call2.code == SUCCESS) {
+                            subject['score'] = call2.result.score;
+                            subject['quiz_attempt_count'] = call2.result.quiz_attempt_count;
+
+                            if (index == callback.result.length - 1) {
+                                console.log("index matched");
+                                res.json(callback);
+                            }
+                        } else {
+                            subject['score'] = null;
+                            subject['quiz_attempt_count'] = 0;
+
+                            if (index == callback.result.length - 1) {
+                                console.log("index matched");
+                                res.json(callback);
+                            }
+                        }
+
+                    });
+
+
+                })
+
+                /*  await get_progress(student_id, subject, index, function (call) {
+
+                      subject['video_progress'] = call.progress;
+
+                      if (index == callback.result.length - 1) {
+                          console.log("index matched");
+                          res.json(callback);
+                      }
+                  });*/
+            });
+        } else {
+            res.json(callback);
+        }
+    });
+}
+
+async function get_progress(student_id, subject, index, callback1) {
+    console.log(index + " : index");
+    common.select_first("select count(*) as total_videos from video where is_delete=0 and is_active =1 and subject_id = " + subject.subject_id, function (call4) {
+        if (call4.code == SUCCESS) {
+            if (call4.result.total_videos > 0) {
+                common.selectAll("select max(progress) as progress from student_progress as p where p.type=1 and subject_id = " + subject.subject_id + " and student_id =" + student_id + " group by type_id", function (call3) {
+                    console.log(call3);
+                    if (call3.code == SUCCESS) {
+                        let sum = 0;
+                        call3.result.forEach(progress => {
+                            console.log(progress);
+                            sum += progress.progress;
+                        });
+                        callback1({progress: sum / call4.result.total_videos});
+                    } else {
+                        callback1({progress: 0});
+                    }
+                });
+                // callback1({progress: sum / call4.result.total_videos});
+                // console.log("progress : " + (subject['video_progress']));
+            } else {
+                callback1({progress: 0});
+            }
+        } else {
+            callback1({progress: 0});
+        }
+    });
+    /*  await common.selectAll("select max(progress) as progress from student_progress as p where p.type=1 and subject_id = " + subject.subject_id + " and student_id =" + student_id + " group by type_id", function (call3) {
+          if (call3.code == SUCCESS) {
+              let sum = 0;
+              call3.result.forEach(progress => {
+                  console.log(progress);
+                  sum += progress.progress;
+              });
+              common.select_first("select count(*) as total_videos from video where is_delete=0 and is_active =1 and subject_id = " + subject.subject_id, function (call4) {
+                  if (call4.code == SUCCESS) {
+                      if (call4.result.total_videos > 0) {
+                          callback1({progress: sum / call4.result.total_videos});
+                          console.log("progress : " + (subject['video_progress']));
+                      } else {
+                          callback1({progress: 0});
+                      }
+                  } else {
+                      callback1({progress: 0});
+                  }
+              });
+          } else {
+              callback1({progress: 0});
+          }
+      });*/
 }
 
 exports.get_video = function (req, res) {
 
     let subject_id = req.query.subject_id;
+    let student_id = req.query.student_id;
 
-    common.selectAll("select * from videos where subject_id = " + subject_id, function (callback) {
-        console.log(callback);
-        res.json(callback);
+    common.selectAll("select * from video where subject_id = " + subject_id, function (call1) {
+        console.log(call1);
+        if (call1.code == SUCCESS) {
+            call1.result.forEach((video, index) => {
+                console.log(index);
+                common.select_first("select max(progress) as progress from student_progress where type=1 and type_id = " + video.video_id + " and student_id = " + student_id, function (call2) {
+                    if (call2.code == SUCCESS) {
+                        video['progress'] = call2.result.progress;
+                    } else {
+                        video['progress'] = 0;
+                    }
+
+                    if (index == call1.result.length - 1) {
+                        res.json(call1);
+                    }
+                });
+            });
+        } else {
+            res.json(call1);
+        }
+
     });
+
+    /* common.selectAll("select * from videos where subject_id = " + subject_id, function (callback) {
+         console.log(callback);
+         res.json(callback);
+     });*/
 
 }
 
@@ -88,15 +210,15 @@ exports.get_result_detail = function (req, res) {
     });
 }
 
-exports.add_progress = function(req,res){
+exports.add_progress = function (req, res) {
     let result = req.body;
 
     let obj = {
-        box_id : result.box_id,
+        box_id: result.box_id,
         student_id: result.student_id,
-        subject_id : result.subject_id,
-        type : result.type,
-        type_id : result.type_id,
+        subject_id: result.subject_id,
+        type: result.type,
+        type_id: result.type_id,
         progress: result.progress,
         is_active: 1,
         is_delete: 1,
@@ -143,7 +265,6 @@ exports.add_result = function (req, res) {
         }
     })
 }
-
 
 
 function insert_result_detail(student_id, result_id, result_detail, callback) {
