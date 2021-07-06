@@ -22,6 +22,9 @@ exports.login = function (req, res) {
 exports.get_profile = function (req, res) {
 
     let student_id = req.query.student_id;
+    var total_courses = 0;
+    var total_video = 0;
+    var total_notes =0;
 
     common.selectAll("select * from student where student_id =" + student_id, function (call1) {
         console.log(call1);
@@ -71,6 +74,23 @@ exports.get_profile = function (req, res) {
                                     } else {
                                         console.log("fail");
                                         call1.result[0]['video_progress'] = 0;
+                                        common.select_first("select count(*) as total_notes from note where is_delete =0 and is_active = 1",function (call6) {
+                                            if(call6.code == SUCCESS){
+                                                call1.result[0]['total_notes'] = call6.result.total_notes;
+                                            }else{
+                                                call1.result[0]['total_notes'] = 0;
+                                            }
+                                            common.select_first("select count(*) as total_courses from course where is_delete =0 and is_active = 1",function (call6) {
+                                                if(call6.code == SUCCESS){
+                                                    call1.result[0]['total_courses'] = call6.result.total_courses;
+                                                }else{
+                                                    call1.result[0]['total_courses'] = 0;
+                                                }
+                                                res.json(call1);
+                                            });
+                                            //res.json(call1);
+                                        });
+
                                     }
                                 });
                             });
