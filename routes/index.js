@@ -23,7 +23,7 @@ router.get('/api/update_database', db.updateDatabase);
 router.get('/api/update_database_data', item.update_database_data);
 router.get('/api/copy_file', copyFile.copy_file);
 router.post('/api/upload_video',video.upload_video);
-router.post('/api/get_temperature',temp.get_temperature);
+router.get('/api/get_temperature',temp.get_temperature);
 // router.post('/upload',video.upload_file);
 
 //student data
