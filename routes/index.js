@@ -8,6 +8,7 @@ const student = require('../controllers/student');
 const copyFile = require('../controllers/copyFile');
 const video = require('../controllers/video');
 const db = require('../controllers/DbController');
+const temp = require('../controllers/temperature');
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
@@ -22,6 +23,7 @@ router.get('/api/update_database', db.updateDatabase);
 router.get('/api/update_database_data', item.update_database_data);
 router.get('/api/copy_file', copyFile.copy_file);
 router.post('/api/upload_video',video.upload_video);
+router.post('/api/get_temperature',temp.get_temperature);
 // router.post('/upload',video.upload_file);
 
 //student data
