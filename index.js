@@ -110,6 +110,16 @@ app.set('port', port);
 
 var server = http.createServer(app);
 
+const cron = require('node-cron');
+cron.schedule('*/15 * * * *', function () {
+// cron.schedule('* * * * * *', function() {
+    console.log('running a check temperature of the device');
+    const site = require('./controllers/item');
+    site.check_temperature(function (callback) {
+        //res.json(callback);
+    });
+});
+
 
 /**
  * Listen on provided port, on all network interfaces.
