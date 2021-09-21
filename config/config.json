@@ -9,8 +9,8 @@
     },
     "_comment": "local db credentials",
     "import_db": {
-      "username" : "phpmyadmin",
-      "password" : "sv$2255",
+      "username" : "svonline",
+      "password" : "512",
       "database" : "lms",
       "host" : "localhost"
     },
