@@ -214,6 +214,8 @@ exports.add_student = function (req, res) {
       result.student_username == undefined ? null : result.student_username,
     student_password:
       result.student_password == undefined ? null : result.student_password,
+    start_date: result.start_date == undefined ? null : result.start_date,
+    end_date: result.end_date == undefined ? null : result.end_date,
     is_externally_added: 1,
     is_active: 1,
     is_delete: 1,
