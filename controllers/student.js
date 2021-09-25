@@ -11,6 +11,11 @@ function getCurrentDateTime() {
   return moment.tz(new Date(), "Asia/Kolkata").format("YYYY-MM-DD HH:mm:ss");
 }
 
+function getCurrentDate() {
+  let moment = require("moment-timezone");
+  return moment.tz(new Date(), "Asia/Kolkata").format("YYYY-MM-DD");
+}
+
 exports.login = function (req, res) {
   let student_username = req.query.student_username;
   let student_password = req.query.student_password;
@@ -20,6 +25,10 @@ exports.login = function (req, res) {
       student_username +
       "' and student_password = '" +
       student_password +
+      "' and start_date <='" +
+      getCurrentDate() +
+      "' and end_date >= '" +
+      getCurrentDate() +
       "'",
     function (callback) {
       console.log(callback);
@@ -27,6 +36,7 @@ exports.login = function (req, res) {
     }
   );
 };
+
 exports.f_login = function (req, res) {
   let student_username = req.body.f_username;
   let student_password = req.body.f_password;
@@ -37,6 +47,16 @@ exports.f_login = function (req, res) {
       "' and f_password = '" +
       student_password +
       "'",
+    function (callback) {
+      console.log(callback);
+      res.json(callback);
+    }
+  );
+};
+
+exports.check_student_status = function (req, res) {
+  common.selectAll(
+    "select count(*) as count from student where is_externally_added = 1",
     function (callback) {
       console.log(callback);
       res.json(callback);
@@ -201,9 +221,26 @@ exports.add_student = function (req, res) {
     created_date: getCurrentDateTime(),
   };
 
-  common.insert(obj, "student", function (callback1) {
-    res.json(callback1);
-  });
+  common.select_first(
+    "select * from student where student_phone = '" +
+      result.student_phone +
+      "' or student_username = '" +
+      result.student_username +
+      "'",
+    function (call1) {
+      if (call1.code == 200) {
+        res.json({
+          status: "error",
+          code: 400,
+          error: "Student already exist with this username or contact number.",
+        });
+      } else {
+        common.insert(obj, "student", function (callback1) {
+          res.json(callback1);
+        });
+      }
+    }
+  );
 };
 exports.add_student_attendance = function (req, res) {
   let result = req.body;

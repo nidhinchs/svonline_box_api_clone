@@ -43,6 +43,8 @@ router.get("/api/get_result_detail", quiz.get_result_detail);
 router.get("/api/login", student.login);
 router.post("/api/f_login", student.f_login);
 router.get("/api/get_profile", student.get_profile);
+router.get("/api/check_student_status", student.check_student_status);
+
 router.post("/api/add_student", student.add_student);
 router.post("/api/add_student_attendance", student.add_student_attendance);
 router.get("/api/get_student", student.get_student);
