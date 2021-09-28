@@ -233,7 +233,7 @@ exports.add_student = function (req, res) {
       if (call1.code == 200) {
         res.json({
           status: "error",
-          code: 400,
+          code: "400",
           error: "Student already exist with this username or contact number.",
         });
       } else {
