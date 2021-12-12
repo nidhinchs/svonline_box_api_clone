@@ -63,7 +63,7 @@
     },
     "import_db": {
       "username" : "root",
-      "password" : "",
+      "password" : "Nidhi@nchs",
       "database" : "lms",
       "host" : "localhost"
     },
