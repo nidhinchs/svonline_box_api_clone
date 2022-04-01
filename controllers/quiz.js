@@ -21,7 +21,7 @@ exports.get_quiz = function (req, res) {
 };
 
 exports.get_course = function (req, res) {
-  common.selectAll("select * from course", function (callback) {
+  common.selectAll("select * from courses", function (callback) {
     console.log(callback);
     res.json(callback);
   });
