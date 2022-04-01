@@ -21,7 +21,7 @@ exports.get_quiz = function (req, res) {
 };
 
 exports.get_course = function (req, res) {
-  common.selectAll("select * from course", function (callback) {
+  common.selectAll("select * from courses", function (callback) {
     console.log(callback);
     res.json(callback);
   });
@@ -32,7 +32,7 @@ exports.get_subject = async function (req, res) {
   let student_id = req.query.student_id;
 
   common.selectAll(
-    "select * from subject where course_id = " + course_id,
+    "select * from subjects where course_id = " + course_id,
     function (callback) {
       console.log(callback);
       if (callback.code == SUCCESS) {
