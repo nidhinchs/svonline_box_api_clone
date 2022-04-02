@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b2eb1264-fa15-42c5-a110-0de3ec0c121f" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/public/1.mp4" afterDir="false" />
-    </list>
+    <list default="true" id="b2eb1264-fa15-42c5-a110-0de3ec0c121f" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -84,7 +82,14 @@
       <option name="project" value="LOCAL" />
       <updated>1648904799126</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="video">
+      <created>1648905667803</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1648905667803</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
