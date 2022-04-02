@@ -74,7 +74,7 @@
     },
     "dumpFile":"dump.sql",
     "destination_path": "./uploads",
-    "base_path": "/"
+    "base_path": "/var/www/html"
   },
   "production": {
     "export_db": {
