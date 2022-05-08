@@ -4,8 +4,10 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b2eb1264-fa15-42c5-a110-0de3ec0c121f" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/config/config.js" beforeDir="false" afterPath="$PROJECT_DIR$/config/config.js" afterDir="false" />
+    <list default="true" id="b873eda7-0761-40c7-9e71-07101c1b1edd" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controllers/quiz.js" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/quiz.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -19,9 +21,8 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-    <option name="UPDATE_TYPE" value="REBASE" />
   </component>
-  <component name="ProjectId" id="27BKwfnBiv9G5nweIi5BqAb11jI" />
+  <component name="ProjectId" id="28rIRL9wrG0pbob0LWu5VLBICmu" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -36,69 +37,12 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="b2eb1264-fa15-42c5-a110-0de3ec0c121f" name="Default Changelist" comment="" />
-      <created>1648788281315</created>
+      <changelist id="b873eda7-0761-40c7-9e71-07101c1b1edd" name="Default Changelist" comment="" />
+      <created>1651968278297</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1648788281315</updated>
+      <updated>1651968278297</updated>
     </task>
-    <task id="LOCAL-00001" summary="change in getcourse and subject api">
-      <created>1648789122554</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1648789122554</updated>
-    </task>
-    <task id="LOCAL-00002" summary="change in getcourse and subject api">
-      <created>1648789220890</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1648789220890</updated>
-    </task>
-    <task id="LOCAL-00003" summary="add index.js">
-      <created>1648789556519</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1648789556519</updated>
-    </task>
-    <task id="LOCAL-00004" summary="video">
-      <created>1648903322660</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1648903322660</updated>
-    </task>
-    <task id="LOCAL-00005" summary="video">
-      <created>1648903432961</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1648903432961</updated>
-    </task>
-    <task id="LOCAL-00006" summary="video">
-      <created>1648904799126</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1648904799126</updated>
-    </task>
-    <task id="LOCAL-00007" summary="video">
-      <created>1648905667803</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1648905667803</updated>
-    </task>
-    <task id="LOCAL-00008" summary="video">
-      <created>1648905842417</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1648905842417</updated>
-    </task>
-    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -111,12 +55,5 @@
         </entry>
       </map>
     </option>
-    <option name="oldMeFiltersMigrated" value="true" />
-  </component>
-  <component name="VcsManagerConfiguration">
-    <MESSAGE value="change in getcourse and subject api" />
-    <MESSAGE value="add index.js" />
-    <MESSAGE value="video" />
-    <option name="LAST_COMMIT_MESSAGE" value="video" />
   </component>
 </project>
