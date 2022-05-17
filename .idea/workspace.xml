@@ -4,8 +4,10 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b873eda7-0761-40c7-9e71-07101c1b1edd" name="Default Changelist" comment="revert the changes due to box can not use the changes.">
-      <change beforePath="$PROJECT_DIR$/config/config.js" beforeDir="false" afterPath="$PROJECT_DIR$/config/config.js" afterDir="false" />
+    <list default="true" id="b873eda7-0761-40c7-9e71-07101c1b1edd" name="Default Changelist" comment="change credentials for the box">
+      <change afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,7 +50,14 @@
       <option name="project" value="LOCAL" />
       <updated>1651968617283</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="change credentials for the box">
+      <created>1651968863590</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1651968863590</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -61,9 +70,11 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="revert the changes due to box can not use the changes." />
-    <option name="LAST_COMMIT_MESSAGE" value="revert the changes due to box can not use the changes." />
+    <MESSAGE value="change credentials for the box" />
+    <option name="LAST_COMMIT_MESSAGE" value="change credentials for the box" />
   </component>
 </project>
