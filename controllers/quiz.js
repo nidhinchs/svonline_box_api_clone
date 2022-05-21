@@ -30,71 +30,88 @@ exports.get_course = function (req, res) {
 exports.get_subject = async function (req, res) {
   let course_id = req.query.course_id;
   let student_id = req.query.student_id;
-
   common.selectAll(
-    "select * from subject where course_id = " + course_id,
+    "select * from subjects where course_id = " + course_id +" and student_id = "+student_id,
     function (callback) {
-      console.log(callback);
-      if (callback.code == SUCCESS) {
-        callback.result.forEach(async (subject, index) => {
-          await common.select_first(
-            "select sum(progress) as total_progress,total_video from video_progress where subject_id = " +
-              subject.subject_id +
-              " and student_id = " +
-              student_id,
-            async function (call1) {
-              if (call1.code == SUCCESS) {
-                subject["video_progress"] =
-                  call1.result.total_progress / call1.result.total_video;
-              } else {
-                subject["video_progress"] = 0;
-              }
 
-              await common.select_first(
-                "select score,quiz_attempt_count from quiz_scores where subject_id = " +
-                  subject.subject_id +
-                  " and student_id = " +
-                  student_id,
-                function (call2) {
-                  console.log(call2);
-                  if (call2.code == SUCCESS) {
-                    subject["score"] = call2.result.score;
-                    subject["quiz_attempt_count"] =
-                      call2.result.quiz_attempt_count;
+      res.json(callback);
+    });
 
-                    if (index == callback.result.length - 1) {
-                      console.log("index matched");
-                      res.json(callback);
-                    }
-                  } else {
-                    subject["score"] = null;
-                    subject["quiz_attempt_count"] = 0;
-
-                    if (index == callback.result.length - 1) {
-                      console.log("index matched");
-                      res.json(callback);
-                    }
-                  }
-                }
-              );
-            }
-          );
-          /*  await get_progress(student_id, subject, index, function (call) {
-
-                      subject['video_progress'] = call.progress;
-
-                      if (index == callback.result.length - 1) {
-                          console.log("index matched");
-                          res.json(callback);
-                      }
-                  });*/
-        });
-      } else {
-        res.json(callback);
-      }
-    }
-  );
 };
+
+// exports.get_subject = async function (req, res) {
+//   let course_id = req.query.course_id;
+//   let student_id = req.query.student_id;
+
+//   common.selectAll(
+//     "select * from subject where course_id = " + course_id,
+//     function (callback) {
+//       console.log(callback);
+//       if (callback.code == SUCCESS) {
+//         callback.result.forEach((subject, index) => {
+//            common.select_first(
+//             "select sum(progress) as total_progress,total_video from video_progress where subject_id = " +
+//               subject.subject_id +
+//               " and student_id = " +
+//               student_id,
+//             async function (call1) {
+//               if (call1.code == SUCCESS) {
+//                 subject["video_progress"] =
+//                   call1.result.total_progress / call1.result.total_video;
+//               } else {
+//                 subject["video_progress"] = 0;
+//               }
+
+//               await common.select_first(
+//                 "select score,quiz_attempt_count from quiz_scores where subject_id = " +
+//                   subject.subject_id +
+//                   " and student_id = " +
+//                   student_id,
+//                 function (call2) {
+//                   console.log(call2);
+//                   if (call2.code == SUCCESS) {
+//                     subject["score"] = call2.result.score;
+//                     subject["quiz_attempt_count"] =
+//                       call2.result.quiz_attempt_count;
+
+//                     if (index == callback.result.length - 1) {
+//                       console.log("index matched");
+//                       res.json(callback);
+//                     }
+//                   } else {
+//                     subject["score"] = null;
+//                     subject["quiz_attempt_count"] = 0;
+
+//                     // if (index == callback.result.length - 1) {
+//                     //   console.log("index matched");
+//                     //   res.json(callback);
+//                     // }
+//                   }
+//                 }
+//               );
+//             }
+//           );
+//           /*  await get_progress(student_id, subject, index, function (call) {
+
+//                       subject['video_progress'] = call.progress;
+
+//                       if (index == callback.result.length - 1) {
+//                           console.log("index matched");
+//                           res.json(callback);
+//                       }
+//                   });*/
+//         });
+//         console.log(callback);
+//         res.json(callback);
+        
+
+
+//       } else {
+//         res.json(callback);
+//       }
+//     }
+//   );
+// };
 
 async function get_progress(student_id, subject, index, callback1) {
   console.log(index + " : index");
@@ -159,46 +176,61 @@ async function get_progress(student_id, subject, index, callback1) {
       });*/
 }
 
-exports.get_video = function (req, res) {
+exports.get_video = function(req,res){
   let subject_id = req.query.subject_id;
   let student_id = req.query.student_id;
 
   common.selectAll(
-    "select * from video where subject_id = " + subject_id,
+    "select * from videos where subject_id = " + subject_id + " and student_id = " + student_id,
     function (call1) {
       console.log(call1);
-      if (call1.code == SUCCESS) {
-        call1.result.forEach((video, index) => {
-          console.log(index);
-          common.select_first(
-            "select max(progress) as progress from student_progress where type=1 and type_id = " +
-              video.video_id +
-              " and student_id = " +
-              student_id,
-            function (call2) {
-              if (call2.code == SUCCESS) {
-                video["progress"] = call2.result.progress;
-              } else {
-                video["progress"] = 0;
-              }
-
-              if (index == call1.result.length - 1) {
-                res.json(call1);
-              }
-            }
-          );
-        });
-      } else {
-        res.json(call1);
-      }
+      res.json(call1);
     }
   );
 
-  /* common.selectAll("select * from videos where subject_id = " + subject_id, function (callback) {
-         console.log(callback);
-         res.json(callback);
-     });*/
+
 };
+
+// exports.get_video = function (req, res) {
+//   let subject_id = req.query.subject_id;
+//   let student_id = req.query.student_id;
+
+//   common.selectAll(
+//     "select * from video where subject_id = " + subject_id,
+//     function (call1) {
+//       console.log(call1);
+//       if (call1.code == SUCCESS) {
+//         call1.result.forEach((video, index) => {
+//           console.log(index);
+//           common.select_first(
+//             "select max(progress) as progress from student_progress where type=1 and type_id = " +
+//               video.video_id +
+//               " and student_id = " +
+//               student_id,
+//             function (call2) {
+//               if (call2.code == SUCCESS) {
+//                 video["progress"] = call2.result.progress;
+//               } else {
+//                 video["progress"] = 0;
+//               }
+
+//               if (index == call1.result.length - 1) {
+//                 res.json(call1);
+//               }
+//             }
+//           );
+//         });
+//       } else {
+//         res.json(call1);
+//       }
+//     }
+//   );
+
+//   /* common.selectAll("select * from videos where subject_id = " + subject_id, function (callback) {
+//          console.log(callback);
+//          res.json(callback);
+//      });*/
+// };
 
 exports.get_note = function (req, res) {
   let subject_id = req.query.subject_id;
