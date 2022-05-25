@@ -20,21 +20,61 @@ exports.login = function (req, res) {
   let student_username = req.query.student_username;
   let student_password = req.query.student_password;
 
-  common.selectAll(
-    "select * from student where student_username = '" +
-      student_username +
-      "' and student_password = '" +
-      student_password +
-      "' and start_date <='" +
+
+  common.selectAll("select * from student where student_username = '"+ student_username
+   + "' and student_password = '"+student_password +"'",
+    function (callback) {
+    console.log(callback);
+    if(callback.code == 200){
+
+      common.selectAll("select * from student where 1"+
+      " and start_date <='" +
       getCurrentDate() +
       "' and end_date >= '" +
       getCurrentDate() +
       "'",
-    function (callback) {
-      console.log(callback);
-      res.json(callback);
+      function (callback) {
+        console.log(callback);
+        if(callback.code == 200){
+          res.json(callback);
+        }else{
+          res.json({
+            status:"error",
+            code:400,
+            error:"Your subscription is ended. please contact admin."    
+          });
+          
+        }
+        
+      }
+      );
+
+    }else{
+      res.json({
+        status:"error",
+        code:400,
+        error:"Your username or password is incorrect."
+
+      });
     }
-  );
+    // res.json(callback);
+  });
+
+  // common.selectAll(
+  //   "select * from student where student_username = '" +
+  //     student_username +
+  //     "' and student_password = '" +
+  //     student_password +
+  //     "' and start_date <='" +
+  //     getCurrentDate() +
+  //     "' and end_date >= '" +
+  //     getCurrentDate() +
+  //     "'",
+  //   function (callback) {
+  //     console.log(callback);
+  //     res.json(callback);
+  //   }
+  // );
 };
 
 exports.f_login = function (req, res) {
