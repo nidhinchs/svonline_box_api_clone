@@ -248,7 +248,7 @@ exports.get_result = function (req, res) {
   let student_id = req.query.student_id;
 
   common.selectAll(
-    "select * from quiz_results where student_id = " + student_id,
+    "select * from quiz_results where student_id = " + student_id + " order by created_date desc",
     function (call) {
       res.json(call);
     }
