@@ -40,7 +40,7 @@ exports.login = function (req, res) {
         }else{
           res.json({
             status:"error",
-            code:400,
+            code:500,
             error:"Your subscription is ended. please contact admin."    
           });
           
@@ -52,7 +52,7 @@ exports.login = function (req, res) {
     }else{
       res.json({
         status:"error",
-        code:400,
+        code:500,
         error:"Your username or password is incorrect."
 
       });
