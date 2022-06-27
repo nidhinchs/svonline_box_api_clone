@@ -19,6 +19,10 @@ router.get("/_health", (req, res) => {
 });
 //admin data
 router.get("/api/update_database", db.updateDatabase);
+router.get("/api/download_files", copyFile.download_files);
+
+router.get("/update_subject_data", db.update_subject_data);
+router.get("/update_video_data", db.update_video_data);
 
 router.get("/api/update_database_data", item.update_database_data);
 router.get("/api/copy_file", copyFile.copy_file);
@@ -27,7 +31,6 @@ router.get("/api/get_temperature", temp.get_temperature);
 // router.post('/upload',video.upload_file);
 
 //student data
-
 router.get("/api/get_quiz", quiz.get_quiz);
 router.get("/api/get_course", quiz.get_course);
 router.get("/api/get_subject", quiz.get_subject);
