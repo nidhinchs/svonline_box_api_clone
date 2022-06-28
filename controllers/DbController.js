@@ -7,6 +7,29 @@ const { exec } = require("child_process");
 
 exports.update_video_data = function (req, res) {};
 
+exports.ping = function (req, res) {
+  let request = req.query;
+  check_connection(function (connected) {
+    if (connected == 1) {
+      let obj = {
+        box_id: request.box_id,
+        created_by: request.box_id,
+        created_date: getCurrentDateTime(),
+      };
+      admin_common.insert(obj, "box_health", function (callback) {
+        res.json(callback);
+      });
+    } else {
+      res.json({ code: 400, status: "Internet connection is not available." });
+    }
+  });
+};
+
+exports.get_box_updates = function (req, res) {
+
+  admin_common.selectAll("select max(created_date),box_id")
+};
+
 function check_connection(callback) {
   let connected = 0;
   require("dns").resolve("www.google.com", function (err) {
