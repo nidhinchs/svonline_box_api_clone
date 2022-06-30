@@ -4,30 +4,129 @@ let admin_common = require("./admin_common");
 let config = require("../config/config").config();
 // Include the dependency we need.
 const { exec } = require("child_process");
+const { request } = require("http");
 
 exports.update_video_data = function (req, res) {};
+
+exports.update_course = function (req, res) {
+  let request = req.query;
+
+  check_connection(function (connected) {
+    if (connected == 1) {
+      admin_common.selectAll(
+        "select * from trigger_log where course_id = " +
+          request.course_id +
+          " and log_id > " +
+          request.last_log_id,
+        function (call1) {
+          if (call1.code == SUCCESS) {
+            for (const item of call1.result) {
+              console.log(item);
+
+              doAction(item, function (call2) {
+                if(call2.code == SUCCESS){
+                  
+                }
+              });
+            }
+          } else {
+            res.json(call1);
+          }
+        }
+      );
+    } else {
+      showInternetError(res);
+    }
+  });
+};
+
+function doAction(item, callback) {
+  if (item.action == "insert") {
+    insert_data(item, function (call1) {
+      callback(call1);
+    });
+  } else if (item.action == "update") {
+  } else if (item.action == "delete") {
+  }
+}
+
+function insert_data(item, callback) {
+  let query =
+    "select * from " +
+    item.table_name +
+    " where " +
+    item.primary_key_name +
+    " = " +
+    item.primary_key_id;
+
+  admin_common.select_first(query, function (call1) {
+    if (call1.code == SUCCESS) {
+      admin_common.insert(call1.result, item.table_name, function (call2) {
+        callback(call2);
+      });
+    } else {
+      callback(errorJsonObject);
+    }
+  });
+}
+
+function errorJsonObject() {
+  return {
+    code: 400,
+    status: "error",
+    error: "Can not fetch data",
+  };
+}
+
+function showInternetError(res) {
+  res.json({
+    code: 400,
+    status: "error",
+    error: "Internet connection is not available.",
+  });
+}
 
 exports.ping = function (req, res) {
   let request = req.query;
   check_connection(function (connected) {
     if (connected == 1) {
-      let obj = {
-        box_id: request.box_id,
-        created_by: request.box_id,
-        created_date: getCurrentDateTime(),
-      };
-      admin_common.insert(obj, "box_health", function (callback) {
-        res.json(callback);
-      });
+      admin_common.select_first(
+        "select * from box where box_id = " + request.box_id,
+        function (call1) {
+          if (call1.code == SUCCESS) {
+            let obj = {
+              box_id: request.box_id,
+              created_by: request.box_id,
+              created_date: getCurrentDateTime(),
+            };
+            admin_common.insert(obj, "box_health", function (callback) {
+              res.json(callback);
+            });
+          } else {
+            res.json({
+              code: 400,
+              status: "error",
+              error:
+                "There are no box available in the admin with id = " +
+                request.box_id,
+            });
+          }
+        }
+      );
     } else {
-      res.json({ code: 400, status: "Internet connection is not available." });
+      res.json({
+        code: 400,
+        status: "error",
+        error: "Internet connection is not available.",
+      });
     }
   });
 };
 
 exports.get_box_updates = function (req, res) {
-
-  admin_common.selectAll("select max(created_date),box_id")
+  admin_common.selectAll("select * from v_box_health", function (callback) {
+    res.json(callback);
+  });
 };
 
 function check_connection(callback) {

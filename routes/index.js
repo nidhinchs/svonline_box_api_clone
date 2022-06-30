@@ -25,6 +25,7 @@ router.get("/update_subject_data", db.update_subject_data);
 router.get("/update_video_data", db.update_video_data);
 router.get("/api/ping", db.ping);
 router.get("/api/get_box_updates", db.get_box_updates);
+router.get("/api/update_course", db.update_course);
 
 router.get("/api/update_database_data", item.update_database_data);
 router.get("/api/copy_file", copyFile.copy_file);
