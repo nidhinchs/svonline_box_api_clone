@@ -61,10 +61,10 @@
 
   "test": {
     "export_db": {
-      "username" : "remote_1",
-      "password" : "Nidhi$2255",
-      "database" : "lms",
-      "host" : "143.110.185.24"
+      "username" : "svonline",
+      "password" : "password",
+      "database" : "lms_admin",
+      "host" : "139.59.77.113"
     },
     "import_db": {
       "username" : "root",

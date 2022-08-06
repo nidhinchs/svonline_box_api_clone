@@ -1,0 +1,90 @@
+===============================================================================
+EXTENSION NAME : linecounter
+EXTENSION VERSION : 0.2.7
+-------------------------------------------------------------------------------
+count time : 2022-07-10 12:07:02
+count workspace : f:\ASHTAPRADHAN\API\SVONLINE\sv_online
+total files : 60
+total code lines : 21056
+total comment lines : 4931
+total blank lines : 529
+
+    statistics
+   |      extension|     total code|  total comment|    total blank|percent|
+   -------------------------------------------------------------------------
+   |           .pug|             16|              0|              2|  0.076|
+   |            .md|              1|              0|              0| 0.0047|
+   |               |            170|             13|             49|   0.81|
+   |            .js|           1844|            375|            297|    8.8|
+   |           .css|              7|              0|              1|  0.033|
+   |          .json|          14617|              0|             22|     69|
+   |    .properties|             15|              1|              0|  0.071|
+   |          .html|              5|              0|              0|  0.024|
+   |           .bat|             44|              0|             10|   0.21|
+   |           .sql|             74|             42|             36|   0.35|
+   |           .cnf|              4|              0|              0|  0.019|
+   |           .xml|            134|              0|              0|   0.64|
+   |           .bin|              1|              0|              0| 0.0047|
+   |           .pdf|           4124|           4500|            112|     20|
+   -------------------------------------------------------------------------
+.gitignore, code is 78, comment is 6, blank is 31.
+.gradle\6.8\executionHistory\executionHistory.bin, it is a binary file.
+.gradle\6.8\executionHistory\executionHistory.lock, it is a binary file.
+.gradle\6.8\fileChanges\last-build.bin, code is 1, comment is 0, blank is 0.
+.gradle\6.8\fileHashes\fileHashes.bin, it is a binary file.
+.gradle\6.8\fileHashes\fileHashes.lock, it is a binary file.
+.gradle\6.8\gc.properties, code is 0, comment is 0, blank is 0.
+.gradle\buildOutputCleanup\buildOutputCleanup.lock, it is a binary file.
+.gradle\buildOutputCleanup\cache.properties, code is 2, comment is 0, blank is 0.
+.gradle\buildOutputCleanup\outputFiles.bin, it is a binary file.
+.gradle\checksums\checksums.lock, it is a binary file.
+.gradle\configuration-cache\gc.properties, code is 0, comment is 0, blank is 0.
+.gradle\vcs-1\gc.properties, code is 0, comment is 0, blank is 0.
+.idea\compiler.xml, code is 6, comment is 0, blank is 0.
+.idea\gradle.xml, code is 20, comment is 0, blank is 0.
+.idea\misc.xml, code is 7, comment is 0, blank is 0.
+.idea\vcs.xml, code is 6, comment is 0, blank is 0.
+.idea\workspace.xml, code is 95, comment is 0, blank is 0.
+.import.cnf, code is 2, comment is 0, blank is 0.
+.my.cnf, code is 2, comment is 0, blank is 0.
+config\admin_db.js, code is 14, comment is 1, blank is 3.
+config\config.js, code is 5, comment is 3, blank is 1.
+config\config.json, code is 141, comment is 0, blank is 18.
+config\db.js, code is 14, comment is 1, blank is 3.
+config\drop_all_tables.sql, code is 27, comment is 0, blank is 0.
+controllers\admin_common.js, code is 106, comment is 28, blank is 9.
+controllers\common.js, code is 186, comment is 48, blank is 14.
+controllers\copyFile.js, code is 138, comment is 18, blank is 29.
+controllers\DbController.js, code is 531, comment is 29, blank is 53.
+controllers\item.js, code is 104, comment is 0, blank is 31.
+controllers\log.js, code is 16, comment is 0, blank is 6.
+controllers\quiz.js, code is 186, comment is 126, blank is 37.
+controllers\student.js, code is 259, comment is 25, blank is 24.
+controllers\temperature.js, code is 23, comment is 1, blank is 2.
+controllers\video.js, code is 38, comment is 27, blank is 15.
+controllers\video_upload.js, code is 62, comment is 23, blank is 25.
+downloads\8b_sample-mp4-file.mp4, it is a binary file.
+downloads\SV_SampleVideo_1280x720_5mb.mp4, it is a binary file.
+drop_tables.sql, code is 16, comment is 23, blank is 18.
+dump.sql, code is 31, comment is 19, blank is 18.
+gradle\wrapper\gradle-wrapper.jar, it is a binary file.
+gradle\wrapper\gradle-wrapper.properties, code is 5, comment is 1, blank is 0.
+gradlew, code is 77, comment is 1, blank is 12.
+gradlew.bat, code is 44, comment is 0, blank is 10.
+index.html, code is 5, comment is 0, blank is 0.
+index.js, code is 119, comment is 40, blank is 35.
+lms, code is 0, comment is 0, blank is 0.
+local.properties, code is 8, comment is 0, blank is 0.
+package-lock.json, code is 14439, comment is 0, blank is 4.
+package.json, code is 37, comment is 0, blank is 0.
+public\1.pdf, code is 4124, comment is 4500, blank is 112.
+public\stylesheets\style.css, code is 7, comment is 0, blank is 1.
+public\video\subject_video\8b_sample-mp4-file.mp4, it is a binary file.
+README.md, code is 1, comment is 0, blank is 0.
+routes\index.js, code is 43, comment is 5, blank is 10.
+undefined, code is 15, comment is 6, blank is 6.
+uploads\video1.mkv, it is a binary file.
+views\error.pug, code is 5, comment is 0, blank is 1.
+views\index.pug, code is 4, comment is 0, blank is 1.
+views\layout.pug, code is 7, comment is 0, blank is 0.
+===============================================================================

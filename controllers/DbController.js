@@ -13,24 +13,31 @@ exports.update_course = function (req, res) {
 
   check_connection(function (connected) {
     if (connected == 1) {
-      admin_common.selectAll(
-        "select * from trigger_log where course_id = " +
-          request.course_id +
-          " and log_id > " +
-          request.last_log_id,
-        function (call1) {
-          if (call1.code == SUCCESS) {
-            for (const item of call1.result) {
-              console.log(item);
-
-              doAction(item, function (call2) {
-                if(call2.code == SUCCESS){
-                  
-                }
-              });
-            }
+      admin_common.select_first(
+        "select * from box_update_status where box_id = " + request.box_id,
+        function (callback1) {
+          if (callback1.code == SUCCESS) {
+            updateAllData(
+              1,
+              callback1.result.last_updated_log_id,
+              request.course_id,
+              request.box_id,
+              function (call2) {
+                res.json(call2);
+              }
+            );
+          } else if (callback1.code == ERROR_EMPTY) {
+            updateAllData(
+              0,
+              0,
+              request.course_id,
+              request.box_id,
+              function (call3) {
+                res.json(call3);
+              }
+            );
           } else {
-            res.json(call1);
+            res.json(callback1);
           }
         }
       );
@@ -40,15 +47,187 @@ exports.update_course = function (req, res) {
   });
 };
 
-function doAction(item, callback) {
+async function updateAllData(
+  isFirstTime,
+  last_updated_log_id,
+  course_id,
+  box_id,
+  callback
+) {
+  admin_common.selectAll(
+    "select * from trigger_log where course_id = " +
+      course_id +
+      " and log_id > " +
+      last_updated_log_id,
+    async function (call1) {
+      if (call1.code == SUCCESS) {
+        let response = {};
+        for (let i = 0; i < call1.result.length; i++) {
+          let item = call1.result[i];
+
+          console.log(
+            "log_id----========================----->    " + item.log_id
+          );
+          await doAction(item, function (call2) {
+            console.log("Do Action Result ------------->  " + call2.code);
+            response = call2;
+            console.log(response);
+            if (call2.code == SUCCESS) {
+              storeUpdatedId(box_id, item.log_id);
+            } else {
+              console.log(call2.status);
+              i = call1.result.length;
+              // callback(call2);
+            }
+            // if (i == call1.result.length) {
+            //   callback(response);
+            //   return;
+            // }
+          });
+        }
+        callback(response);
+
+        // callback(call1);
+      } else {
+        callback(call1);
+      }
+    }
+  );
+}
+
+function storeUpdatedId(box_id, log_id) {
+  let obj = {
+    box_id: box_id,
+    last_updated_log_id: log_id,
+  };
+
+  admin_common.select_first(
+    "select status_id from box_update_status where box_id = " + box_id,
+    function (call1) {
+      console.log(call1.code);
+      if (call1.code == SUCCESS) {
+        admin_common.update(
+          obj,
+          "status_id",
+          call1.result.status_id,
+          "box_update_status",
+          function (call) {
+            console.log(call.code);
+          }
+        );
+      } else {
+        admin_common.insert(obj, "box_update_status", function (call) {
+          console.log(call.code);
+        });
+      }
+    }
+  );
+}
+
+async function doAction(item, callback) {
   if (item.action == "insert") {
     insert_data(item, function (call1) {
       callback(call1);
     });
   } else if (item.action == "update") {
+    update_data(item, function (call2) {
+      console.log("update data ------------->" + call2.code);
+
+      callback(call2);
+    });
   } else if (item.action == "delete") {
+    delete_data(item, function (call3) {
+      callback(call3);
+    });
   }
 }
+
+function delete_data(item, callback) {
+  const fs = require("fs");
+  if (item.table_name == "video") {
+    common.select_first(
+      "select video_path from video where video_id = " + item.primary_key_id,
+      function (call2) {
+        if (call2.code == SUCCESS) {
+          fs.unlink(call2.result.video_path, function (err, result) {
+            if (err) {
+              console.log("error in deleting file ..........");
+            } else {
+              common.delete(
+                item.primary_key_name,
+                item.primary_key_id,
+                item.table_name,
+                function (call1) {
+                  callback(call1);
+                }
+              );
+            }
+            next(err, list);
+          });
+        } else {
+          callback(errorJsonObject);
+        }
+      }
+    );
+  } else if (item.table_name == "note") {
+    common.select_first(
+      "select note_path from note where note_id = " + item.primary_key_id,
+      function (call2) {
+        fs.unlink(call2.result.video_path, function (err, result) {
+          next(err, list);
+          if (err) {
+            console.log("error in deleting file ..........");
+          } else {
+            common.delete(
+              item.primary_key_name,
+              item.primary_key_id,
+              item.table_name,
+              function (call1) {
+                callback(call1);
+              }
+            );
+          }
+        });
+      }
+    );
+  }
+}
+
+const downloadFile = (url, callback) => {
+  return new Promise((resolve, reject) => {
+    const https = require("https");
+    let downloadFolderPath = "./public/video/";
+    console.log("url------------------>");
+    console.log(url);
+
+    const splitUrl = url.split("/");
+    const filename = splitUrl[splitUrl.length - 1];
+    const foldername = splitUrl[splitUrl.length - 2];
+    const outputPath = `${downloadFolderPath}${foldername}/${filename}`;
+
+    console.log(outputPath);
+
+    const file = fs.createWriteStream(outputPath);
+
+    if (!fs.existsSync(`${downloadFolderPath}${foldername}`)) {
+      fs.mkdirSync(`${downloadFolderPath}${foldername}`, {
+        recursive: true,
+      });
+    }
+
+    https.get(url, (res) => {
+      if (res.statusCode === 200) {
+        console.log("get success");
+        res.pipe(file).on("close", resolve);
+        callback(res.statusCode);
+      } else {
+        reject(res.statusCode);
+        callback(res.statusCode);
+        console.log("get error" + res.statusCode);
+      }
+    });
+  });
+};
 
 function insert_data(item, callback) {
   let query =
@@ -61,9 +240,84 @@ function insert_data(item, callback) {
 
   admin_common.select_first(query, function (call1) {
     if (call1.code == SUCCESS) {
-      admin_common.insert(call1.result, item.table_name, function (call2) {
-        callback(call2);
-      });
+      if (item.table_name == "video" || item.table_name == "note") {
+        downloadFile(call1.result.video_path, function (callback1) {
+          if (callback1 == 200) {
+            common.insert(call1.result, item.table_name, function (call2) {
+              console.log(call2.status);
+              callback(call2);
+            });
+          } else {
+            callback({
+              code: 400,
+              status: "error",
+              error: "Error in downloading the File",
+            });
+          }
+        });
+      } else {
+        common.insert(call1.result, item.table_name, function (call2) {
+          console.log(call2.status);
+          callback(call2);
+        });
+      }
+    } else {
+      callback(errorJsonObject);
+    }
+  });
+}
+
+function update_data(item, callback) {
+  let query =
+    "select * from " +
+    item.table_name +
+    " where " +
+    item.primary_key_name +
+    " = " +
+    item.primary_key_id;
+
+  admin_common.select_first(query, function (call1) {
+    if (call1.code == SUCCESS) {
+      if (item.table_name == "video" || item.table_name == "note") {
+        fs.unlink(call2.result.video_path, function (err, result) {
+          if (err) {
+            console.log("error in deleting file ..........");
+          } else {
+            downloadFile(call1.result.video_path, function (callback1) {
+              if (callback1 == 200) {
+                common.update(
+                  call1.result,
+                  item.primary_key_name,
+                  item.primary_key_id,
+                  item.table_name,
+                  function (call2) {
+                    console.log(call2.status);
+                    callback(call2);
+                  }
+                );
+              } else {
+                callback({
+                  code: 400,
+                  status: "error",
+                  error: "Error in downloading the File",
+                });
+              }
+            });
+          }
+          next(err, list);
+        });
+      } else {
+        common.update(
+          call1.result,
+          item.primary_key_name,
+          item.primary_key_id,
+          item.table_name,
+          function (call2) {
+            console.log(call2.status);
+            callback(call2);
+          }
+        );
+      }
     } else {
       callback(errorJsonObject);
     }

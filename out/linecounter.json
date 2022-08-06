@@ -1,0 +1,461 @@
+{
+    "extension": "linecounter",
+    "version": "0.2.7",
+    "workspace": "f:\\ASHTAPRADHAN\\API\\SVONLINE\\sv_online",
+    "linecount": [
+        {
+            "version": "0.2.7",
+            "counttime": "2022-07-10 12:07:02",
+            "filesum": 60,
+            "codesum": 21056,
+            "commentsum": 4931,
+            "blanksum": 529,
+            "statistics": {
+                ".pug": {
+                    "code": 16,
+                    "comment": 0,
+                    "blank": 2
+                },
+                ".md": {
+                    "code": 1,
+                    "comment": 0,
+                    "blank": 0
+                },
+                "": {
+                    "code": 170,
+                    "comment": 13,
+                    "blank": 49
+                },
+                ".js": {
+                    "code": 1844,
+                    "comment": 375,
+                    "blank": 297
+                },
+                ".css": {
+                    "code": 7,
+                    "comment": 0,
+                    "blank": 1
+                },
+                ".json": {
+                    "code": 14617,
+                    "comment": 0,
+                    "blank": 22
+                },
+                ".properties": {
+                    "code": 15,
+                    "comment": 1,
+                    "blank": 0
+                },
+                ".html": {
+                    "code": 5,
+                    "comment": 0,
+                    "blank": 0
+                },
+                ".bat": {
+                    "code": 44,
+                    "comment": 0,
+                    "blank": 10
+                },
+                ".sql": {
+                    "code": 74,
+                    "comment": 42,
+                    "blank": 36
+                },
+                ".cnf": {
+                    "code": 4,
+                    "comment": 0,
+                    "blank": 0
+                },
+                ".xml": {
+                    "code": 134,
+                    "comment": 0,
+                    "blank": 0
+                },
+                ".bin": {
+                    "code": 1,
+                    "comment": 0,
+                    "blank": 0
+                },
+                ".pdf": {
+                    "code": 4124,
+                    "comment": 4500,
+                    "blank": 112
+                }
+            },
+            "filelist": [
+                {
+                    "blank": 31,
+                    "code": 78,
+                    "comment": 6,
+                    "filename": ".gitignore"
+                },
+                {
+                    "filename": ".gradle\\6.8\\executionHistory\\executionHistory.bin",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": ".gradle\\6.8\\executionHistory\\executionHistory.lock",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": ".gradle\\6.8\\fileChanges\\last-build.bin"
+                },
+                {
+                    "filename": ".gradle\\6.8\\fileHashes\\fileHashes.bin",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": ".gradle\\6.8\\fileHashes\\fileHashes.lock",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0,
+                    "filename": ".gradle\\6.8\\gc.properties"
+                },
+                {
+                    "filename": ".gradle\\buildOutputCleanup\\buildOutputCleanup.lock",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 2,
+                    "comment": 0,
+                    "filename": ".gradle\\buildOutputCleanup\\cache.properties"
+                },
+                {
+                    "filename": ".gradle\\buildOutputCleanup\\outputFiles.bin",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": ".gradle\\checksums\\checksums.lock",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0,
+                    "filename": ".gradle\\configuration-cache\\gc.properties"
+                },
+                {
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0,
+                    "filename": ".gradle\\vcs-1\\gc.properties"
+                },
+                {
+                    "blank": 0,
+                    "code": 6,
+                    "comment": 0,
+                    "filename": ".idea\\compiler.xml"
+                },
+                {
+                    "blank": 0,
+                    "code": 20,
+                    "comment": 0,
+                    "filename": ".idea\\gradle.xml"
+                },
+                {
+                    "blank": 0,
+                    "code": 7,
+                    "comment": 0,
+                    "filename": ".idea\\misc.xml"
+                },
+                {
+                    "blank": 0,
+                    "code": 6,
+                    "comment": 0,
+                    "filename": ".idea\\vcs.xml"
+                },
+                {
+                    "blank": 0,
+                    "code": 95,
+                    "comment": 0,
+                    "filename": ".idea\\workspace.xml"
+                },
+                {
+                    "blank": 0,
+                    "code": 2,
+                    "comment": 0,
+                    "filename": ".import.cnf"
+                },
+                {
+                    "blank": 0,
+                    "code": 2,
+                    "comment": 0,
+                    "filename": ".my.cnf"
+                },
+                {
+                    "blank": 3,
+                    "code": 14,
+                    "comment": 1,
+                    "filename": "config\\admin_db.js"
+                },
+                {
+                    "blank": 1,
+                    "code": 5,
+                    "comment": 3,
+                    "filename": "config\\config.js"
+                },
+                {
+                    "blank": 18,
+                    "code": 141,
+                    "comment": 0,
+                    "filename": "config\\config.json"
+                },
+                {
+                    "blank": 3,
+                    "code": 14,
+                    "comment": 1,
+                    "filename": "config\\db.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 27,
+                    "comment": 0,
+                    "filename": "config\\drop_all_tables.sql"
+                },
+                {
+                    "blank": 9,
+                    "code": 106,
+                    "comment": 28,
+                    "filename": "controllers\\admin_common.js"
+                },
+                {
+                    "blank": 14,
+                    "code": 186,
+                    "comment": 48,
+                    "filename": "controllers\\common.js"
+                },
+                {
+                    "blank": 29,
+                    "code": 138,
+                    "comment": 18,
+                    "filename": "controllers\\copyFile.js"
+                },
+                {
+                    "blank": 53,
+                    "code": 531,
+                    "comment": 29,
+                    "filename": "controllers\\DbController.js"
+                },
+                {
+                    "blank": 31,
+                    "code": 104,
+                    "comment": 0,
+                    "filename": "controllers\\item.js"
+                },
+                {
+                    "blank": 6,
+                    "code": 16,
+                    "comment": 0,
+                    "filename": "controllers\\log.js"
+                },
+                {
+                    "blank": 37,
+                    "code": 186,
+                    "comment": 126,
+                    "filename": "controllers\\quiz.js"
+                },
+                {
+                    "blank": 24,
+                    "code": 259,
+                    "comment": 25,
+                    "filename": "controllers\\student.js"
+                },
+                {
+                    "blank": 2,
+                    "code": 23,
+                    "comment": 1,
+                    "filename": "controllers\\temperature.js"
+                },
+                {
+                    "blank": 15,
+                    "code": 38,
+                    "comment": 27,
+                    "filename": "controllers\\video.js"
+                },
+                {
+                    "blank": 25,
+                    "code": 62,
+                    "comment": 23,
+                    "filename": "controllers\\video_upload.js"
+                },
+                {
+                    "filename": "downloads\\8b_sample-mp4-file.mp4",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "downloads\\SV_SampleVideo_1280x720_5mb.mp4",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 18,
+                    "code": 16,
+                    "comment": 23,
+                    "filename": "drop_tables.sql"
+                },
+                {
+                    "blank": 18,
+                    "code": 31,
+                    "comment": 19,
+                    "filename": "dump.sql"
+                },
+                {
+                    "filename": "gradle\\wrapper\\gradle-wrapper.jar",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 5,
+                    "comment": 1,
+                    "filename": "gradle\\wrapper\\gradle-wrapper.properties"
+                },
+                {
+                    "blank": 12,
+                    "code": 77,
+                    "comment": 1,
+                    "filename": "gradlew"
+                },
+                {
+                    "blank": 10,
+                    "code": 44,
+                    "comment": 0,
+                    "filename": "gradlew.bat"
+                },
+                {
+                    "blank": 0,
+                    "code": 5,
+                    "comment": 0,
+                    "filename": "index.html"
+                },
+                {
+                    "blank": 35,
+                    "code": 119,
+                    "comment": 40,
+                    "filename": "index.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0,
+                    "filename": "lms"
+                },
+                {
+                    "blank": 0,
+                    "code": 8,
+                    "comment": 0,
+                    "filename": "local.properties"
+                },
+                {
+                    "blank": 4,
+                    "code": 14439,
+                    "comment": 0,
+                    "filename": "package-lock.json"
+                },
+                {
+                    "blank": 0,
+                    "code": 37,
+                    "comment": 0,
+                    "filename": "package.json"
+                },
+                {
+                    "blank": 112,
+                    "code": 4124,
+                    "comment": 4500,
+                    "filename": "public\\1.pdf"
+                },
+                {
+                    "blank": 1,
+                    "code": 7,
+                    "comment": 0,
+                    "filename": "public\\stylesheets\\style.css"
+                },
+                {
+                    "filename": "public\\video\\subject_video\\8b_sample-mp4-file.mp4",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "README.md"
+                },
+                {
+                    "blank": 10,
+                    "code": 43,
+                    "comment": 5,
+                    "filename": "routes\\index.js"
+                },
+                {
+                    "blank": 6,
+                    "code": 15,
+                    "comment": 6,
+                    "filename": "undefined"
+                },
+                {
+                    "filename": "uploads\\video1.mkv",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 1,
+                    "code": 5,
+                    "comment": 0,
+                    "filename": "views\\error.pug"
+                },
+                {
+                    "blank": 1,
+                    "code": 4,
+                    "comment": 0,
+                    "filename": "views\\index.pug"
+                },
+                {
+                    "blank": 0,
+                    "code": 7,
+                    "comment": 0,
+                    "filename": "views\\layout.pug"
+                }
+            ]
+        }
+    ]
+}
