@@ -9,6 +9,7 @@ const copyFile = require("../controllers/copyFile");
 const video = require("../controllers/video");
 const db = require("../controllers/DbController");
 const temp = require("../controllers/temperature");
+const uploadFile = require("../controllers/upload");
 
 /* GET home page. */
 router.get("/", function (req, res, next) {
@@ -54,5 +55,64 @@ router.get("/api/check_student_status", student.check_student_status);
 router.post("/api/add_student", student.add_student);
 router.post("/api/add_student_attendance", student.add_student_attendance);
 router.get("/api/get_student", student.get_student);
+
+// admin app apis
+
+router.get("/api/get_all_quiz", quiz.get_all_quiz);
+router.get("/api/get_course", quiz.get_course);
+router.post("/api/add_course", quiz.add_course);
+router.post("/api/edit_course", quiz.edit_course);
+router.post("/api/delete_course", quiz.delete_course);
+router.get("/api/get_all_subject", quiz.get_all_subject);
+router.post(
+  "/api/add_subject",
+  uploadFile.uploadFile.single("file"),
+  quiz.add_subject
+);
+
+router.post("/api/edit_subject", quiz.edit_subject);
+router.post(
+  "/api/edit_subject_with_file",
+  uploadFile.uploadFile.single("file"),
+  quiz.edit_subject
+);
+router.post("/api/delete_subject", quiz.delete_subject);
+router.get("/api/get_note", quiz.get_note);
+router.post(
+  "/api/add_note",
+  uploadFile.uploadFile.single("file"),
+  quiz.add_note
+);
+router.post(
+  "/api/add_video",
+  uploadFile.uploadVideo.single("file"),
+  quiz.add_video
+);
+
+router.post("/api/edit_note", quiz.edit_note);
+router.post(
+  "/api/edit_note_with_file",
+  uploadFile.uploadFile.single("file"),
+  quiz.edit_note
+);
+
+router.post("/api/delete_note", quiz.delete_note);
+
+router.get("/api/get_all_video", quiz.get_all_video);
+
+router.post("/api/edit_video", quiz.edit_video);
+
+router.post(
+  "/api/edit_video_with_file",
+  uploadFile.uploadVideo.single("file"),
+  quiz.edit_video
+);
+router.post("/api/delete_video", quiz.delete_video);
+
+router.post("/api/delete_quiz", quiz.delete_quiz);
+router.post("/api/edit_quiz", quiz.edit_quiz);
+router.post("/api/add_quiz", quiz.add_quiz);
+router.post("/api/add_multiple_quiz", quiz.add_multiple_quiz);
+router.post("/api/admin_login", quiz.admin_login);
 
 module.exports = router;
