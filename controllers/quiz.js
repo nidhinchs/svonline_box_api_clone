@@ -735,7 +735,7 @@ exports.add_quiz = function (req, res) {
 
 exports.add_multiple_quiz = function (req, res) {
   let items = req.body;
-
+  console.log(items);
   var table_fields =
     "(subject_id,question,question_type,answer," +
     "option1,option2,option3,option4,option5," +

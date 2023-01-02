@@ -2,7 +2,8 @@ const util = require("util");
 const multer = require("multer");
 const maxSize_for_note = 2 * 1024 * 1024;
 const maxSize_for_video = 200 * 1024 * 1024;
-global.notes_path = "public/notes";
+let config = require("../config/config").config();
+global.notes_path = config.base_path + "public/notes";
 global.videoes_path = "public/videoes";
 
 let storage_for_file = multer.diskStorage({
