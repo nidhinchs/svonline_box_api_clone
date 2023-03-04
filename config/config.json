@@ -39,10 +39,10 @@
     },
     "_comment": "local db credentials",
     "import_db": {
-      "username" : "svonline",
+      "username" : "smit",
       "password" : "512",
       "database" : "lms",
-      "host" : "localhost"
+      "host" : "127.0.0.1"
     },
     "_comment": "remote admin machine credentials",
     "remote_server": {

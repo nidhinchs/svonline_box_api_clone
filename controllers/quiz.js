@@ -565,7 +565,8 @@ exports.add_video = function (req, res) {
 
   let obj = {
     subject_id: request.subject_id,
-    video_path: "videoes/" + req.file.originalname,
+    video_path:
+      "videoes/" + req.file.originalname.split(" ").join("_").toLowerCase(),
     video_name: request.video_name,
     video_extension: request.video_extension,
     video_desc: request.video_desc,
@@ -644,7 +645,8 @@ exports.edit_video = function (req, res) {
   } else {
     request = req.body.data;
     request = JSON.parse(request);
-    video_path = "videoes/" + req.file.originalname;
+    video_path =
+      "videoes/" + req.file.originalname.split(" ").join("_").toLowerCase();
   }
 
   let obj = {
