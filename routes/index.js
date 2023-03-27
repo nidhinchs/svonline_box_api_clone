@@ -48,12 +48,14 @@ router.get("/api/get_result_detail", quiz.get_result_detail);
 //student table
 
 router.get("/api/login", student.login);
+router.get("/api/signout", student.signout);
 router.post("/api/f_login", student.f_login);
 router.get("/api/get_profile", student.get_profile);
 router.get("/api/check_student_status", student.check_student_status);
 
 router.post("/api/add_student", student.add_student);
 router.post("/api/add_student_attendance", student.add_student_attendance);
+router.post("/api/call_reset_device", student.call_reset_device);
 router.get("/api/get_student", student.get_student);
 
 // admin app apis

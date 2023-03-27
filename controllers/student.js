@@ -16,49 +16,113 @@ function getCurrentDate() {
   return moment.tz(new Date(), "Asia/Kolkata").format("YYYY-MM-DD");
 }
 
+exports.signout = function (req, res) {
+  let student_id = req.query.student_id;
+
+  let obj = {
+    student_id: student_id,
+    log_name: "logout",
+    log_time: getCurrentDateTime(),
+    created_date: getCurrentDateTime(),
+  };
+
+  common.insert(obj, "student_log", function (call2) {
+    res.json(call2);
+  });
+};
+
 exports.login = function (req, res) {
   let student_username = req.query.student_username;
   let student_password = req.query.student_password;
+  let unique_id = req.query.unique_id;
 
-
-  common.selectAll("select * from student where student_username = '"+ student_username
-   + "' and student_password = '"+student_password +"'",
-    function (callback) {
-    console.log(callback);
-    if(callback.code == 200){
-
-      common.selectAll("select * from student where 1"+
-      " and start_date <='" +
-      getCurrentDate() +
-      "' and end_date >= '" +
-      getCurrentDate() +
+  common.selectAll(
+    "select * from student where student_username = '" +
+      student_username +
+      "' and student_password = '" +
+      student_password +
       "'",
-      function (callback) {
-        console.log(callback);
-        if(callback.code == 200){
-          res.json(callback);
-        }else{
-          res.json({
-            status:"error",
-            code:500,
-            error:"Your subscription is ended. please contact admin."    
-          });
-          
-        }
-        
+    function (callback) {
+      console.log(callback);
+      if (callback.code == 200) {
+        common.selectAll(
+          "select * from student where student_username = '" +
+            student_username +
+            "' and student_password = '" +
+            student_password +
+            "' and" +
+            " start_date <='" +
+            getCurrentDate() +
+            "' and end_date >= '" +
+            getCurrentDate() +
+            "'",
+          function (callback1) {
+            console.log(callback1);
+            if (callback1.code == 200) {
+              console.log(callback1.result[0].unique_id);
+              if (
+                callback1.result[0].unique_id == "" ||
+                callback1.result[0].unique_id == undefined
+              ) {
+                common.execute_query(
+                  "update student set unique_id = '" +
+                    unique_id +
+                    "' where student_username = '" +
+                    student_username +
+                    "' and student_password = '" +
+                    student_password +
+                    "'",
+                  function (call1) {
+                    let obj = {
+                      student_id: callback1.student_id,
+                      log_name: "login",
+                      log_time: getCurrentDateTime(),
+                      created_date: getCurrentDateTime(),
+                    };
+
+                    common.insert(obj, "student_log", function (call2) {
+                      res.json(callback1);
+                    });
+                  }
+                );
+              } else if (callback1.result[0].unique_id == unique_id) {
+                let obj = {
+                  student_id: callback1.student_id,
+                  log_name: "login",
+                  log_time: getCurrentDateTime(),
+                  created_date: getCurrentDateTime(),
+                };
+
+                common.insert(obj, "student_log", function (call2) {
+                  res.json(callback1);
+                });
+              } else {
+                res.json({
+                  status: "error",
+                  code: "500",
+                  error:
+                    "Your registered device id does not match. You previously login with some another device. Please contact admin for change device.",
+                });
+              }
+            } else {
+              res.json({
+                status: "error",
+                code: "500",
+                error: "Your subscription is ended. please contact admin.",
+              });
+            }
+          }
+        );
+      } else {
+        res.json({
+          status: "error",
+          code: "500",
+          error: "Your username or password is incorrect.",
+        });
       }
-      );
-
-    }else{
-      res.json({
-        status:"error",
-        code:500,
-        error:"Your username or password is incorrect."
-
-      });
+      // res.json(callback);
     }
-    // res.json(callback);
-  });
+  );
 
   // common.selectAll(
   //   "select * from student where student_username = '" +
@@ -284,6 +348,7 @@ exports.add_student = function (req, res) {
     }
   );
 };
+
 exports.add_student_attendance = function (req, res) {
   let result = req.body;
 
@@ -298,6 +363,19 @@ exports.add_student_attendance = function (req, res) {
     console.log(callback1);
     res.json(callback1);
   });
+};
+
+exports.call_reset_device = function (req, res) {
+  let result = req.body;
+
+  common.execute_query(
+    "update student set unique_id = NULL where student_id = " +
+      result.student_id,
+    function (callback1) {
+      console.log(callback1);
+      res.json(callback1);
+    }
+  );
 };
 
 exports.get_student = function (req, res) {
