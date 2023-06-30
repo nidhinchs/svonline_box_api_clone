@@ -23,7 +23,7 @@ exports.signout = function (req, res) {
     student_id: student_id,
     log_name: "logout",
     log_time: getCurrentDateTime(),
-    created_date: getCurrentDateTime(),
+    created_date: getCurrentDateTime()
   };
 
   common.insert(obj, "student_log", function (call2) {
@@ -77,7 +77,7 @@ exports.login = function (req, res) {
                       student_id: callback1.student_id,
                       log_name: "login",
                       log_time: getCurrentDateTime(),
-                      created_date: getCurrentDateTime(),
+                      created_date: getCurrentDateTime()
                     };
 
                     common.insert(obj, "student_log", function (call2) {
@@ -90,7 +90,7 @@ exports.login = function (req, res) {
                   student_id: callback1.student_id,
                   log_name: "login",
                   log_time: getCurrentDateTime(),
-                  created_date: getCurrentDateTime(),
+                  created_date: getCurrentDateTime()
                 };
 
                 common.insert(obj, "student_log", function (call2) {
@@ -101,14 +101,14 @@ exports.login = function (req, res) {
                   status: "error",
                   code: "500",
                   error:
-                    "Your registered device id does not match. You previously login with some another device. Please contact admin for change device.",
+                    "You previously login with some another device. Please contact admin for change device."
                 });
               }
             } else {
               res.json({
                 status: "error",
                 code: "500",
-                error: "Your subscription is ended. please contact admin.",
+                error: "Your subscription is ended. please contact admin."
               });
             }
           }
@@ -117,7 +117,7 @@ exports.login = function (req, res) {
         res.json({
           status: "error",
           code: "500",
-          error: "Your username or password is incorrect.",
+          error: "Your username or password is incorrect."
         });
       }
       // res.json(callback);
@@ -324,7 +324,7 @@ exports.add_student = function (req, res) {
     is_active: 1,
     is_delete: 1,
     created_by: result.f_id,
-    created_date: getCurrentDateTime(),
+    created_date: getCurrentDateTime()
   };
 
   common.select_first(
@@ -338,7 +338,7 @@ exports.add_student = function (req, res) {
         res.json({
           status: "error",
           code: "400",
-          error: "Student already exist with this username or contact number.",
+          error: "Student already exist with this username or contact number."
         });
       } else {
         common.insert(obj, "student", function (callback1) {
@@ -356,7 +356,7 @@ exports.add_student_attendance = function (req, res) {
     student_id: result.student_id,
     arriving_time: getCurrentDateTime(),
     created_by: result.f_id,
-    created_date: getCurrentDateTime(),
+    created_date: getCurrentDateTime()
   };
 
   common.insert(obj, "student_attendance", function (callback1) {

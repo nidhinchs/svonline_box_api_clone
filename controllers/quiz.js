@@ -303,7 +303,7 @@ exports.add_progress = function (req, res) {
     is_active: 1,
     is_delete: 1,
     created_by: result.student_id,
-    created_date: getCurrentDateTime(),
+    created_date: getCurrentDateTime()
   };
   common.insert(obj, "student_progress", function (callback1) {
     res.json(callback1);
@@ -323,7 +323,7 @@ exports.add_result = function (req, res) {
     is_active: 1,
     is_delete: 1,
     created_by: result.student_id,
-    created_date: getCurrentDateTime(),
+    created_date: getCurrentDateTime()
   };
 
   common.insert(obj, "quiz_result", function (callback1) {
@@ -355,7 +355,7 @@ function insert_result_detail(student_id, result_id, result_detail, callback) {
     is_delete: 0,
     is_active: 1,
     created_by: student_id,
-    created_date: getCurrentDateTime(),
+    created_date: getCurrentDateTime()
   };
   common.insert(obj, "quiz_result_detail", function (call) {
     console.log(call.code);
@@ -372,7 +372,7 @@ exports.add_course = function (req, res) {
     is_active: 1,
     is_delete: 0,
     created_by: request.admin_id == undefined ? null : request.admin_id,
-    created_date: getCurrentDateTime(),
+    created_date: getCurrentDateTime()
   };
 
   common.insert(obj, "course", function (callback1) {
@@ -389,7 +389,7 @@ exports.edit_course = function (req, res) {
     is_active: 1,
     is_delete: 0,
     modified_by: request.admin_id,
-    modified_date: getCurrentDateTime(),
+    modified_date: getCurrentDateTime()
   };
 
   common.update(
@@ -416,7 +416,7 @@ exports.delete_course = function (req, res) {
         res.json({
           status: "error",
           code: "400",
-          error: "First you have to delete all the subjects under the course.",
+          error: "First you have to delete all the subjects under the course."
         });
       } else {
         common.delete(
@@ -462,7 +462,7 @@ exports.add_subject = function (req, res) {
       is_active: 1,
       is_delete: 0,
       created_by: request.admin_id,
-      created_date: getCurrentDateTime(),
+      created_date: getCurrentDateTime()
     };
 
     common.insert(obj, "subject", function (callback1) {
@@ -471,7 +471,7 @@ exports.add_subject = function (req, res) {
   } else {
     res.json({
       code: "400",
-      error: "File can not be uploaded",
+      error: "File can not be uploaded"
     });
   }
 };
@@ -498,7 +498,7 @@ exports.edit_subject = function (req, res) {
     is_active: 1,
     is_delete: 0,
     modified_by: request.admin_id,
-    modified_date: getCurrentDateTime(),
+    modified_date: getCurrentDateTime()
   };
 
   common.update(
@@ -543,7 +543,7 @@ exports.add_note = async function (req, res) {
     is_active: 1,
     is_delete: 0,
     created_by: request.admin_id,
-    created_date: getCurrentDateTime(),
+    created_date: getCurrentDateTime()
   };
   console.log(obj);
 
@@ -573,7 +573,7 @@ exports.add_video = function (req, res) {
     is_active: 1,
     is_delete: 0,
     created_by: request.admin_id,
-    created_date: getCurrentDateTime(),
+    created_date: getCurrentDateTime()
   };
 
   console.log(obj);
@@ -605,7 +605,7 @@ exports.edit_note = function (req, res) {
     is_active: 1,
     is_delete: 0,
     modified_by: request.admin_id,
-    modified_date: getCurrentDateTime(),
+    modified_date: getCurrentDateTime()
   };
 
   console.log(obj);
@@ -658,7 +658,7 @@ exports.edit_video = function (req, res) {
     is_active: 1,
     is_delete: 0,
     modified_by: request.admin_id,
-    modified_date: getCurrentDateTime(),
+    modified_date: getCurrentDateTime()
   };
 
   common.update(
@@ -703,7 +703,7 @@ exports.edit_quiz = function (req, res) {
     is_active: 1,
     is_delete: 0,
     modified_by: request.admin_id,
-    modified_date: getCurrentDateTime(),
+    modified_date: getCurrentDateTime()
   };
 
   common.update(obj, "quiz_id", request.quiz_id, "quiz", function (callback1) {
@@ -727,7 +727,7 @@ exports.add_quiz = function (req, res) {
     is_active: 1,
     is_delete: 0,
     created_by: request.admin_id,
-    created_date: getCurrentDateTime(),
+    created_date: getCurrentDateTime()
   };
 
   common.insert(obj, "quiz", function (callback1) {
@@ -741,7 +741,7 @@ exports.add_multiple_quiz = function (req, res) {
   var table_fields =
     "(subject_id,question,question_type,answer," +
     "option1,option2,option3,option4,option5," +
-    "is_delete,is_active,created_by,created_date) ";
+    "is_delete,is_active,created_by,created_date)";
 
   var object_array = [
     items.map((item) => [
@@ -757,17 +757,17 @@ exports.add_multiple_quiz = function (req, res) {
       0,
       1,
       item.admin_id,
-      getCurrentDateTime(),
-    ]),
+      getCurrentDateTime()
+    ])
   ];
-
   var table = "quiz";
-
+  console.log(object_array);
   common.insert_multiple_rows(
     table_fields,
     object_array,
     table,
     function (callback1) {
+      console.log(callback1);
       res.json(callback1);
     }
   );

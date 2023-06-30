@@ -21,6 +21,7 @@ require("firebase/auth");
 require("firebase/firestore");
 
 var indexRouter = require("./routes/index");
+var syncDataRouter = require("./routes/sync_data");
 
 var app = express();
 app.use(cors());
