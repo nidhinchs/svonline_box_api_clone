@@ -107,7 +107,7 @@ exports.login = function (req, res) {
             } else {
               res.json({
                 status: "error",
-                code: "500",
+                code: "700",
                 error: "Your subscription is ended. please contact admin."
               });
             }

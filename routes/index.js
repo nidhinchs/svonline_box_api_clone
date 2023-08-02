@@ -32,6 +32,7 @@ router.get("/api/update_database_data", item.update_database_data);
 router.get("/api/copy_file", copyFile.copy_file);
 router.post("/api/upload_video", video.upload_video);
 router.get("/api/get_temperature", temp.get_temperature);
+router.get("/api/reboot", temp.reboot);
 // router.post('/upload',video.upload_file);
 
 //student data
@@ -116,5 +117,7 @@ router.post("/api/edit_quiz", quiz.edit_quiz);
 router.post("/api/add_quiz", quiz.add_quiz);
 router.post("/api/add_multiple_quiz", quiz.add_multiple_quiz);
 router.post("/api/admin_login", quiz.admin_login);
+
+router.post("/api/add_box_details",temp.add_box_details);
 
 module.exports = router;
