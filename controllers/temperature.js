@@ -40,17 +40,18 @@ exports.reboot = function (req, res) {
 
 exports.add_box_details = function (req, res) {
   let item = req.body;
+  console.log(item);
 
   common.select_first("select * from hbt limit 1", function (call1) {
     if (call1.code == 200) {
       if (
-        item.device_name != undefined &&
+        item.device_id != undefined &&
         call1.result.device_name != undefined
       ) {
-        if (item.device_name == call1.result.device_name) {
+        if (item.device_id == call1.result.device_name) {
           let obj = {
             f_id: item.f_id,
-            box_id: item.box_id,
+            box_id: item.device_id,
             f_name: item.f_name,
             f_phone: item.f_phone,
             f_email: item.f_email,
@@ -74,15 +75,21 @@ exports.add_box_details = function (req, res) {
         } else {
           res.json({
             code: "400",
-            status: "success",
+            status: "error",
             error: "Device does not match"
           });
         }
+      } else {
+        res.json({
+          code: "400",
+          status: "error",
+          error: "Device id does not found"
+        });
       }
     } else {
       res.json({
         code: "400",
-        status: "success",
+        status: "error",
         error:
           "This box does not having data for checking temperature and cpu usage. Please connect to the admin for verify."
       });

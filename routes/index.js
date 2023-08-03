@@ -16,7 +16,11 @@ router.get("/", function (req, res, next) {
   res.render("index", { title: "Express" });
 });
 router.get("/_health", (req, res) => {
-  res.status(200).send("ok");
+  res.json({
+    status: "success",
+    code: "200"
+  });
+  // res.status(200).send("ok");
 });
 //admin data
 router.get("/api/update_database", db.updateDatabase);
@@ -118,6 +122,6 @@ router.post("/api/add_quiz", quiz.add_quiz);
 router.post("/api/add_multiple_quiz", quiz.add_multiple_quiz);
 router.post("/api/admin_login", quiz.admin_login);
 
-router.post("/api/add_box_details",temp.add_box_details);
+router.post("/api/add_box_details", temp.add_box_details);
 
 module.exports = router;
