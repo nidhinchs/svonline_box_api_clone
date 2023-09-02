@@ -43,9 +43,10 @@ app.use(cookieParser());
 app.use(express.static(path.join(process.cwd(), config.base_path + "public")));
 
 app.use("/", indexRouter);
+app.use("/", syncDataRouter);
 app.use(
   upload({
-    limits: { filesize: 50 * 1024 * 1024 },
+    limits: { filesize: 50 * 1024 * 1024 }
   })
 );
 app.get("/upload", function (req, res) {
@@ -190,5 +191,5 @@ function onListening() {
 }
 
 module.exports = {
-  app,
+  app
 };

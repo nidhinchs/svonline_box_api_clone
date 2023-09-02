@@ -5,6 +5,7 @@ let config = require("../config/config").config();
 // Include the dependency we need.
 const { exec } = require("child_process");
 const { request } = require("http");
+const async = require("async");
 
 exports.update_video_data = function (req, res) {};
 
@@ -62,14 +63,13 @@ async function updateAllData(
     async function (call1) {
       if (call1.code == SUCCESS) {
         let response = {};
-        for (let i = 0; i < call1.result.length; i++) {
-          let item = call1.result[i];
 
+        async.eachSeries(call1.result, (item, next) => {
           console.log(
             "log_id----========================----->    " + item.log_id
           );
-          await doAction(item, function (call2) {
-            console.log("Do Action Result ------------->  " + call2.code);
+          doAction(item, function (call2) {
+            console.log("Do Action Result ------------->  " + call2);
             response = call2;
             console.log(response);
             if (call2.code == SUCCESS) {
@@ -79,13 +79,40 @@ async function updateAllData(
               i = call1.result.length;
               // callback(call2);
             }
-            // if (i == call1.result.length) {
-            //   callback(response);
-            //   return;
-            // }
+            if (item == call1.result[call1.result.length - 1]) {
+              console.log("--------------last item-----------------------");
+              callback(response);
+              return;
+            } else {
+              next();
+            }
           });
-        }
-        callback(response);
+        });
+
+        // for (let i = 0; i < call1.result.length; i++) {
+        //   let item = call1.result[i];
+
+        //   console.log(
+        //     "log_id----========================----->    " + item.log_id
+        //   );
+        //   await doAction(item, function (call2) {
+        //     console.log("Do Action Result ------------->  " + call2);
+        //     response = call2;
+        //     console.log(response);
+        //     if (call2.code == SUCCESS) {
+        //       storeUpdatedId(box_id, item.log_id);
+        //     } else {
+        //       console.log(call2.status);
+        //       i = call1.result.length;
+        //       // callback(call2);
+        //     }
+        //     // if (i == call1.result.length) {
+        //     //   callback(response);
+        //     //   return;
+        //     // }
+        //   });
+        // }
+        // callback(response);
 
         // callback(call1);
       } else {
@@ -98,7 +125,7 @@ async function updateAllData(
 function storeUpdatedId(box_id, log_id) {
   let obj = {
     box_id: box_id,
-    last_updated_log_id: log_id,
+    last_updated_log_id: log_id
   };
 
   admin_common.select_first(
@@ -125,20 +152,26 @@ function storeUpdatedId(box_id, log_id) {
 }
 
 async function doAction(item, callback) {
+  console.log("========go into DoAction ======================");
   if (item.action == "insert") {
+    console.log("insert");
     insert_data(item, function (call1) {
       callback(call1);
     });
   } else if (item.action == "update") {
+    console.log("update");
     update_data(item, function (call2) {
       console.log("update data ------------->" + call2.code);
 
       callback(call2);
     });
   } else if (item.action == "delete") {
+    console.log("delete");
     delete_data(item, function (call3) {
       callback(call3);
     });
+  } else {
+    callback();
   }
 }
 
@@ -211,7 +244,7 @@ const downloadFile = (url, callback) => {
 
     if (!fs.existsSync(`${downloadFolderPath}${foldername}`)) {
       fs.mkdirSync(`${downloadFolderPath}${foldername}`, {
-        recursive: true,
+        recursive: true
       });
     }
 
@@ -242,6 +275,7 @@ function insert_data(item, callback) {
     if (call1.code == SUCCESS) {
       if (item.table_name == "video" || item.table_name == "note") {
         downloadFile(call1.result.video_path, function (callback1) {
+          console.log(call1.result);
           if (callback1 == 200) {
             common.insert(call1.result, item.table_name, function (call2) {
               console.log(call2.status);
@@ -251,7 +285,7 @@ function insert_data(item, callback) {
             callback({
               code: 400,
               status: "error",
-              error: "Error in downloading the File",
+              error: "Error in downloading the File"
             });
           }
         });
@@ -279,7 +313,7 @@ function update_data(item, callback) {
   admin_common.select_first(query, function (call1) {
     if (call1.code == SUCCESS) {
       if (item.table_name == "video" || item.table_name == "note") {
-        fs.unlink(call2.result.video_path, function (err, result) {
+        fs.unlink(call1.result.video_path, function (err, result) {
           if (err) {
             console.log("error in deleting file ..........");
           } else {
@@ -299,12 +333,12 @@ function update_data(item, callback) {
                 callback({
                   code: 400,
                   status: "error",
-                  error: "Error in downloading the File",
+                  error: "Error in downloading the File"
                 });
               }
             });
           }
-          next(err, list);
+          // next(err, list);
         });
       } else {
         common.update(
@@ -328,7 +362,7 @@ function errorJsonObject() {
   return {
     code: 400,
     status: "error",
-    error: "Can not fetch data",
+    error: "Can not fetch data"
   };
 }
 
@@ -336,7 +370,7 @@ function showInternetError(res) {
   res.json({
     code: 400,
     status: "error",
-    error: "Internet connection is not available.",
+    error: "Internet connection is not available."
   });
 }
 
@@ -351,7 +385,7 @@ exports.ping = function (req, res) {
             let obj = {
               box_id: request.box_id,
               created_by: request.box_id,
-              created_date: getCurrentDateTime(),
+              created_date: getCurrentDateTime()
             };
             admin_common.insert(obj, "box_health", function (callback) {
               res.json(callback);
@@ -362,7 +396,7 @@ exports.ping = function (req, res) {
               status: "error",
               error:
                 "There are no box available in the admin with id = " +
-                request.box_id,
+                request.box_id
             });
           }
         }
@@ -371,7 +405,7 @@ exports.ping = function (req, res) {
       res.json({
         code: 400,
         status: "error",
-        error: "Internet connection is not available.",
+        error: "Internet connection is not available."
       });
     }
   });
@@ -462,8 +496,8 @@ function insert_subject_data(created_date, callback) {
           item.created_date,
           item.modified_by,
           item.modified_date,
-          item.ip_address,
-        ]),
+          item.ip_address
+        ])
       ];
 
       var table = "subject";
@@ -513,7 +547,7 @@ exports.updateDatabase = function (req, res) {
       console.log("error");
       res.json({
         code: ERROR,
-        error: "SOME ERROR OCCURED",
+        error: "SOME ERROR OCCURED"
       });
     }
   });
@@ -527,7 +561,7 @@ async function deleteAll(result, callback) {
   }
 
   callback({
-    code: SUCCESS,
+    code: SUCCESS
   });
 }
 
@@ -547,11 +581,11 @@ function deleteAllTables(call) {
       });
     } else if (callback.code == ERROR_EMPTY) {
       call({
-        code: SUCCESS,
+        code: SUCCESS
       });
     } else {
       call({
-        code: ERROR,
+        code: ERROR
       });
     }
   });
@@ -571,11 +605,11 @@ function deleteAllViews(call) {
       });
     } else if (call2.code == ERROR_EMPTY) {
       call({
-        code: SUCCESS,
+        code: SUCCESS
       });
     } else {
       call({
-        code: ERROR,
+        code: ERROR
       });
     }
   });

@@ -1,0 +1,51 @@
+const axios = require("axios");
+const fs = require("fs");
+const path = require("path");
+
+exports.download = async function (req, res) {
+
+    let url = req.query.url;
+ 
+    let type= req.query.type;
+    let downloadFolderPath = "./public/video/";
+    if(type ==1){
+        downloadFolderPath = "./public/video/";
+    }else{
+        downloadFolderPath = "./public/video/";
+    }
+const downloadFile = (url, callback) => {
+    return new Promise((resolve, reject) => {
+      const https = require("https");
+      let downloadFolderPath = "./public/video/";
+      console.log("url------------------>");
+      console.log(url);
+  
+      const splitUrl = url.split("/");
+      const filename = splitUrl[splitUrl.length - 1];
+      const foldername = splitUrl[splitUrl.length - 2];
+      const outputPath = `${downloadFolderPath}${foldername}/${filename}`;
+  
+      console.log(outputPath);
+  
+      const file = fs.createWriteStream(outputPath);
+  
+      if (!fs.existsSync(`${downloadFolderPath}${foldername}`)) {
+        fs.mkdirSync(`${downloadFolderPath}${foldername}`, {
+          recursive: true
+        });
+      }
+  
+      https.get(url, (res) => {
+        if (res.statusCode === 200) {
+          console.log("get success");
+          res.pipe(file).on("close", resolve);
+          callback(res.statusCode);
+        } else {
+          reject(res.statusCode);
+          callback(res.statusCode);
+          console.log("get error" + res.statusCode);
+        }
+      });
+    });
+  };
+};

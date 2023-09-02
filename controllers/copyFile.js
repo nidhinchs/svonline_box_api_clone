@@ -38,8 +38,8 @@ exports.download_files = function (req, res) {
             item.created_date,
             item.modified_by,
             item.modified_date,
-            item.ip_address,
-          ]),
+            item.ip_address
+          ])
         ];
 
         var table = "video";
@@ -81,7 +81,7 @@ function download_files(list, urls, callback) {
 
       if (!fs.existsSync(`${downloadFolderPath}${foldername}`)) {
         fs.mkdirSync(`${downloadFolderPath}${foldername}`, {
-          recursive: true,
+          recursive: true
         });
       }
 
@@ -138,7 +138,7 @@ exports.copy_file1 = function (req, res) {
       host: config.remote_server.host,
       username: config.remote_server.username,
       password: config.remote_server.password,
-      path: "/home/test/",
+      path: "/home/test/"
     },
     "./uploads/",
     function (err) {
@@ -168,7 +168,7 @@ async function test(scp, callback) {
       host: config.remote_server.host,
       port: 22,
       username: config.remote_server.username,
-      password: config.remote_server.password,
+      password: config.remote_server.password
       // privateKey: fs.readFileSync('./key.pem'),
       // passphrase: 'your key passphrase',
     });

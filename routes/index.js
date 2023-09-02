@@ -10,18 +10,28 @@ const video = require("../controllers/video");
 const db = require("../controllers/DbController");
 const temp = require("../controllers/temperature");
 const uploadFile = require("../controllers/upload");
+const add_data_to_box = require("../controllers/add_data_to_box");
 
 /* GET home page. */
 router.get("/", function (req, res, next) {
   res.render("index", { title: "Express" });
 });
+
 router.get("/_health", (req, res) => {
-  res.json({
-    status: "success",
-    code: "200"
-  });
-  // res.status(200).send("ok");
+  res.status(200).send("ok");
 });
+// router.get("/_health", (req, res) => {
+//   res.json({
+//     status: "success",
+//     code: "200"
+//   });
+//   // res.status(200).send("ok");
+// });
+
+router.get(
+  "/api/add_course_to_box_from_server",
+  add_data_to_box.add_course_to_box_from_server
+);
 //admin data
 router.get("/api/update_database", db.updateDatabase);
 router.get("/api/download_files", copyFile.download_files);
