@@ -69,7 +69,7 @@
     "import_db": {
       "username" : "root",
       "password" : "",
-      "database" : "svonline_box",
+      "database" : "lms",
       "host" : "localhost"
     },
     "remote_server": {

@@ -38,6 +38,8 @@ exports.reboot = function (req, res) {
   });
 };
 
+
+
 exports.add_box_details = function (req, res) {
   let item = req.body;
   console.log(item);

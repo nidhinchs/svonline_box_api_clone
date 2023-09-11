@@ -16,6 +16,8 @@ const filename = "course_data.sql";
 let video_urls = [];
 let note_urls = [];
 
+const { v4: uuidv4 } = require("uuid");
+
 exports.get_courses = function (req, res) {
   let query = "select * from course";
 
@@ -23,6 +25,8 @@ exports.get_courses = function (req, res) {
     res.json(call1);
   });
 };
+
+
 
 exports.add_course_to_box_from_server = function (req, res) {
   let item = req.query;
