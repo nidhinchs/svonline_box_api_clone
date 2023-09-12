@@ -13,6 +13,22 @@ exports.get_temperature = function (req, res) {
   });
 };
 
+exports.disable_access_point = function (req, res) {
+  exec(
+    `sudo systemctl disable dnsmasq && sudo systemctl disable hostapd`,
+    (err, stdout, stderr) => {
+      if (err) {
+        console.error(`exec error: ${err}`);
+        res.json({ code: "400", error: err });
+        return;
+      }
+      console.log(`stdout: ${stdout}`);
+      console.log(`stderr: ${stderr}`);
+      res.json({ result: stdout });
+    }
+  );
+};
+
 function check_temperature() {
   exec(`sudo vcgencmd measure_temp`, (err, stdout, stderr) => {
     if (err) {
@@ -37,8 +53,6 @@ exports.reboot = function (req, res) {
     res.json({ result: stdout });
   });
 };
-
-
 
 exports.add_box_details = function (req, res) {
   let item = req.body;

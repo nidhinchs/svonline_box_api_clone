@@ -118,8 +118,8 @@ const cron = require("node-cron");
 cron.schedule("*/15 * * * *", function () {
   // cron.schedule('* * * * * *', function() {
   console.log("running a check temperature of the device");
-  const site = require("./controllers/item");
-  site.check_temperature(function (callback) {
+  const site = require("./controllers/temperature");
+  site.get_temperature(function (callback) {
     //res.json(callback);
   });
 });
