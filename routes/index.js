@@ -28,10 +28,7 @@ router.get("/_health", (req, res) => {
 //   // res.status(200).send("ok");
 // });
 
-router.get(
-  "/api/add_course_to_box_from_server",
-  add_data_to_box.add_course_to_box_from_server
-);
+
 //admin data
 router.get("/api/update_database", db.updateDatabase);
 router.get("/api/download_files", copyFile.download_files);

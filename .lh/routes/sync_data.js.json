@@ -1,0 +1,26 @@
+{
+    "sourceFile": "routes/sync_data.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 2,
+            "patches": [
+                {
+                    "date": 1694589603808,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1694601802465,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -11,8 +11,9 @@\n router.get(\"/\", function (req, res, next) {\r\n   res.render(\"index\", { title: \"Express\" });\r\n });\r\n router.get(\"/_health\", (req, res) => {\r\n+  res.json\r\n   res.status(200).send(\"ok\");\r\n });\r\n //admin data\r\n router.get(\"/api/check_connection\", syncData.check_connection);\r\n"
+                },
+                {
+                    "date": 1694601898532,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -11,10 +11,10 @@\n router.get(\"/\", function (req, res, next) {\r\n   res.render(\"index\", { title: \"Express\" });\r\n });\r\n router.get(\"/_health\", (req, res) => {\r\n-  res.json\r\n-  res.status(200).send(\"ok\");\r\n+  \r\n+  res.status(\"200).send(\"ok\");\r\n });\r\n //admin data\r\n router.get(\"/api/check_connection\", syncData.check_connection);\r\n router.get(\"/api/download\", download.download);\r\n"
+                }
+            ],
+            "date": 1694589603808,
+            "name": "Commit-0",
+            "content": "var express = require(\"express\");\r\n\r\nvar router = express.Router();\r\n\r\nconst syncData = require(\"../controllers/syncData\");\r\nconst download = require(\"../controllers/download_file\");\r\nconst add_data_to_box = require(\"../controllers/add_data_to_box\");\r\nconst temp = require(\"../controllers/temperature\");\r\n\r\n/* GET home page. */\r\nrouter.get(\"/\", function (req, res, next) {\r\n  res.render(\"index\", { title: \"Express\" });\r\n});\r\nrouter.get(\"/_health\", (req, res) => {\r\n  res.status(200).send(\"ok\");\r\n});\r\n//admin data\r\nrouter.get(\"/api/check_connection\", syncData.check_connection);\r\nrouter.get(\"/api/download\", download.download);\r\nrouter.get(\"/api/get_server_courses\", add_data_to_box.get_courses);\r\n\r\nrouter.get(\"/api/disable_access_point\", temp.disable_access_point);\r\n\r\nmodule.exports = router;\r\n"
+        }
+    ]
+}

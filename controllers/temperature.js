@@ -112,3 +112,27 @@ exports.add_box_details = function (req, res) {
     }
   });
 };
+
+exports.disable_access_point1 = function (req, res) {
+  const { spawn } = require("child_process");
+
+  // Replace 'pythonScript.py' with the path to your Python script
+  const pythonScriptPath = "home/smit/public/Networks/access.py";
+
+  // Run the Python script
+  const pythonProcess = spawn("python", [pythonScriptPath]);
+
+  // Handle the output of the Python script (stdout and stderr)
+  pythonProcess.stdout.on("data", (data) => {
+    console.log(`Python stdout: ${data}`);
+  });
+
+  pythonProcess.stderr.on("data", (data) => {
+    console.error(`Python stderr: ${data}`);
+  });
+
+  // Handle the exit of the Python script
+  pythonProcess.on("close", (code) => {
+    console.log(`Python script exited with code ${code}`);
+  });
+};

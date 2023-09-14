@@ -1,0 +1,26 @@
+{
+    "sourceFile": "config/config.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 2,
+            "patches": [
+                {
+                    "date": 1694602188213,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1694607917375,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,7 +1,7 @@\n var env = require(\"../config/config.json\");\r\n \r\n exports.config = function () {\r\n-  var node_env = \"test\";\r\n-  var node_env = \"development\";\r\n+  // var node_env = \"test\";\r\n+  // var node_env = \"development\";\r\n   return env[node_env];\r\n };\r\n"
+                },
+                {
+                    "date": 1694607923627,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,7 +1,7 @@\n var env = require(\"../config/config.json\");\r\n \r\n exports.config = function () {\r\n   // var node_env = \"test\";\r\n-  // var node_env = \"development\";\r\n+  var node_env = \"development\";\r\n   return env[node_env];\r\n };\r\n"
+                }
+            ],
+            "date": 1694602188213,
+            "name": "Commit-0",
+            "content": "var env = require(\"../config/config.json\");\r\n\r\nexports.config = function () {\r\n  var node_env = \"test\";\r\n  var node_env = \"development\";\r\n  return env[node_env];\r\n};\r\n"
+        }
+    ]
+}

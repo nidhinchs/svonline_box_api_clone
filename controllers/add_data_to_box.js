@@ -18,6 +18,11 @@ let note_urls = [];
 
 const { v4: uuidv4 } = require("uuid");
 
+exports.download_course_with_course_id = function(req,res){
+  box_common.insert()
+}
+
+
 exports.get_courses = function (req, res) {
   let query = "select * from course";
 
@@ -25,8 +30,6 @@ exports.get_courses = function (req, res) {
     res.json(call1);
   });
 };
-
-
 
 exports.add_course_to_box_from_server = function (req, res) {
   let item = req.query;
@@ -333,20 +336,121 @@ function readFileAndAddToBox(callback) {
 
 function executeInsertQueriesSequentially(queries, callback) {
   async.eachSeries(queries, (query, next) => {
-    box_common.execute_query(query, function (call1) {
+    box_common.execute_query(query, async function (call1) {
       console.log(call1);
       if (queries[queries.length - 1] == query) {
-        callback({
-          code: "200",
-          status: "success",
-          result: {
-            video_urls: video_urls,
-            note_urls: note_urls
-          }
+        await downloadFiles(function (call1) {
+          callback(call1);
         });
+        // callback({
+        //   code: "200",
+        //   status: "success",
+        //   result: {
+        //     video_urls: video_urls,
+        //     note_urls: note_urls
+        //   }
+        // });
       } else {
         next();
       }
+    });
+  });
+}
+
+async function downloadFiles(callback) {
+  async.eachSeries(video_urls, (url, next) => {
+    new Promise((resolve, reject) => {
+      const https = require("https");
+      let downloadFolderPath = "./public/videoes/";
+      console.log("url------------------>");
+      console.log(url);
+
+      const splitUrl = url.split("/");
+      const filename = splitUrl[splitUrl.length - 1];
+      const foldername = splitUrl[splitUrl.length - 2];
+      const outputPath = `${downloadFolderPath}/${filename}`;
+
+      console.log(outputPath);
+
+      const file = fs.createWriteStream(outputPath);
+
+      if (!fs.existsSync(`${downloadFolderPath}`)) {
+        fs.mkdirSync(`${downloadFolderPath}`, {
+          recursive: true
+        });
+      }
+
+      https.get(url, (res) => {
+        if (res.statusCode === 200) {
+          console.log("get success");
+          res.pipe(file).on("close", resolve);
+
+          if (video_urls[video_urls.length - 1] == url) {
+            console.log("finish videoes");
+            downloadNoteFiles(function (call1) {
+              callback(call1);
+            });
+          } else {
+            console.log("next");
+            next();
+          }
+        } else {
+          reject(res.statusCode);
+          callback({
+            status: res.statusCode.toString(),
+            code: "400",
+            error: "there is some download error"
+          });
+          console.log("get error" + res.statusCode);
+        }
+      });
+    });
+  });
+}
+
+function downloadNoteFiles(callback) {
+  async.eachSeries(note_urls, (url, next) => {
+    new Promise((resolve, reject) => {
+      const https = require("https");
+      let downloadFolderPath = "./public/notes/";
+      console.log("url------------------>");
+      console.log(url);
+
+      const splitUrl = url.split("/");
+      const filename = splitUrl[splitUrl.length - 1];
+      const foldername = splitUrl[splitUrl.length - 2];
+      const outputPath = `${downloadFolderPath}/${filename}`;
+
+      console.log(outputPath);
+
+      const file = fs.createWriteStream(outputPath);
+
+      if (!fs.existsSync(`${downloadFolderPath}`)) {
+        fs.mkdirSync(`${downloadFolderPath}`, {
+          recursive: true
+        });
+      }
+
+      https.get(url, (res) => {
+        if (res.statusCode === 200) {
+          console.log("get success");
+          res.pipe(file).on("close", resolve);
+
+          if (note_urls[note_urls.length - 1] == url) {
+            callback({ code: "200", status: "success" });
+          } else {
+            next();
+          }
+        } else {
+          reject(res.statusCode);
+          callback({
+            status: res.statusCode.toString(),
+            code: "400",
+            error: "there is some download error"
+          });
+          console.log("get error" + res.statusCode);
+        }
+      });
     });
   });
 }
