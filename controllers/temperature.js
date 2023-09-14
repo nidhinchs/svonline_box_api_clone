@@ -117,7 +117,7 @@ exports.disable_access_point1 = function (req, res) {
   const { spawn } = require("child_process");
 
   // Replace 'pythonScript.py' with the path to your Python script
-  const pythonScriptPath = "home/smit/public/Networks/access.py";
+  const pythonScriptPath = "home/smit/Public/Networks/access.py";
 
   // Run the Python script
   const pythonProcess = spawn("python", [pythonScriptPath]);
