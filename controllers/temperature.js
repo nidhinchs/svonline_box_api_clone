@@ -125,9 +125,19 @@ exports.disable_access_point1 = function (req, res) {
   // Handle the output of the Python script (stdout and stderr)
   pythonProcess.stdout.on("data", (data) => {
     console.log(`Python stdout: ${data}`);
+    res.json({
+      code: "200",
+      status: "success",
+      result: `Python stdout: ${data}`
+    });
   });
 
   pythonProcess.stderr.on("data", (data) => {
+    res.json({
+      code: "400",
+      status: "error",
+      error: `Python stderr: ${data}`
+    });
     console.error(`Python stderr: ${data}`);
   });
 

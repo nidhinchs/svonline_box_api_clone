@@ -12,16 +12,44 @@ const notes_table = "note";
 const quiz_table = "quiz";
 
 const filename = "course_data.sql";
+const temp = require("../controllers/temperature");
 
 let video_urls = [];
 let note_urls = [];
+let update_id = 0;
 
 const { v4: uuidv4 } = require("uuid");
 
-exports.download_course_with_course_id = function(req,res){
-  box_common.insert()
-}
+exports.download_course_with_course_id = function (req, res) {
+  let id = req.query.course_id;
 
+  box_common.selectAll(
+    "select * from course_update_log where status=0",
+    function (call2) {
+      if (call2.code == 200) {
+        res.json({
+          code: "400",
+          status: "error",
+          error:
+            "There is one course downloading Request is pending. first complete it."
+        });
+      } else {
+        let item = {
+          course_id: id
+        };
+
+        box_common.insert(item, "course_update_log", function (call1) {
+          if (call1.code == 200) {
+            temp.disable_access_point1(req, res);
+            // res.json(call1);
+          } else {
+            res.json(call1);
+          }
+        });
+      }
+    }
+  );
+};
 
 exports.get_courses = function (req, res) {
   let query = "select * from course";
@@ -36,49 +64,54 @@ exports.add_course_to_box_from_server = function (req, res) {
 
   video_urls = [];
   note_urls = [];
+  update_id = 0;
 
-  const courseId = item.course_id;
-  if (courseId != undefined) {
-    let query = "";
-    const sqlStream = fs.createWriteStream(filename);
-
-    getCoursesInsertQuery(courseId, function (call1) {
+  box_common.select_first(
+    "select * from course_update_log where status = 0 order by created_date desc",
+    function (call1) {
       if (call1.code == 200) {
-        query += call1.result + "\n";
-        // sqlStream.write(call1.result + "\n");
+        const courseId = call1.result.course_id;
+        update_id = call1.result.update_id;
 
-        getSubjectsInsertQuery(courseId, function (call2) {
-          if (call2.code == 200) {
-            // console.log(call2);
-            query += call2.result;
-            // sqlStream.write(call2.result);
+        if (courseId != undefined) {
+          let query = "";
+          const sqlStream = fs.createWriteStream(filename);
 
-            // sqlStream.end();
-            fs.writeFileSync(filename, query);
+          getCoursesInsertQuery(courseId, function (call1) {
+            if (call1.code == 200) {
+              query += call1.result + "\n";
+              // sqlStream.write(call1.result + "\n");
 
-            readFileAndAddToBox(function (call3) {
-              res.json(call3);
-            });
-          } else {
-            // sqlStream.end();
-            fs.writeFileSync(filename, query);
-
-            readFileAndAddToBox(function (call3) {
-              res.json(call3);
-            });
-          }
-        });
+              getSubjectsInsertQuery(courseId, function (call2) {
+                if (call2.code == 200) {
+                  query += call2.result;
+                  fs.writeFileSync(filename, query);
+                  readFileAndAddToBox(function (call3) {
+                    res.json(call3);
+                  });
+                } else {
+                  fs.writeFileSync(filename, query);
+                  readFileAndAddToBox(function (call3) {
+                    res.json(call3);
+                  });
+                }
+              });
+            } else {
+              res.json(call1);
+            }
+          });
+        } else {
+          res.json({
+            code: "400",
+            error: "Please give me course Id.",
+            status: "error"
+          });
+        }
       } else {
         res.json(call1);
       }
-    });
-  } else {
-    res.json({
-      code: "400",
-      error: "Please give me course Id.",
-      status: "error"
-    });
-  }
+    }
+  );
 };
 
 function getCoursesInsertQuery(courseId, callback) {
@@ -339,17 +372,21 @@ function executeInsertQueriesSequentially(queries, callback) {
     box_common.execute_query(query, async function (call1) {
       console.log(call1);
       if (queries[queries.length - 1] == query) {
-        await downloadFiles(function (call1) {
-          callback(call1);
-        });
-        // callback({
-        //   code: "200",
-        //   status: "success",
-        //   result: {
-        //     video_urls: video_urls,
-        //     note_urls: note_urls
-        //   }
-        // });
+        if (video_urls.length > 0) {
+          await downloadFiles(function (call1) {
+            callback(call1);
+          });
+        } else {
+          if (note_urls.length > 0) {
+            downloadNoteFiles(function (call1) {
+              callback(call1);
+            });
+          } else {
+            update_log_status(function (call2) {
+              callback(call2);
+            });
+          }
+        }
       } else {
         next();
       }
@@ -387,9 +424,15 @@ async function downloadFiles(callback) {
 
           if (video_urls[video_urls.length - 1] == url) {
             console.log("finish videoes");
-            downloadNoteFiles(function (call1) {
-              callback(call1);
-            });
+            if (note_urls.length > 0) {
+              downloadNoteFiles(function (call1) {
+                callback(call1);
+              });
+            } else {
+              update_log_status(function (call2) {
+                callback(call2);
+              });
+            }
           } else {
             console.log("next");
             next();
@@ -406,6 +449,22 @@ async function downloadFiles(callback) {
       });
     });
   });
+}
+
+function update_log_status(callback) {
+  console.log("update_log_status");
+  let obj = {
+    status: 1
+  };
+  box_common.update(
+    obj,
+    "update_id",
+    update_id,
+    "course_update_log",
+    function (call1) {
+      callback(call1);
+    }
+  );
 }
 
 function downloadNoteFiles(callback) {
@@ -437,7 +496,9 @@ function downloadNoteFiles(callback) {
           res.pipe(file).on("close", resolve);
 
           if (note_urls[note_urls.length - 1] == url) {
-            callback({ code: "200", status: "success" });
+            update_log_status(function (call3) {
+              callback(call3);
+            });
           } else {
             next();
           }

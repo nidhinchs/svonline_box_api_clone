@@ -28,5 +28,9 @@ router.get(
   "/api/add_course_to_box_from_server",
   add_data_to_box.add_course_to_box_from_server
 );
+router.get(
+  "/api/download_course_with_course_id",
+  add_data_to_box.download_course_with_course_id
+);
 
 module.exports = router;

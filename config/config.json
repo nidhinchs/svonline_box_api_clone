@@ -54,6 +54,7 @@
     "_comment4": "folder for copy remote videoes and pdfs to local",
     "destination_path": "./uploads",
     "base_path": "/home/pi/sv_online/"
+    
   },
 
 
