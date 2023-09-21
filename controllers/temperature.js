@@ -117,7 +117,7 @@ exports.disable_access_point1 = function (req, res) {
   const { spawn } = require("child_process");
 
   // Replace 'pythonScript.py' with the path to your Python script
-  const pythonScriptPath = "../Public/Networks/access.py";
+  const pythonScriptPath = "../Public/Networks/connect.py";
 
   // Run the Python script
   const pythonProcess = spawn("python", [pythonScriptPath]);
@@ -146,11 +146,12 @@ exports.disable_access_point1 = function (req, res) {
     console.log(`Python script exited with code ${code}`);
   });
 };
+
 exports.enable_access_point = function (req, res) {
   const { spawn } = require("child_process");
 
   // Replace 'pythonScript.py' with the path to your Python script
-  const pythonScriptPath = "../Public/Networks/connect.py";
+  const pythonScriptPath = "../Public/Networks/access.py";
 
   // Run the Python script
   const pythonProcess = spawn("python", [pythonScriptPath]);
