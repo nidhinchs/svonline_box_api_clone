@@ -146,3 +146,36 @@ exports.disable_access_point1 = function (req, res) {
     console.log(`Python script exited with code ${code}`);
   });
 };
+exports.enable_access_point = function (req, res) {
+  const { spawn } = require("child_process");
+
+  // Replace 'pythonScript.py' with the path to your Python script
+  const pythonScriptPath = "../Public/Networks/connect.py";
+
+  // Run the Python script
+  const pythonProcess = spawn("python", [pythonScriptPath]);
+
+  // Handle the output of the Python script (stdout and stderr)
+  pythonProcess.stdout.on("data", (data) => {
+    console.log(`Python stdout: ${data}`);
+    res.json({
+      code: "200",
+      status: "success",
+      result: `Python stdout: ${data}`
+    });
+  });
+
+  pythonProcess.stderr.on("data", (data) => {
+    res.json({
+      code: "400",
+      status: "error",
+      error: `Python stderr: ${data}`
+    });
+    console.error(`Python stderr: ${data}`);
+  });
+
+  // Handle the exit of the Python script
+  pythonProcess.on("close", (code) => {
+    console.log(`Python script exited with code ${code}`);
+  });
+};

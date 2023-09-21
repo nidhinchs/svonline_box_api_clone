@@ -462,7 +462,13 @@ function update_log_status(callback) {
     update_id,
     "course_update_log",
     function (call1) {
-      callback(call1);
+      if (call1.code == 200) {
+        temp.enable_access_point(function (call2) {
+          callback(call2);
+        });
+      } else {
+        callback(call1);
+      }
     }
   );
 }
@@ -478,7 +484,7 @@ function downloadNoteFiles(callback) {
       const splitUrl = url.split("/");
       const filename = splitUrl[splitUrl.length - 1];
       const foldername = splitUrl[splitUrl.length - 2];
-      const outputPath = `${downloadFolderPath}/${filename}`;
+      const outputPath = `${downloadFolderPath}${filename}`;
 
       console.log(outputPath);
 
@@ -490,28 +496,38 @@ function downloadNoteFiles(callback) {
         });
       }
 
-      https.get(url, (res) => {
-        if (res.statusCode === 200) {
-          console.log("get success");
-          res.pipe(file).on("close", resolve);
+      try {
+        const urlObject = new URL(url);
+        https.get(urlObject, (res) => {
+          if (res.statusCode === 200) {
+            console.log("get success");
+            res.pipe(file).on("close", resolve);
 
-          if (note_urls[note_urls.length - 1] == url) {
-            update_log_status(function (call3) {
-              callback(call3);
-            });
+            if (note_urls[note_urls.length - 1] == url) {
+              update_log_status(function (call3) {
+                callback(call3);
+              });
+            } else {
+              next();
+            }
           } else {
-            next();
+            // reject(res.statusCode);
+            callback({
+              status: res.statusCode.toString(),
+              code: "400",
+              error: "there is some download error"
+            });
+            console.log("get error" + res.statusCode);
           }
-        } else {
-          reject(res.statusCode);
-          callback({
-            status: res.statusCode.toString(),
-            code: "400",
-            error: "there is some download error"
-          });
-          console.log("get error" + res.statusCode);
-        }
-      });
+        });
+      } catch (e) {
+        console.log(e);
+        callback({
+          status: "error",
+          code: "400",
+          error: e.code
+        });
+      }
     });
   });
 }
