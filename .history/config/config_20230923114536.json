@@ -30,30 +30,31 @@
 
 
   "development": {
-    "_comment": "remote admin db credentials for dev",
+    "_comment1": "remote admin db credentials for dev",
     "export_db": {
       "username" : "svonline",
-      "password" : "password",
+      "password" : "svonline@2255",
       "database" : "lms_admin",
       "host" : "139.59.77.113"
     },
-    "_comment": "local db credentials",
+    "_comment2": "local db credentials",
     "import_db": {
       "username" : "smit",
       "password" : "512",
       "database" : "lms",
       "host" : "127.0.0.1"
     },
-    "_comment": "remote admin machine credentials",
+    "_comment3": "remote admin machine credentials",
     "remote_server": {
       "host": "143.110.185.24",
       "username": "root",
       "password": "nidhi@2255Nchs"
     },
     "dumpFile":"dump.sql",
-    "_comment": "folder for copy remote videoes and pdfs to local",
+    "_comment4": "folder for copy remote videoes and pdfs to local",
     "destination_path": "./uploads",
-    "base_path": "/home/pi/sv_online/"
+    "base_path": "/"
+    
   },
 
 
@@ -61,7 +62,7 @@
 
   "test": {
     "export_db": {
-      "username" : "root",
+      "username" : "svonline",
       "password" : "svonline@2255",
       "database" : "lms_admin",
       "host" : "139.59.77.113"
