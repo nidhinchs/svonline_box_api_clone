@@ -114,6 +114,13 @@ app.set("port", port);
 
 var server = http.createServer(app);
 
+console.log("add data from server to the box starting...........");
+
+const b = require("./controllers/add_data_to_box");
+b.add_course_to_box_from_server(function (callback) {
+  console.log(callback);
+});
+
 const cron = require("node-cron");
 cron.schedule("*/15 * * * *", function () {
   // cron.schedule('* * * * * *', function() {
