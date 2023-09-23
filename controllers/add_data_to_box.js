@@ -59,8 +59,8 @@ exports.get_courses = function (req, res) {
   });
 };
 
-exports.add_course_to_box_from_server = function (req, res) {
-  let item = req.query;
+exports.add_course_to_box_from_server = function (callback) {
+  // let item = req.query;
 
   video_urls = [];
   note_urls = [];
@@ -87,32 +87,87 @@ exports.add_course_to_box_from_server = function (req, res) {
                   query += call2.result;
                   fs.writeFileSync(filename, query);
                   readFileAndAddToBox(function (call3) {
-                    res.json(call3);
+                    callback(call3);
                   });
                 } else {
                   fs.writeFileSync(filename, query);
                   readFileAndAddToBox(function (call3) {
-                    res.json(call3);
+                    callback(call3);
                   });
                 }
               });
             } else {
-              res.json(call1);
+              callback(call1);
             }
           });
         } else {
-          res.json({
+          callback({
             code: "400",
             error: "Please give me course Id.",
             status: "error"
           });
         }
       } else {
-        res.json(call1);
+        callback(call1);
       }
     }
   );
 };
+
+// exports.add_course_to_box_from_server = function (req, res) {
+//   let item = req.query;
+
+//   video_urls = [];
+//   note_urls = [];
+//   update_id = 0;
+
+//   box_common.select_first(
+//     "select * from course_update_log where status = 0 order by created_date desc",
+//     function (call1) {
+//       if (call1.code == 200) {
+//         const courseId = call1.result.course_id;
+//         update_id = call1.result.update_id;
+
+//         if (courseId != undefined) {
+//           let query = "";
+//           const sqlStream = fs.createWriteStream(filename);
+
+//           getCoursesInsertQuery(courseId, function (call1) {
+//             if (call1.code == 200) {
+//               query += call1.result + "\n";
+//               // sqlStream.write(call1.result + "\n");
+
+//               getSubjectsInsertQuery(courseId, function (call2) {
+//                 if (call2.code == 200) {
+//                   query += call2.result;
+//                   fs.writeFileSync(filename, query);
+//                   readFileAndAddToBox(function (call3) {
+//                     res.json(call3);
+//                   });
+//                 } else {
+//                   fs.writeFileSync(filename, query);
+//                   readFileAndAddToBox(function (call3) {
+//                     res.json(call3);
+//                   });
+//                 }
+//               });
+//             } else {
+//               res.json(call1);
+//             }
+//           });
+//         } else {
+//           res.json({
+//             code: "400",
+//             error: "Please give me course Id.",
+//             status: "error"
+//           });
+//         }
+//       } else {
+//         res.json(call1);
+//       }
+//     }
+//   );
+// };
 
 function getCoursesInsertQuery(courseId, callback) {
   if (courseId != undefined) {
