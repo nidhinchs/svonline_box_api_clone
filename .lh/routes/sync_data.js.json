@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 2,
+            "activePatchIndex": 3,
             "patches": [
                 {
                     "date": 1694589603808,
@@ -16,6 +16,10 @@
                 {
                     "date": 1694601898532,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -11,10 +11,10 @@\n router.get(\"/\", function (req, res, next) {\r\n   res.render(\"index\", { title: \"Express\" });\r\n });\r\n router.get(\"/_health\", (req, res) => {\r\n-  res.json\r\n-  res.status(200).send(\"ok\");\r\n+  \r\n+  res.status(\"200).send(\"ok\");\r\n });\r\n //admin data\r\n router.get(\"/api/check_connection\", syncData.check_connection);\r\n router.get(\"/api/download\", download.download);\r\n"
+                },
+                {
+                    "date": 1695649458385,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -11,15 +11,26 @@\n router.get(\"/\", function (req, res, next) {\r\n   res.render(\"index\", { title: \"Express\" });\r\n });\r\n router.get(\"/_health\", (req, res) => {\r\n-  \r\n-  res.status(\"200).send(\"ok\");\r\n+  res.status(\"200\").send(\"ok\");\r\n });\r\n //admin data\r\n router.get(\"/api/check_connection\", syncData.check_connection);\r\n router.get(\"/api/download\", download.download);\r\n router.get(\"/api/get_server_courses\", add_data_to_box.get_courses);\r\n \r\n-router.get(\"/api/disable_access_point\", temp.disable_access_point);\r\n+router.get(\"/api/disable_access_point\", temp.disable_access_point1);\r\n+router.get(\r\n+  \"/api/download_course_with_course_id\",\r\n+  add_data_to_box.download_course_with_course_id\r\n+);\r\n+router.get(\r\n+  \"/api/add_course_to_box_from_server\",\r\n+  add_data_to_box.add_course_to_box_from_server\r\n+);\r\n+router.get(\r\n+  \"/api/download_course_with_course_id\",\r\n+  add_data_to_box.download_course_with_course_id\r\n+);\r\n \r\n module.exports = router;\r\n"
                 }
             ],
             "date": 1694589603808,

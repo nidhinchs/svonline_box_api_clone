@@ -141,6 +141,42 @@ exports.login = function (req, res) {
   // );
 };
 
+exports.check_device_for_reset_pwd = function (req, res) {
+  let student_username = req.query.student_username;
+  let unique_id = req.query.unique_id;
+
+  common.selectAll(
+    "select * from student where student_username = '" +
+      student_username +
+      "' and unique_id = '" +
+      unique_id +
+      "'",
+    function (callback) {
+      console.log(callback);
+      res.json(callback);
+    }
+  );
+};
+
+exports.change_pwd = function (req, res) {
+  let student_username = req.query.student_username;
+  let student_password = req.query.student_password;
+
+  let obj = {
+    student_password: student_password
+  };
+
+  common.update(
+    obj,
+    "student_username",
+    student_username,
+    "student",
+    function (call1) {
+      res.json(call1);
+    }
+  );
+};
+
 exports.f_login = function (req, res) {
   let student_username = req.body.f_username;
   let student_password = req.body.f_password;

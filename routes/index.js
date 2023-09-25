@@ -28,7 +28,6 @@ router.get("/_health", (req, res) => {
 //   // res.status(200).send("ok");
 // });
 
-
 //admin data
 router.get("/api/update_database", db.updateDatabase);
 router.get("/api/download_files", copyFile.download_files);
@@ -60,6 +59,12 @@ router.get("/api/get_result_detail", quiz.get_result_detail);
 //student table
 
 router.get("/api/login", student.login);
+router.get(
+  "/api/check_device_for_reset_pwd",
+  student.check_device_for_reset_pwd
+);
+router.get("/api/change_pwd", student.change_pwd);
+
 router.get("/api/signout", student.signout);
 router.post("/api/f_login", student.f_login);
 router.get("/api/get_profile", student.get_profile);
@@ -130,6 +135,5 @@ router.post("/api/add_multiple_quiz", quiz.add_multiple_quiz);
 router.post("/api/admin_login", quiz.admin_login);
 
 router.post("/api/add_box_details", temp.add_box_details);
-
 
 module.exports = router;
