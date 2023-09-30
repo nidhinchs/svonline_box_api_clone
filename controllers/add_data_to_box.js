@@ -423,8 +423,12 @@ function readFileAndAddToBox(callback) {
 }
 
 function executeInsertQueriesSequentially(queries, callback) {
+  const sqlstring = require("sqlstring");
   async.eachSeries(queries, (query, next) => {
-    box_common.execute_query(query, async function (call1) {
+    const correctedQuery = sqlstring.format(query);
+
+    // console.log(query);
+    box_common.execute_query(correctedQuery, async function (call1) {
       console.log(call1);
       if (queries[queries.length - 1] == query) {
         if (video_urls.length > 0) {
@@ -459,12 +463,10 @@ async function downloadFiles(callback) {
 
       const splitUrl = url.split("/");
       const filename = splitUrl[splitUrl.length - 1];
-      const foldername = splitUrl[splitUrl.length - 2];
-      const outputPath = `${downloadFolderPath}/${filename}`;
+
+      const outputPath = `${downloadFolderPath}${filename}`;
 
       console.log(outputPath);
-
-      const file = fs.createWriteStream(outputPath);
 
       if (!fs.existsSync(`${downloadFolderPath}`)) {
         fs.mkdirSync(`${downloadFolderPath}`, {
@@ -472,26 +474,41 @@ async function downloadFiles(callback) {
         });
       }
 
-      https.get(url, (res) => {
+      const options = {
+        hostname: splitUrl[2], // Extract the hostname from the URL
+        path: `/${splitUrl.slice(3).join("/")}`, // Extract the path from the URL
+        followRedirects: true // Handle HTTP redirects
+      };
+
+      const file = fs.createWriteStream(outputPath);
+
+      const request = https.get(options, (res) => {
         if (res.statusCode === 200) {
           console.log("get success");
-          res.pipe(file).on("close", resolve);
+          res.pipe(file);
+          // res.pipe(file).on("close", resolve);
 
-          if (video_urls[video_urls.length - 1] == url) {
-            console.log("finish videoes");
-            if (note_urls.length > 0) {
-              downloadNoteFiles(function (call1) {
-                callback(call1);
-              });
-            } else {
-              update_log_status(function (call2) {
-                callback(call2);
-              });
-            }
-          } else {
-            console.log("next");
-            next();
-          }
+          file.on("finish", () => {
+            file.close(() => {
+              console.log(`Downloaded: ${filename}`);
+              resolve(); // Resolve the promise when download is complete
+              if (video_urls[video_urls.length - 1] == url) {
+                console.log("finish videoes");
+                if (note_urls.length > 0) {
+                  downloadNoteFiles(function (call1) {
+                    callback(call1);
+                  });
+                } else {
+                  update_log_status(function (call2) {
+                    callback(call2);
+                  });
+                }
+              } else {
+                console.log("next");
+                next();
+              }
+            });
+          });
         } else {
           reject(res.statusCode);
           callback({
@@ -501,6 +518,9 @@ async function downloadFiles(callback) {
           });
           console.log("get error" + res.statusCode);
         }
+      });
+      request.on("error", (error) => {
+        reject(`Download Error: ${error}`);
       });
     });
   });
@@ -538,12 +558,10 @@ function downloadNoteFiles(callback) {
 
       const splitUrl = url.split("/");
       const filename = splitUrl[splitUrl.length - 1];
-      const foldername = splitUrl[splitUrl.length - 2];
+
       const outputPath = `${downloadFolderPath}${filename}`;
 
       console.log(outputPath);
-
-      const file = fs.createWriteStream(outputPath);
 
       if (!fs.existsSync(`${downloadFolderPath}`)) {
         fs.mkdirSync(`${downloadFolderPath}`, {
@@ -551,29 +569,45 @@ function downloadNoteFiles(callback) {
         });
       }
 
+      const options = {
+        hostname: splitUrl[2], // Extract the hostname from the URL
+        path: `/${splitUrl.slice(3).join("/")}`, // Extract the path from the URL
+        followRedirects: true // Handle HTTP redirects
+      };
+      const file = fs.createWriteStream(outputPath);
       try {
-        const urlObject = new URL(url);
-        https.get(urlObject, (res) => {
-          if (res.statusCode === 200) {
-            console.log("get success");
-            res.pipe(file).on("close", resolve);
+        const request = https.get(options, (res) => {
+          res.pipe(file);
+          file.on("finish", () => {
+            file.close(() => {
+              console.log(`Downloaded: ${filename}`);
+              resolve(); // Resolve the promise when download is complete
+              if (res.statusCode === 200) {
+                console.log("get success");
+                res.pipe(file).on("close", resolve);
 
-            if (note_urls[note_urls.length - 1] == url) {
-              update_log_status(function (call3) {
-                callback(call3);
-              });
-            } else {
-              next();
-            }
-          } else {
-            // reject(res.statusCode);
-            callback({
-              status: res.statusCode.toString(),
-              code: "400",
-              error: "there is some download error"
+                if (note_urls[note_urls.length - 1] == url) {
+                  update_log_status(function (call3) {
+                    callback(call3);
+                  });
+                } else {
+                  next();
+                }
+              } else {
+                // reject(res.statusCode);
+                callback({
+                  status: res.statusCode.toString(),
+                  code: "400",
+                  error: "there is some download error"
+                });
+                console.log("get error" + res.statusCode);
+              }
             });
-            console.log("get error" + res.statusCode);
-          }
+          });
+        });
+
+        request.on("error", (error) => {
+          reject(`Download Error: ${error}`);
         });
       } catch (e) {
         console.log(e);

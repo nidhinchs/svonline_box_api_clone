@@ -63,7 +63,12 @@ router.get(
   "/api/check_device_for_reset_pwd",
   student.check_device_for_reset_pwd
 );
+router.get(
+  "/api/f_check_device_for_reset_pwd",
+  student.f_check_device_for_reset_pwd
+);
 router.get("/api/change_pwd", student.change_pwd);
+router.get("/api/f_change_pwd", student.f_change_pwd);
 
 router.get("/api/signout", student.signout);
 router.post("/api/f_login", student.f_login);
@@ -72,6 +77,11 @@ router.get("/api/check_student_status", student.check_student_status);
 
 router.post("/api/add_student", student.add_student);
 router.post("/api/add_student_attendance", student.add_student_attendance);
+router.get("/api/get_attendance_report", student.get_attendance_report);
+router.get(
+  "/api/get_attendance_report_by_student",
+  student.get_attendance_report_by_student
+);
 router.post("/api/call_reset_device", student.call_reset_device);
 router.get("/api/get_student", student.get_student);
 
@@ -135,5 +145,7 @@ router.post("/api/add_multiple_quiz", quiz.add_multiple_quiz);
 router.post("/api/admin_login", quiz.admin_login);
 
 router.post("/api/add_box_details", temp.add_box_details);
+
+//* attendance report
 
 module.exports = router;

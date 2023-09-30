@@ -157,6 +157,22 @@ exports.check_device_for_reset_pwd = function (req, res) {
     }
   );
 };
+exports.f_check_device_for_reset_pwd = function (req, res) {
+  let student_username = req.query.f_username;
+  let unique_id = req.query.unique_id;
+
+  common.selectAll(
+    "select * from franchise where f_username = '" +
+      student_username +
+      "' and unique_id = '" +
+      unique_id +
+      "'",
+    function (callback) {
+      console.log(callback);
+      res.json(callback);
+    }
+  );
+};
 
 exports.change_pwd = function (req, res) {
   let student_username = req.query.student_username;
@@ -176,10 +192,29 @@ exports.change_pwd = function (req, res) {
     }
   );
 };
+exports.f_change_pwd = function (req, res) {
+  let student_username = req.query.f_username;
+  let student_password = req.query.f_password;
+
+  let obj = {
+    f_password: student_password
+  };
+
+  common.update(
+    obj,
+    "f_username",
+    student_username,
+    "franchise",
+    function (call1) {
+      res.json(call1);
+    }
+  );
+};
 
 exports.f_login = function (req, res) {
   let student_username = req.body.f_username;
   let student_password = req.body.f_password;
+  let unique_id = req.body.unique_id;
 
   common.selectAll(
     "select * from franchise where f_username = '" +
@@ -187,9 +222,39 @@ exports.f_login = function (req, res) {
       "' and f_password = '" +
       student_password +
       "'",
-    function (callback) {
-      console.log(callback);
-      res.json(callback);
+    function (callback1) {
+      if (callback1.code == 200) {
+        console.log(callback1);
+        if (
+          callback1.result[0].unique_id == "" ||
+          callback1.result[0].unique_id == undefined
+        ) {
+          common.execute_query(
+            "update franchise set unique_id = '" +
+              unique_id +
+              "' where f_username = '" +
+              student_username +
+              "' and f_password = '" +
+              student_password +
+              "'",
+            function (call1) {
+              console.log(call1);
+              res.json(callback1);
+            }
+          );
+        } else if (callback1.result[0].unique_id == unique_id) {
+          res.json(callback1);
+        } else {
+          res.json({
+            status: "error",
+            code: "500",
+            error:
+              "You previously login with some another device. Please contact admin for change device."
+          });
+        }
+      } else {
+        res.json(callback1);
+      }
     }
   );
 };
@@ -401,6 +466,82 @@ exports.add_student_attendance = function (req, res) {
   });
 };
 
+exports.get_attendance_report = function (req, res) {
+  let item = req.query;
+
+  let start_date = item.start_date;
+  let end_date = item.end_date;
+
+  let query =
+    "SELECT  sa.student_id,  s.student_name," +
+    "DATEDIFF('" +
+    end_date +
+    "', '" +
+    start_date +
+    "') + 1 AS total_days,  " +
+    "COUNT(DISTINCT CASE WHEN sa.arriving_time IS NOT NULL THEN DATE(sa.created_date) END) AS present_days, " +
+    " (DATEDIFF('" +
+    end_date +
+    "', '" +
+    start_date +
+    "') + 1 - COUNT(DISTINCT CASE WHEN sa.arriving_time IS NOT NULL THEN DATE(sa.created_date) END)) AS absent_days, " +
+    " (COUNT(DISTINCT CASE WHEN sa.arriving_time IS NOT NULL THEN DATE(sa.created_date) END) / (DATEDIFF('" +
+    end_date +
+    "', '" +
+    start_date +
+    "') + 1)) * 100 AS percentage " +
+    "FROM  student_attendance AS sa JOIN   student AS s ON   sa.student_id = s.student_id WHERE  DATE(sa.created_date) BETWEEN '" +
+    start_date +
+    "' AND '" +
+    end_date +
+    "' GROUP BY  sa.student_id, s.student_name";
+  common.selectAll(query, function (call1) {
+    res.json(call1);
+  });
+};
+
+exports.get_attendance_report_by_student = function (req, res) {
+  let item = req.query;
+
+  let start_date = item.start_date;
+  let end_date = item.end_date;
+  let student_id = item.student_id;
+
+  let query =
+    "SELECT    sa.student_id,   s.student_name,   DATE(sa.created_date) AS attendance_date,   sa.arriving_time,   sa.leaving_time " +
+    "FROM " +
+    "student_attendance AS sa JOIN " +
+    " student  s" +
+    " ON" +
+    "  sa.student_id = s.student_id " +
+    "WHERE " +
+    "  sa.student_id = '" +
+    student_id +
+    "'" +
+    "AND DATE(sa.created_date) BETWEEN '" +
+    start_date +
+    "' AND '" +
+    end_date +
+    "'" +
+    "ORDER BY attendance_date";
+
+  let query1 =
+    "SELECT d.date AS attendance_date,s.student_id,s.student_name,sa.arriving_time FROM" +
+    "(SELECT  DATE('" +
+    start_date +
+    "' + INTERVAL (a.a + (10 * b.a) + (100 * c.a)) DAY) AS date FROM( SELECT 0 AS a UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) AS a        CROSS JOIN(SELECT 0 AS a UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) AS b CROSS JOIN(                SELECT 0 AS a UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL                SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9            ) AS c    ) AS d LEFT JOIN    student AS s ON     s.student_id = '" +
+    student_id +
+    "' LEFT JOIN    student_attendance AS sa ON     s.student_id = sa.student_id      AND DATE(sa.created_date) = d.date WHERE     d.date BETWEEN '" +
+    start_date +
+    "' AND '" +
+    end_date +
+    "' ORDER BY     d.date;";
+
+  common.selectAll(query1, function (call1) {
+    res.json(call1);
+  });
+};
+
 exports.call_reset_device = function (req, res) {
   let result = req.body;
 
@@ -415,7 +556,9 @@ exports.call_reset_device = function (req, res) {
 };
 
 exports.get_student = function (req, res) {
-  common.selectAll("select * from student ", function (callback) {
+  let query =
+    "SELECT  s.*,  a.arriving_time FROM  student AS s LEFT JOIN  student_attendance AS a ON  s.student_id = a.student_id  AND DATE(a.created_date) = CURDATE();";
+  common.selectAll(query, function (callback) {
     console.log(callback.code);
     res.json(callback);
   });
