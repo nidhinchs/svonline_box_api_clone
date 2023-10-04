@@ -1,17 +1,17 @@
 const { exec } = require("child_process");
 let common = require("./common");
 
-exports.get_temperature = function (req, res) {
-  exec(`sudo vcgencmd measure_temp`, (err, stdout, stderr) => {
-    if (err) {
-      console.error(`exec error: ${err}`);
-      return;
-    }
-    console.log(`stdout: ${stdout}`);
-    console.log(`stderr: ${stderr}`);
-    res.json({ result: stdout });
-  });
-};
+// exports.get_temperature = function (req, res) {
+//   exec(`sudo vcgencmd measure_temp`, (err, stdout, stderr) => {
+//     if (err) {
+//       console.error(`exec error: ${err}`);
+//       return;
+//     }
+//     console.log(`stdout: ${stdout}`);
+//     console.log(`stderr: ${stderr}`);
+//     res.json({ result: stdout });
+//   });
+// };
 
 exports.disable_access_point = function (req, res) {
   exec(
@@ -24,7 +24,7 @@ exports.disable_access_point = function (req, res) {
       }
       console.log(`stdout: ${stdout}`);
       console.log(`stderr: ${stderr}`);
-      res.json({ result: stdout });
+      // res.json({ result: stdout });
     }
   );
 };
@@ -50,7 +50,7 @@ exports.reboot = function (req, res) {
     }
     console.log(`stdout: ${stdout}`);
     console.log(`stderr: ${stderr}`);
-    res.json({ result: stdout });
+    // res.json({ result: stdout });
   });
 };
 
