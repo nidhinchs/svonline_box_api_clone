@@ -32,5 +32,6 @@ router.get(
   "/api/download_course_with_course_id",
   add_data_to_box.download_course_with_course_id
 );
+router.get("/api/download_old_course", add_data_to_box.download_old_course);
 
 module.exports = router;

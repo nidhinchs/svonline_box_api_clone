@@ -20,6 +20,23 @@ let update_id = 0;
 
 const { v4: uuidv4 } = require("uuid");
 
+exports.download_old_course = function (req, res) {
+  box_common.selectAll(
+    "select * from course_update_log where status=0",
+    function (call2) {
+      if (call2.code == 200) {
+        temp.disable_access_point1(req, res);
+      } else {
+        res.json({
+          code: "400",
+          status: "error",
+          error: "No courses are remaining to download."
+        });
+      }
+    }
+  );
+};
+
 exports.download_course_with_course_id = function (req, res) {
   let id = req.query.course_id;
 
@@ -28,7 +45,7 @@ exports.download_course_with_course_id = function (req, res) {
     function (call2) {
       if (call2.code == 200) {
         res.json({
-          code: "400",
+          code: "600",
           status: "error",
           error:
             "There is one course downloading Request is pending. first complete it."

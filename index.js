@@ -121,15 +121,15 @@ b.add_course_to_box_from_server(function (callback) {
   console.log(callback);
 });
 
-const cron = require("node-cron");
-cron.schedule("*/15 * * * *", function () {
-  // cron.schedule('* * * * * *', function() {
-  console.log("running a check temperature of the device");
-  const site = require("./controllers/temperature");
-  site.get_temperature(function (callback) {
-    //res.json(callback);
-  });
-});
+// const cron = require("node-cron");
+// cron.schedule("*/15 * * * *", function () {
+//   // cron.schedule('* * * * * *', function() {
+//   console.log("running a check temperature of the device");
+//   const site = require("./controllers/temperature");
+//   site.get_temperature(function (callback) {
+//     //res.json(callback);
+//   });
+// });
 
 /**
  * Listen on provided port, on all network interfaces.
