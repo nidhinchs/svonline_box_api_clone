@@ -20,7 +20,7 @@
     },
     "dumpFile": "dump.sql",
     "destination_path": "./uploads",
-    "base_path": "/home/pi/sv_online/"
+    "base_path": "/"
   },
   "development": {
     "_comment1": "remote admin db credentials for dev",
