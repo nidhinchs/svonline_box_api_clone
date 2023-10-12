@@ -28,10 +28,6 @@ router.get("/_health", (req, res) => {
 //   // res.status(200).send("ok");
 // });
 
-router.get(
-  "/api/add_course_to_box_from_server",
-  add_data_to_box.add_course_to_box_from_server
-);
 //admin data
 router.get("/api/update_database", db.updateDatabase);
 router.get("/api/download_files", copyFile.download_files);
@@ -45,7 +41,7 @@ router.get("/api/update_course", db.update_course);
 router.get("/api/update_database_data", item.update_database_data);
 router.get("/api/copy_file", copyFile.copy_file);
 router.post("/api/upload_video", video.upload_video);
-router.get("/api/get_temperature", temp.get_temperature);
+// router.get("/api/get_temperature", temp.get_temperatuverifyre);
 router.get("/api/reboot", temp.reboot);
 // router.post('/upload',video.upload_file);
 
@@ -63,6 +59,17 @@ router.get("/api/get_result_detail", quiz.get_result_detail);
 //student table
 
 router.get("/api/login", student.login);
+router.get(
+  "/api/check_device_for_reset_pwd",
+  student.check_device_for_reset_pwd
+);
+router.get(
+  "/api/f_check_device_for_reset_pwd",
+  student.f_check_device_for_reset_pwd
+);
+router.get("/api/change_pwd", student.change_pwd);
+router.get("/api/f_change_pwd", student.f_change_pwd);
+
 router.get("/api/signout", student.signout);
 router.post("/api/f_login", student.f_login);
 router.get("/api/get_profile", student.get_profile);
@@ -70,6 +77,11 @@ router.get("/api/check_student_status", student.check_student_status);
 
 router.post("/api/add_student", student.add_student);
 router.post("/api/add_student_attendance", student.add_student_attendance);
+router.get("/api/get_attendance_report", student.get_attendance_report);
+router.get(
+  "/api/get_attendance_report_by_student",
+  student.get_attendance_report_by_student
+);
 router.post("/api/call_reset_device", student.call_reset_device);
 router.get("/api/get_student", student.get_student);
 
@@ -132,8 +144,8 @@ router.post("/api/add_quiz", quiz.add_quiz);
 router.post("/api/add_multiple_quiz", quiz.add_multiple_quiz);
 router.post("/api/admin_login", quiz.admin_login);
 
-router.post("/api/add_box_details", temp.add_box_details);
-router.post("/api/get_merchant_id", add_data_to_box.get_merchant_id);
-router.post("/api/generate_order_id", add_data_to_box.generate_order_id);
+router.post("/api/add_box_details", quiz.add_box_details);
+
+//* attendance report
 
 module.exports = router;
