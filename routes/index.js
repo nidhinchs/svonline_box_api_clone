@@ -11,6 +11,7 @@ const db = require("../controllers/DbController");
 const temp = require("../controllers/temperature");
 const uploadFile = require("../controllers/upload");
 const add_data_to_box = require("../controllers/add_data_to_box");
+const commands = require("../controllers/commands");
 
 /* GET home page. */
 router.get("/", function (req, res, next) {
@@ -145,6 +146,10 @@ router.post("/api/add_multiple_quiz", quiz.add_multiple_quiz);
 router.post("/api/admin_login", quiz.admin_login);
 
 router.post("/api/add_box_details", quiz.add_box_details);
+
+router.post("/api/add_wifi_cred", commands.add_wifi_cred);
+router.post("/api/shut_down", commands.shut_down);
+router.post("/api/reboot", commands.reboot);
 
 //* attendance report
 

@@ -32,7 +32,7 @@ exports.insert = function (object, table, callback) {
         callback({
           status: "success",
           code: SUCCESS,
-          cust_id: results.insertId,
+          cust_id: results.insertId
         });
         console.log(callback);
       }
@@ -227,7 +227,7 @@ exports.insert_multiple_rows = function (
       callback({
         status: "success",
         code: SUCCESS,
-        id: results.insertId,
+        id: results.insertId
       });
       console.log(callback);
     }
