@@ -1,5 +1,6 @@
 const fs = require("fs");
 const wpaConfigPath = "/etc/wpa_supplicant/wpa_supplicant.conf";
+const { exec } = require("child_process");
 
 exports.add_wifi_cred = function (req, res) {
   const wifiCredentials = req.body;
