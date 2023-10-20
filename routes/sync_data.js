@@ -17,7 +17,7 @@ router.get("/_health", (req, res) => {
 //admin data
 router.get("/api/check_connection", syncData.check_connection);
 router.get("/api/download", download.download);
-router.get("/api/get_server_courses", add_data_to_box.get_courses);
+// router.get("/api/get_server_courses", add_data_to_box.get_courses);
 
 router.get("/api/disable_access_point", temp.disable_access_point1);
 router.get(

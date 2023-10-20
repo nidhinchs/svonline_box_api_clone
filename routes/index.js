@@ -10,7 +10,7 @@ const video = require("../controllers/video");
 const db = require("../controllers/DbController");
 const temp = require("../controllers/temperature");
 const uploadFile = require("../controllers/upload");
-const add_data_to_box = require("../controllers/add_data_to_box");
+const add_data_to_box = require("../controllers/add_data_to_box1");
 const commands = require("../controllers/commands");
 
 /* GET home page. */

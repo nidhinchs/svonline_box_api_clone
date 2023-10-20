@@ -1,8 +1,10 @@
 const fs = require("fs");
 let box_common = require("./common");
-let common = require("./admin_common");
+// let common = require("./admin_common");
 const async = require("async");
 const path = require("path");
+
+const axios = require("axios");
 
 const course_table = "course";
 
@@ -12,11 +14,18 @@ const notes_table = "note";
 const quiz_table = "quiz";
 
 const filename = "course_data.sql";
-const temp = require("../controllers/temperature");
+const temp = require("./temperature");
 
 let video_urls = [];
 let note_urls = [];
 let update_id = 0;
+
+let baseurl = "http://64.227.184.42:3003/api/";
+let course_url = "get_course_by_course_id?course_id=";
+let subject_url = "get_course_by_course_id?course_id=";
+let video_url = "get_course_by_course_id?subject_id=";
+let note_url = "get_course_by_course_id?subject_id=";
+let quiz_url = "get_course_by_course_id?subject_id=";
 
 const { v4: uuidv4 } = require("uuid");
 
@@ -68,13 +77,13 @@ exports.download_course_with_course_id = function (req, res) {
   );
 };
 
-exports.get_courses = function (req, res) {
-  let query = "select * from course";
+// exports.get_courses = function (req, res) {
+//   let query = "select * from course";
 
-  common.selectAll(query, function (call1) {
-    res.json(call1);
-  });
-};
+//   common.selectAll(query, function (call1) {
+//     res.json(call1);
+//   });
+// };
 
 exports.add_course_to_box_from_server = function (callback) {
   // let item = req.query;
@@ -94,9 +103,9 @@ exports.add_course_to_box_from_server = function (callback) {
           let query = "";
           const sqlStream = fs.createWriteStream(filename);
 
-          getCoursesInsertQuery(courseId, function (call1) {
-            if (call1.code == 200) {
-              query += call1.result + "\n";
+          getCoursesInsertQuery(courseId, function (call4) {
+            if (call4.code == 200) {
+              query += call4.result + "\n";
               // sqlStream.write(call1.result + "\n");
 
               getSubjectsInsertQuery(courseId, function (call2) {
@@ -104,28 +113,28 @@ exports.add_course_to_box_from_server = function (callback) {
                   query += call2.result;
                   fs.writeFileSync(filename, query);
                   readFileAndAddToBox(function (call3) {
-                    callback(call3);
+                    // callback(call3);
                   });
                 } else {
                   fs.writeFileSync(filename, query);
                   readFileAndAddToBox(function (call3) {
-                    callback(call3);
+                    // callback(call3);
                   });
                 }
               });
             } else {
-              callback(call1);
+              // callback(call4);
             }
           });
         } else {
-          callback({
-            code: "400",
-            error: "Please give me course Id.",
-            status: "error"
-          });
+          // callback({
+          //   code: "400",
+          //   error: "Please give me course Id.",
+          //   status: "error"
+          // });
         }
       } else {
-        callback(call1);
+        // callback(call1);
       }
     }
   );
@@ -190,231 +199,261 @@ function getCoursesInsertQuery(courseId, callback) {
   if (courseId != undefined) {
     const sqlStream = fs.createWriteStream("course_data.sql");
 
-    const selectCourseQuery = `SELECT * FROM course WHERE course_id = ${courseId}`;
+    axios
+      .get(baseurl + course_url + courseId)
+      .then(function (courseResult) {
+        // Handle the successful response here
+        if (courseResult.code == 200) {
+          const course = courseResult.result;
 
-    common.select_first(selectCourseQuery, function (courseResult) {
-      if (courseResult.code == 200) {
-        const course = courseResult.result;
+          // Generate insert query for the course
+          const courseColumns = Object.keys(course).join(",");
+          const courseValues = Object.values(course)
+            .map((value) => (value === null ? "NULL" : `'${value}'`))
+            .join(",");
+          const courseInsertQuery =
+            `INSERT INTO course (${courseColumns}) VALUES (${courseValues});` +
+            "\n";
 
-        // Generate insert query for the course
-        const courseColumns = Object.keys(course).join(",");
-        const courseValues = Object.values(course)
-          .map((value) => (value === null ? "NULL" : `'${value}'`))
-          .join(",");
-        const courseInsertQuery =
-          `INSERT INTO course (${courseColumns}) VALUES (${courseValues});` +
-          "\n";
-
-        callback({
-          code: "200",
-          status: "success",
-          result: courseInsertQuery
-        });
-      } else {
+          callback({
+            code: "200",
+            status: "success",
+            result: courseInsertQuery
+          });
+        } else {
+          callback({
+            code: "400",
+            error: `Failed to fetch ${course_table}:` + courseResult.error,
+            status: "error"
+          });
+          console.log(`Failed to fetch ${course_table}:`, courseResult.error);
+        }
+        // console.log('Response data:', response.data);
+      })
+      .catch(function (error) {
         callback({
           code: "400",
-          error: `Failed to fetch ${course_table}:` + courseResult.error,
+          error: `Failed to fetch course:`,
           status: "error"
         });
-        console.log(`Failed to fetch ${course_table}:`, courseResult.error);
-      }
-    });
+        // Handle any errors that occurred during the request
+        console.error("Error:", error);
+      });
   }
 }
 
 function getSubjectsInsertQuery(courseId, callback) {
-  const selectSubjectsQuery = `SELECT * FROM ${subject_table} WHERE course_id = ${courseId}`;
-  common.selectAll(selectSubjectsQuery, function (result) {
-    if (result.code == 200) {
-      const subjects = result.result;
+  axios
+    .get(baseurl + subject_url + courseId)
+    .then(function (result) {
+      if (result.code == 200) {
+        const subjects = result.result;
 
-      let insertQueries = subjects
-        .map((subject) => {
-          const videoFileName = path.basename(subject.note_url);
+        let insertQueries = subjects
+          .map((subject) => {
+            const videoFileName = path.basename(subject.note_url);
 
-          if (videoFileName != "") {
-            note_urls.push(subject.note_url);
-            subject.note_url = `notes/${videoFileName}`;
-          }
-
-          const columns = Object.keys(subject).join(",");
-          const values = Object.values(subject)
-            .map((value) => (value === null ? "NULL" : `'${value}'`))
-            .join(",");
-          return `INSERT INTO ${subject_table} (${columns}) VALUES (${values});`;
-        })
-        .join("\n");
-
-      console.log(insertQueries);
-
-      getVideoInsertQuery(subjects, function (call1) {
-        if (call1.code == 200) {
-          insertQueries += call1.result;
-        }
-        getNotesInsertQuery(subjects, function (call2) {
-          if (call2.code == 200) {
-            insertQueries += call2.result;
-          }
-
-          getQuizInsertQuery(subjects, function (call3) {
-            if (call3.code == 200) {
-              insertQueries += call3.result;
+            if (videoFileName != "") {
+              note_urls.push(subject.note_url);
+              subject.note_url = `notes/${videoFileName}`;
             }
-            callback({
-              code: "200",
-              status: "success",
-              result: insertQueries
+
+            const columns = Object.keys(subject).join(",");
+            const values = Object.values(subject)
+              .map((value) => (value === null ? "NULL" : `'${value}'`))
+              .join(",");
+            return `INSERT INTO ${subject_table} (${columns}) VALUES (${values});`;
+          })
+          .join("\n");
+
+        console.log(insertQueries);
+
+        getVideoInsertQuery(subjects, function (call1) {
+          if (call1.code == 200) {
+            insertQueries += call1.result;
+          }
+          getNotesInsertQuery(subjects, function (call2) {
+            if (call2.code == 200) {
+              insertQueries += call2.result;
+            }
+
+            getQuizInsertQuery(subjects, function (call3) {
+              if (call3.code == 200) {
+                insertQueries += call3.result;
+              }
+              callback({
+                code: "200",
+                status: "success",
+                result: insertQueries
+              });
             });
           });
         });
-      });
 
-      //   callback({
-      //     code: "200",
-      //     status: "success",
-      //     result: insertQueries
-      //   });
-    } else {
-      callback({
-        code: "400",
-        error: `Failed to fetch ${subject_table}:` + result.error,
-        status: "error"
-      });
-    }
-  });
+        //   callback({
+        //     code: "200",
+        //     status: "success",
+        //     result: insertQueries
+        //   });
+      } else {
+        callback({
+          code: "400",
+          error: `Failed to fetch ${subject_table}:` + result.error,
+          status: "error"
+        });
+      }
+    })
+    .catch(function (error) {
+      // Handle any errors that occurred during the request
+      console.error("Error:", error);
+    });
 }
 
 function getVideoInsertQuery(subjects, callback) {
-  let query = "";
   async.eachSeries(subjects, (subject, next) => {
-    const selectVideosQuery = `SELECT * FROM ${video_table} WHERE subject_id = ${subject.subject_id}`;
-    common.selectAll(selectVideosQuery, function (videoResult) {
-      if (videoResult.code == 200) {
-        let videoQueries = videoResult.result
-          .map((video) => {
-            const videoFileName = path.basename(video.video_path);
+    axios
+      .get(baseurl + video_url + subject.subject_id)
+      .then(function (videoResult) {
+        if (videoResult.code == 200) {
+          let videoQueries = videoResult.result
+            .map((video) => {
+              const videoFileName = path.basename(video.video_path);
 
-            if (videoFileName != "") {
-              video_urls.push(video.video_path);
-              video.video_path = `videoes/${videoFileName}`;
-            }
-            const video_columns = Object.keys(video).join(",");
-            const video_values = Object.values(video)
-              .map((value) => (value === null ? "NULL" : `'${value}'`))
-              .join(",");
-            return (
-              `INSERT INTO ${video_table} (${video_columns}) VALUES (${video_values});` +
-              "\n"
-            );
-          })
-          .join("\n");
-        console.log("*********** video queries ***********************//");
-        console.log(videoQueries);
-        query += videoQueries;
-        console.log(subject.subject_id);
-        console.log(subjects[subjects.length - 1].subject_id);
-      }
+              if (videoFileName != "") {
+                video_urls.push(video.video_path);
+                video.video_path = `videoes/${videoFileName}`;
+              }
+              const video_columns = Object.keys(video).join(",");
+              const video_values = Object.values(video)
+                .map((value) => (value === null ? "NULL" : `'${value}'`))
+                .join(",");
+              return (
+                `INSERT INTO ${video_table} (${video_columns}) VALUES (${video_values});` +
+                "\n"
+              );
+            })
+            .join("\n");
+          console.log("*********** video queries ***********************//");
+          console.log(videoQueries);
+          query += videoQueries;
+          console.log(subject.subject_id);
+          console.log(subjects[subjects.length - 1].subject_id);
+        }
 
-      if (subject.subject_id == subjects[subjects.length - 1].subject_id) {
-        console.log("******************query***************************");
-        console.log(query);
-        callback({
-          code: "200",
-          status: "success",
-          result: query
-        });
-      } else {
-        next();
-      }
-    });
+        if (subject.subject_id == subjects[subjects.length - 1].subject_id) {
+          console.log("******************query***************************");
+          console.log(query);
+          callback({
+            code: "200",
+            status: "success",
+            result: query
+          });
+        } else {
+          next();
+        }
+      })
+      .catch(function (error) {
+        // Handle any errors that occurred during the request
+        console.error("Error:", error);
+      });
   });
 }
 
 function getNotesInsertQuery(subjects, callback) {
   let query = "";
   async.eachSeries(subjects, (subject, next) => {
-    const selectVideosQuery = `SELECT * FROM ${notes_table} WHERE subject_id = ${subject.subject_id}`;
-    common.selectAll(selectVideosQuery, function (videoResult) {
-      if (videoResult.code == 200) {
-        let videoQueries = videoResult.result
-          .map((video) => {
-            const videoFileName = path.basename(video.note_path);
-            console.log(videoFileName);
+    axios
+      .get(baseurl + note_url + subject.subject_id)
+      .then(function (videoResult) {
+        if (videoResult.code == 200) {
+          let videoQueries = videoResult.result
+            .map((video) => {
+              const videoFileName = path.basename(video.note_path);
+              console.log(videoFileName);
 
-            if (videoFileName != "") {
-              note_urls.push(video.note_path);
-              video.note_path = `notes/${videoFileName}`;
-            }
+              if (videoFileName != "") {
+                note_urls.push(video.note_path);
+                video.note_path = `notes/${videoFileName}`;
+              }
 
-            const video_columns = Object.keys(video).join(",");
-            const video_values = Object.values(video)
-              .map((value) => (value === null ? "NULL" : `'${value}'`))
-              .join(",");
-            return (
-              `INSERT INTO ${notes_table} (${video_columns}) VALUES (${video_values});` +
-              "\n"
-            );
-          })
-          .join("\n");
-        console.log("*********** video queries ***********************//");
-        console.log(videoQueries);
-        query += videoQueries;
-        console.log(subject.subject_id);
-        console.log(subjects[subjects.length - 1].subject_id);
-      }
+              const video_columns = Object.keys(video).join(",");
+              const video_values = Object.values(video)
+                .map((value) => (value === null ? "NULL" : `'${value}'`))
+                .join(",");
+              return (
+                `INSERT INTO ${notes_table} (${video_columns}) VALUES (${video_values});` +
+                "\n"
+              );
+            })
+            .join("\n");
+          console.log("*********** video queries ***********************//");
+          console.log(videoQueries);
+          query += videoQueries;
+          console.log(subject.subject_id);
+          console.log(subjects[subjects.length - 1].subject_id);
+        }
 
-      if (subject.subject_id == subjects[subjects.length - 1].subject_id) {
-        console.log("******************query***************************");
-        console.log(query);
-        callback({
-          code: "200",
-          status: "success",
-          result: query
-        });
-      } else {
-        next();
-      }
-    });
+        if (subject.subject_id == subjects[subjects.length - 1].subject_id) {
+          console.log("******************query***************************");
+          console.log(query);
+          callback({
+            code: "200",
+            status: "success",
+            result: query
+          });
+        } else {
+          next();
+        }
+      })
+      .catch(function (error) {
+        // Handle any errors that occurred during the request
+        console.error("Error:", error);
+      });
   });
 }
 
 function getQuizInsertQuery(subjects, callback) {
   let query = "";
   async.eachSeries(subjects, (subject, next) => {
-    const selectVideosQuery = `SELECT * FROM ${quiz_table} WHERE subject_id = ${subject.subject_id}`;
-    common.selectAll(selectVideosQuery, function (videoResult) {
-      if (videoResult.code == 200) {
-        let videoQueries = videoResult.result
-          .map((video) => {
-            const video_columns = Object.keys(video).join(",");
-            const video_values = Object.values(video)
-              .map((value) => (value === null ? "NULL" : `'${value}'`))
-              .join(",");
-            return (
-              `INSERT INTO ${quiz_table} (${video_columns}) VALUES (${video_values});` +
-              "\n"
-            );
-          })
-          .join("\n");
-        console.log("*********** video queries ***********************//");
-        console.log(videoQueries);
-        query += videoQueries;
-        console.log(subject.subject_id);
-        console.log(subjects[subjects.length - 1].subject_id);
-      }
+    axios
+      .get(baseurl + quiz_url + subject.subject_id)
+      .then(function (videoResult) {
+        if (videoResult.code == 200) {
+          let videoQueries = videoResult.result
+            .map((video) => {
+              const video_columns = Object.keys(video).join(",");
+              const video_values = Object.values(video)
+                .map((value) => (value === null ? "NULL" : `'${value}'`))
+                .join(",");
+              return (
+                `INSERT INTO ${quiz_table} (${video_columns}) VALUES (${video_values});` +
+                "\n"
+              );
+            })
+            .join("\n");
+          console.log("*********** video queries ***********************//");
+          console.log(videoQueries);
+          query += videoQueries;
+          console.log(subject.subject_id);
+          console.log(subjects[subjects.length - 1].subject_id);
+        }
 
-      if (subject.subject_id == subjects[subjects.length - 1].subject_id) {
-        console.log("******************query***************************");
-        console.log(query);
-        callback({
-          code: "200",
-          status: "success",
-          result: query
-        });
-      } else {
-        next();
-      }
-    });
+        if (subject.subject_id == subjects[subjects.length - 1].subject_id) {
+          console.log("******************query***************************");
+          console.log(query);
+          callback({
+            code: "200",
+            status: "success",
+            result: query
+          });
+        } else {
+          next();
+        }
+      })
+      .catch(function (error) {
+        // Handle any errors that occurred during the request
+        console.error("Error:", error);
+      });
   });
 }
 
