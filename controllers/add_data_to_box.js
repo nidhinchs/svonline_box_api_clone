@@ -22,10 +22,10 @@ let update_id = 0;
 
 let baseurl = "http://64.227.184.42:3003/api/";
 let course_url = "get_course_by_course_id?course_id=";
-let subject_url = "get_course_by_course_id?course_id=";
-let video_url = "get_course_by_course_id?subject_id=";
-let note_url = "get_course_by_course_id?subject_id=";
-let quiz_url = "get_course_by_course_id?subject_id=";
+let subject_url = "get_subjects_by_course_id?course_id=";
+let video_url = "get_video_by_subject_id?subject_id=";
+let note_url = "get_note_by_subject_id?subject_id=";
+let quiz_url = "get_quiz_by_subject_id?subject_id=";
 
 const { v4: uuidv4 } = require("uuid");
 
@@ -99,6 +99,8 @@ exports.add_course_to_box_from_server = function (callback) {
         const courseId = call1.result.course_id;
         update_id = call1.result.update_id;
 
+        console.log(update_id);
+
         if (courseId != undefined) {
           let query = "";
           const sqlStream = fs.createWriteStream(filename);
@@ -127,6 +129,11 @@ exports.add_course_to_box_from_server = function (callback) {
             }
           });
         } else {
+          console.log({
+            code: "400",
+            error: "Please give me course Id.",
+            status: "error"
+          });
           // callback({
           //   code: "400",
           //   error: "Please give me course Id.",
@@ -199,9 +206,13 @@ function getCoursesInsertQuery(courseId, callback) {
   if (courseId != undefined) {
     const sqlStream = fs.createWriteStream("course_data.sql");
 
+    console.log(baseurl + course_url + courseId);
+
     axios
       .get(baseurl + course_url + courseId)
-      .then(function (courseResult) {
+      .then(function (response) {
+        let courseResult = response.data;
+        console.log(courseResult);
         // Handle the successful response here
         if (courseResult.code == 200) {
           const course = courseResult.result;
@@ -214,6 +225,8 @@ function getCoursesInsertQuery(courseId, callback) {
           const courseInsertQuery =
             `INSERT INTO course (${courseColumns}) VALUES (${courseValues});` +
             "\n";
+
+          console.log(courseInsertQuery);
 
           callback({
             code: "200",
@@ -243,9 +256,11 @@ function getCoursesInsertQuery(courseId, callback) {
 }
 
 function getSubjectsInsertQuery(courseId, callback) {
+  console.log(baseurl + subject_url + courseId);
   axios
     .get(baseurl + subject_url + courseId)
-    .then(function (result) {
+    .then(function (response) {
+      let result = response.data;
       if (result.code == 200) {
         const subjects = result.result;
 
@@ -310,10 +325,12 @@ function getSubjectsInsertQuery(courseId, callback) {
 }
 
 function getVideoInsertQuery(subjects, callback) {
+  let query = "";
   async.eachSeries(subjects, (subject, next) => {
     axios
       .get(baseurl + video_url + subject.subject_id)
-      .then(function (videoResult) {
+      .then(function (response) {
+        let videoResult = response.data;
         if (videoResult.code == 200) {
           let videoQueries = videoResult.result
             .map((video) => {
@@ -364,7 +381,8 @@ function getNotesInsertQuery(subjects, callback) {
   async.eachSeries(subjects, (subject, next) => {
     axios
       .get(baseurl + note_url + subject.subject_id)
-      .then(function (videoResult) {
+      .then(function (response) {
+        let videoResult = response.data;
         if (videoResult.code == 200) {
           let videoQueries = videoResult.result
             .map((video) => {
@@ -417,7 +435,8 @@ function getQuizInsertQuery(subjects, callback) {
   async.eachSeries(subjects, (subject, next) => {
     axios
       .get(baseurl + quiz_url + subject.subject_id)
-      .then(function (videoResult) {
+      .then(function (response) {
+        let videoResult = response.data;
         if (videoResult.code == 200) {
           let videoQueries = videoResult.result
             .map((video) => {
