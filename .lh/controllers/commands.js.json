@@ -1,0 +1,22 @@
+{
+    "sourceFile": "controllers/commands.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1699119608203,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1699119738648,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -68,5 +68,37 @@\n   //   console.log(`stdout: ${stdout}`);\r\n   //   console.log(`stderr: ${stderr}`);\r\n   //   res.json({ code: \"200\", status: \"success\" });\r\n   // });\r\n+\r\n+  const { spawn } = require(\"child_process\");\r\n+\r\n+  // Replace 'pythonScript.py' with the path to your Python script\r\n+  const pythonScriptPath = \"../Public/Networks/connect.py\";\r\n+\r\n+  // Run the Python script\r\n+  const pythonProcess = spawn(\"python\", [pythonScriptPath]);\r\n+\r\n+  // Handle the output of the Python script (stdout and stderr)\r\n+  pythonProcess.stdout.on(\"data\", (data) => {\r\n+    console.log(`Python stdout: ${data}`);\r\n+    res.json({\r\n+      code: \"200\",\r\n+      status: \"success\",\r\n+      result: `Python stdout: ${data}`\r\n+    });\r\n+  });\r\n+\r\n+  pythonProcess.stderr.on(\"data\", (data) => {\r\n+    res.json({\r\n+      code: \"400\",\r\n+      status: \"error\",\r\n+      error: `Python stderr: ${data}`\r\n+    });\r\n+    console.error(`Python stderr: ${data}`);\r\n+  });\r\n+\r\n+  // Handle the exit of the Python script\r\n+  pythonProcess.on(\"close\", (code) => {\r\n+    console.log(`Python script exited with code ${code}`);\r\n+  });\r\n };\r\n"
+                }
+            ],
+            "date": 1699119608203,
+            "name": "Commit-0",
+            "content": "const fs = require(\"fs\");\r\nconst wpaConfigPath = \"/etc/wpa_supplicant/wpa_supplicant.conf\";\r\nconst { exec } = require(\"child_process\");\r\n\r\nexports.add_wifi_cred = function (req, res) {\r\n  const wifiCredentials = req.body;\r\n\r\n  console.log(wifiCredentials);\r\n\r\n  const wifiSSID = wifiCredentials.ssid;\r\n  const wifiPassword = wifiCredentials.password;\r\n\r\n  // Check if the wpa_supplicant configuration file exists\r\n  if (fs.existsSync(wpaConfigPath)) {\r\n    console.log(\"wpa_supplicant configuration file exists. Rewriting...\");\r\n  }\r\n\r\n  // Update the wpa_supplicant configuration\r\n  const wpaSupplicantConfig = `\r\nctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev\r\nupdate_config=1\r\ncountry=US\r\n\r\nnetwork={\r\n    ssid=\"${wifiSSID}\"\r\n    psk=\"${wifiPassword}\"\r\n}\r\n`;\r\n\r\n  // Write or rewrite the configuration to the file\r\n  fs.writeFile(wpaConfigPath, wpaSupplicantConfig, (err) => {\r\n    if (err) {\r\n      console.error(\"Error writing wpa_supplicant configuration:\", err);\r\n    } else {\r\n      // Restart the Wi-Fi interface\r\n\r\n      const { exec } = require(\"child_process\");\r\n      temp.disable_access_point1(req, res);\r\n      //   exec(\"sudo ifdown wlan0 && sudo ifup wlan0\", (error, stdout, stderr) => {\r\n      //     if (error) {\r\n      //       console.error(\"Error restarting Wi-Fi:\", error);\r\n      //     } else {\r\n      //       console.log(\"Wi-Fi restarted successfully.\");\r\n      //     }\r\n      //   });\r\n    }\r\n  });\r\n};\r\n\r\nexports.shut_down = function (req, res) {\r\n  exec(`sudo shutdown -r now`, (err, stdout, stderr) => {\r\n    if (err) {\r\n      console.error(`exec error: ${err}`);\r\n      return;\r\n    }\r\n    console.log(`stdout: ${stdout}`);\r\n    console.log(`stderr: ${stderr}`);\r\n    res.json({ code: \"200\", status: \"success\" });\r\n  });\r\n};\r\n\r\nexports.reboot = function (req, res) {\r\n  // exec(`sudo reboot`, (err, stdout, stderr) => {\r\n  //   if (err) {\r\n  //     console.error(`exec error: ${err}`);\r\n  //     return;\r\n  //   }\r\n  //   console.log(`stdout: ${stdout}`);\r\n  //   console.log(`stderr: ${stderr}`);\r\n  //   res.json({ code: \"200\", status: \"success\" });\r\n  // });\r\n};\r\n"
+        }
+    ]
+}
