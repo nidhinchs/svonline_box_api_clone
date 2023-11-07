@@ -59,7 +59,7 @@ exports.get_courses = function (req, res) {
   });
 };
 
-exports.add_course_to_box_from_server = function(callback){
+exports.add_course_to_box_from_server = function (callback) {
   // let item = req.query;
 
   video_urls = [];
@@ -112,7 +112,7 @@ exports.add_course_to_box_from_server = function(callback){
       }
     }
   );
-}
+};
 
 // exports.add_course_to_box_from_server = function (req, res) {
 //   let item = req.query;

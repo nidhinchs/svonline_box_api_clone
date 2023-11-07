@@ -2,6 +2,8 @@ const fs = require("fs");
 const wpaConfigPath = "/etc/wpa_supplicant/wpa_supplicant.conf";
 const { exec } = require("child_process");
 
+const temp = require("../controllers/temperature");
+
 exports.add_wifi_cred = function (req, res) {
   const wifiCredentials = req.body;
 
@@ -31,6 +33,11 @@ network={
   fs.writeFile(wpaConfigPath, wpaSupplicantConfig, (err) => {
     if (err) {
       console.error("Error writing wpa_supplicant configuration:", err);
+      res.json({
+        code: "400",
+        status: "error",
+        error: "Error writing wpa_supplicant configuration"
+      });
     } else {
       // Restart the Wi-Fi interface
 

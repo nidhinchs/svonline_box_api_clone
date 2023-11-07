@@ -10,7 +10,8 @@ const video = require("../controllers/video");
 const db = require("../controllers/DbController");
 const temp = require("../controllers/temperature");
 const uploadFile = require("../controllers/upload");
-const add_data_to_box = require("../controllers/add_data_to_box");
+const add_data_to_box = require("../controllers/add_data_to_box1");
+const commands = require("../controllers/commands");
 
 /* GET home page. */
 router.get("/", function (req, res, next) {
@@ -41,7 +42,7 @@ router.get("/api/update_course", db.update_course);
 router.get("/api/update_database_data", item.update_database_data);
 router.get("/api/copy_file", copyFile.copy_file);
 router.post("/api/upload_video", video.upload_video);
-router.get("/api/get_temperature", temp.get_temperature);
+// router.get("/api/get_temperature", temp.get_temperatuverifyre);
 router.get("/api/reboot", temp.reboot);
 // router.post('/upload',video.upload_file);
 
@@ -63,7 +64,12 @@ router.get(
   "/api/check_device_for_reset_pwd",
   student.check_device_for_reset_pwd
 );
+router.get(
+  "/api/f_check_device_for_reset_pwd",
+  student.f_check_device_for_reset_pwd
+);
 router.get("/api/change_pwd", student.change_pwd);
+router.get("/api/f_change_pwd", student.f_change_pwd);
 
 router.get("/api/signout", student.signout);
 router.post("/api/f_login", student.f_login);
@@ -72,6 +78,11 @@ router.get("/api/check_student_status", student.check_student_status);
 
 router.post("/api/add_student", student.add_student);
 router.post("/api/add_student_attendance", student.add_student_attendance);
+router.get("/api/get_attendance_report", student.get_attendance_report);
+router.get(
+  "/api/get_attendance_report_by_student",
+  student.get_attendance_report_by_student
+);
 router.post("/api/call_reset_device", student.call_reset_device);
 router.get("/api/get_student", student.get_student);
 
@@ -134,11 +145,12 @@ router.post("/api/add_quiz", quiz.add_quiz);
 router.post("/api/add_multiple_quiz", quiz.add_multiple_quiz);
 router.post("/api/admin_login", quiz.admin_login);
 
-router.post("/api/add_box_details", temp.add_box_details);
+router.post("/api/add_box_details", quiz.add_box_details);
 
+router.post("/api/add_wifi_cred", commands.add_wifi_cred);
+router.post("/api/shut_down", commands.shut_down);
+router.post("/api/reboot", commands.reboot);
 
 //* attendance report
-
-router.get("/api/get_attendance")
 
 module.exports = router;
