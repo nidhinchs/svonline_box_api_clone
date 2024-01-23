@@ -3,11 +3,15 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 0,
+            "activePatchIndex": 1,
             "patches": [
                 {
                     "date": 1697091182048,
                     "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1702269087345,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -789,10 +789,8 @@\n     }\r\n   );\r\n };\r\n \r\n-\r\n-\r\n exports.add_box_details = function (req, res) {\r\n   let item = req.body;\r\n   console.log(item);\r\n \r\n"
                 }
             ],
             "date": 1697091182048,
