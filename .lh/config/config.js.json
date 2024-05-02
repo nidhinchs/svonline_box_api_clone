@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 7,
+            "activePatchIndex": 8,
             "patches": [
                 {
                     "date": 1694602188213,
@@ -36,6 +36,10 @@
                 {
                     "date": 1697091424688,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -2,7 +2,7 @@\n \r\n exports.config = function () {\r\n   // var node_env = \"test\";\r\n   var node_env = \"development\";\r\n-  var node_env = \"server\";\r\n+  // var node_env = \"server\";\r\n   return env[node_env];\r\n };\r\n"
+                },
+                {
+                    "date": 1709214859849,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,8 @@\n+var env = require(\"../config/config.json\");\r\n+\r\n+exports.config = function () {\r\n+  // var node_env = \"test\";\r\n+  // var node_env = \"development\";\r\n+  // var node_env = \"server\";\r\n+  return env[node_env];\r\n+};\r\n"
                 }
             ],
             "date": 1694602188213,
