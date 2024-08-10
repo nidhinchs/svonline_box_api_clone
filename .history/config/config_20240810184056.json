@@ -22,32 +22,24 @@
     "destination_path": "./uploads",
     "base_path": "/"
   },
+
   "development": {
     "_comment1": "remote admin db credentials for dev",
-    "export_db": {
-      "username": "svonline",
-      "password": "svonline@2255",
-      "database": "lms_admin",
+    "import_db": {
+      "port":25060,
+      "username" : "svonline",
+      "password" : "svonline@2255",
+      "database" : "tree_plantation",
       "host" : "db-svonline-do-user-9870855-0.b.db.ondigitalocean.com"
     },
-    "_comment2": "local db credentials",
-    "import_db": {
-      "username": "smit",
-      "password": "512",
-      "database": "lms",
-      "host": "127.0.0.1"
-    },
-    "_comment3": "remote admin machine credentials",
-    "remote_server": {
-      "host": "143.110.185.24",
-      "username": "root",
-      "password": "nidhi@2255Nchs"
-    },
-    "dumpFile": "dump.sql",
-    "_comment4": "folder for copy remote videoes and pdfs to local",
-    "destination_path": "./uploads",
-    "base_path": "/"
+    "base_path": "/",
+    "port":"20031"
   },
+
+
+  
+
+
   "test": {
     "export_db": {
       "username": "svonline",
@@ -59,6 +51,30 @@
       "username": "root",
       "password": "",
       "database": "svonline_box",
+      "host": "localhost",
+      "port":"3306"
+    },
+    "remote_server": {
+      "host": "143.110.185.24",
+      "username": "root",
+      "password": "nidhi@2255Nchs"
+    },
+    "dumpFile": "dump.sql",
+    "destination_path": "./uploads",
+    "base_path": "/"
+  },
+
+  "test_laptop": {
+    "export_db": {
+      "username": "svonline",
+      "password": "svonline@2255",
+      "database": "lms_admin",
+      "host": "139.59.77.113"
+    },
+    "import_db": {
+      "username": "root",
+      "password": "",
+      "database": "svonline",
       "host": "localhost"
     },
     "remote_server": {
@@ -70,6 +86,7 @@
     "destination_path": "./uploads",
     "base_path": "/"
   },
+
   "test_dev": {
     "export_db": {
       "username": "svonline",
@@ -92,6 +109,8 @@
     "destination_path": "./uploads",
     "base_path": "/"
   },
+
+
   "test_server": {
     "export_db": {
       "username": "remote_1",
