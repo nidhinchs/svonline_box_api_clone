@@ -42,15 +42,49 @@ exports.get_course = function (req, res) {
 exports.get_subject = async function (req, res) {
   let course_id = req.query.course_id;
   let student_id = req.query.student_id;
-  common.selectAll(
-    "select * from subjects where course_id = " +
-      course_id +
-      " and student_id = " +
-      student_id,
-    function (callback) {
-      res.json(callback);
-    }
-  );
+
+  let query = `SELECT 
+  s.subject_id,
+  s.course_id,
+  s.subject_name,
+  s.subject_desc,
+  s.note_name,
+  s.note_url,
+  s.created_by,
+  s.created_date,
+  s.ip_address,
+  s.is_active,
+  s.is_delete,
+  s.modified_by,
+  s.modified_date,
+  COALESCE(MAX(CASE WHEN sp.type = 1 THEN sp.progress END), 0) AS max_video_progress,
+  COALESCE(qs.obtained_score, 0) AS max_score,
+  COALESCE(qs.attempt_count, 0) AS quiz_attempt_count
+FROM 
+  subject s
+LEFT JOIN 
+  student_progress sp ON s.subject_id = sp.subject_id AND sp.student_id = ${student_id}
+LEFT JOIN 
+  (
+      SELECT 
+          q.subject_id,
+          q.student_id,
+          MAX(q.obtained_score) AS obtained_score,
+          COUNT(*) AS attempt_count
+      FROM 
+          quiz_result q
+      WHERE 
+          q.student_id = ${student_id}
+      GROUP BY 
+          q.subject_id, q.student_id
+  ) qs ON s.subject_id = qs.subject_id AND sp.student_id = qs.student_id
+GROUP BY 
+  s.subject_id
+ORDER BY 
+  s.subject_id;`;
+  common.selectAll(query, function (callback) {
+    res.json(callback);
+  });
 };
 
 // exports.get_subject = async function (req, res) {

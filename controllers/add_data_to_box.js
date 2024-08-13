@@ -628,7 +628,7 @@ function downloadNoteFiles(callback) {
     new Promise((resolve, reject) => {
       const https = require("https");
       let downloadFolderPath = "./public/notes/";
-      console.log("url------------------>");
+      console.log("url------------>");
       console.log(url);
 
       const splitUrl = url.split("/");
