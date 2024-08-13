@@ -77,7 +77,7 @@ LEFT JOIN
           q.student_id = ${student_id}
       GROUP BY 
           q.subject_id, q.student_id
-  ) qs ON s.subject_id = qs.subject_id AND sp.student_id = qs.student_id
+  ) qs ON s.subject_id = qs.subject_id AND sp.student_id = qs.student_id where s.course_id = ${course_id}
 GROUP BY 
   s.subject_id
 ORDER BY 
@@ -226,16 +226,34 @@ exports.get_video = function (req, res) {
   let subject_id = req.query.subject_id;
   let student_id = req.query.student_id;
 
-  common.selectAll(
-    "select * from videos where subject_id = " +
-      subject_id +
-      " and student_id = " +
-      student_id,
-    function (call1) {
-      console.log(call1);
-      res.json(call1);
-    }
-  );
+  let query = `SELECT 
+  v.*,
+  COALESCE(MAX(sp.progress), 0) AS max_progress
+FROM 
+  video v
+LEFT JOIN 
+  student_progress sp ON v.video_id = sp.type_id AND sp.type = 1 AND sp.student_id = ${student_id}
+  where v.subject_id = ${subject_id}
+GROUP BY 
+  v.video_id, 
+  v.video_name, 
+  v.video_desc, 
+  v.video_path, 
+  v.video_extension,
+  v.created_by,
+  v.created_date,
+  v.ip_address,
+  v.is_active,
+  v.is_delete,
+  v.modified_by,
+  v.modified_date
+ORDER BY 
+  v.video_id;`;
+
+  common.selectAll(query, function (call1) {
+    console.log(call1);
+    res.json(call1);
+  });
 };
 
 // exports.get_video = function (req, res) {
