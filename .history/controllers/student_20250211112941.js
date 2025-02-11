@@ -21,7 +21,7 @@ exports.signout = function (req, res) {
 
   let obj = {
     student_id: student_id,
-    log_name: "logout",
+    log_action: "logout",
     log_time: getCurrentDateTime(),
     created_date: getCurrentDateTime()
   };

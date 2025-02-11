@@ -21,9 +21,9 @@ exports.signout = function (req, res) {
 
   let obj = {
     student_id: student_id,
-    log_name: "logout",
-    log_time: getCurrentDateTime(),
-    created_date: getCurrentDateTime()
+    log_action: "logout",
+    log_date: getCurrentDateTime(),
+    
   };
 
   common.insert(obj, "student_log", function (call2) {
