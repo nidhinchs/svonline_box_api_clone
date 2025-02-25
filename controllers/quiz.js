@@ -324,7 +324,7 @@ exports.get_result = function (req, res) {
 exports.get_result_detail = function (req, res) {
   let result_id = req.query.result_id;
 
-  common.selectAll(
+  common.select_first(
     "select * from quiz_results where result_id = " + result_id,
     function (call) {
       if (call.code == SUCCESS) {

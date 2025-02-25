@@ -77,7 +77,7 @@ LEFT JOIN
           q.student_id = ${student_id}
       GROUP BY 
           q.subject_id, q.student_id
-  ) qs ON s.subject_id = qs.subject_id AND sp.student_id = qs.student_id where s.course_id = ${}
+  ) qs ON s.subject_id = qs.subject_id AND sp.student_id = qs.student_id where s.course_id = ${course_id}
 GROUP BY 
   s.subject_id
 ORDER BY 
@@ -324,7 +324,7 @@ exports.get_result = function (req, res) {
 exports.get_result_detail = function (req, res) {
   let result_id = req.query.result_id;
 
-  common.selectAll(
+  common.select_first(
     "select * from quiz_results where result_id = " + result_id,
     function (call) {
       if (call.code == SUCCESS) {
