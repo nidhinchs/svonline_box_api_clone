@@ -331,7 +331,7 @@ exports.get_result_detail = function (req, res) {
         common.selectAll(
           "select * from quiz_result_details where result_id = " + result_id,
           function (call2) {
-            call.result[0]["quiz"] = call2.result;
+            call.result["quiz"] = call2.result;
             res.json(call);
           }
         );
