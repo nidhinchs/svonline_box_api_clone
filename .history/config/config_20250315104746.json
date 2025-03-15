@@ -147,8 +147,8 @@
       "host": "localhost"
     },
     "import_db": {
-      "username": "root",
-      "password": "",
+      "username": "smit",
+      "password": "512",
       "database": "lms",
       "host": "localhost"
     },

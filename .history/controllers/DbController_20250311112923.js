@@ -5,6 +5,7 @@ let config = require("../config/config").config();
 // Include the dependency we need.
 const { exec } = require("child_process");
 const { request } = require("http");
+const async = require("async");
 
 exports.update_video_data = function (req, res) {};
 
@@ -78,9 +79,12 @@ async function updateAllData(
               i = call1.result.length;
               // callback(call2);
             }
-            if (item == call1.result.length-1) {
+            if (item == call1.result[call1.result.length - 1]) {
+              console.log("--------------last item-----------------------");
               callback(response);
               return;
+            } else {
+              next();
             }
           });
         });
@@ -254,7 +258,7 @@ const downloadFile = (url, callback) => {
         callback(res.statusCode);
         console.log("get error" + res.statusCode);
       }
-    });
+    },);
   });
 };
 
