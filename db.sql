@@ -227,7 +227,7 @@ CREATE TABLE `student` (
   `modified_by` int DEFAULT NULL,
   `modified_date` datetime DEFAULT CURRENT_TIMESTAMP,
   `ip_address` varchar(32) DEFAULT NULL
-)
+);
 
 
 CREATE TABLE `student_attendance` (
@@ -243,7 +243,7 @@ CREATE TABLE `student_attendance` (
   `modified_by` int DEFAULT NULL,
   `modified_date` datetime DEFAULT NULL,
   `ip_address` int DEFAULT NULL
-)
+);
 
 CREATE TABLE `student_log` (
   `log_id` int NOT NULL,
@@ -253,7 +253,7 @@ CREATE TABLE `student_log` (
   `log_date` datetime DEFAULT CURRENT_TIMESTAMP,
   `is_active` int DEFAULT NULL,
   `is_delete` int DEFAULT NULL
-) 
+) ;
 
 CREATE TABLE `student_progress` (
   `progress_id` int NOT NULL,
@@ -270,7 +270,7 @@ CREATE TABLE `student_progress` (
   `modified_by` int DEFAULT NULL,
   `modified_date` datetime DEFAULT NULL,
   `ip_address` varchar(32) DEFAULT NULL
-)
+);
 
 DROP TABLE IF EXISTS `quiz_results`;
 
