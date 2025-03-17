@@ -125,7 +125,8 @@ async function updateAllData(
 function storeUpdatedId(box_id, log_id) {
   let obj = {
     box_id: box_id,
-    last_updated_log_id: log_id
+    last_updated_log_id: log_id,
+    created_date: getCurrentDateTime()
   };
 
   admin_common.select_first(
