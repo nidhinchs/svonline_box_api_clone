@@ -4,7 +4,7 @@ let config = require("./config").config();
 var pool = mysql.createPool({
   connectionLimit: 100, //important
   host: config.export_db.host,
-  port: "25060",
+  port: config.export_db.port,
   user: config.export_db.username,
   password: config.export_db.password,
   database: config.export_db.database,

@@ -1,0 +1,67 @@
+{
+  "server": {
+    "_comment": "folder for copy remote videoes and pdfs to local",
+    "export_db": {
+      "username": "remote_1",
+      "password": "Nidhi$2255",
+      "database": "lms",
+      "host": "143.110.185.24"
+    },
+    "import_db": {
+      "username": "root",
+      "password": "svonline@2255",
+      "database": "lms",
+      "host": "localhost"
+    },
+    "remote_server": {
+      "host": "143.110.185.24",
+      "username": "root",
+      "password": "nidhi@2255Nchs"
+    },
+    "dumpFile": "dump.sql",
+    "destination_path": "./uploads",
+    "base_path": "/"
+  },
+
+  "development": {
+    "_comment1": "remote admin db credentials for dev",
+    "import_db": {
+      "port":25060,
+      "username" : "svonline",
+      "password" : "svonline@2255",
+      "database" : "svonline_local",
+      "host" : "db-svonline-do-user-9870855-0.b.db.ondigitalocean.com"
+    },
+    "export_db": {
+      "username": "svonline",
+      "password": "svonline@2255",
+      "database": "lms_admin",
+      "host": "db-svonline-do-user-9870855-0.b.db.ondigitalocean.com"
+    },
+    "base_path": "/",
+    "port":"20031"
+  },
+
+
+  "production": {
+    "export_db": {
+      "username": "root",
+      "password": "",
+      "database": "demo",
+      "host": "localhost"
+    },
+    "import_db": {
+      "username": "smit",
+      "password": "512",
+      "database": "lms",
+      "host": "127.0.0.1"
+    },
+    "remote_server": {
+      "host": "143.110.185.24",
+      "username": "root",
+      "password": "nidhi@2255Nchs"
+    },
+    "dumpFile": "dump.sql",
+    "destination_path": "./uploads"
+  }
+}

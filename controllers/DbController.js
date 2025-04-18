@@ -15,8 +15,9 @@ exports.update_course = function (req, res) {
   check_connection(function (connected) {
     if (connected == 1) {
       admin_common.select_first(
-        "select * from box_update_status where box_id = " + request.box_id,
+        "select * from box_update_status where device_id = " + request.box_id,
         function (callback1) {
+          console.log(callback1.code);
           if (callback1.code == SUCCESS) {
             updateAllData(
               1,
@@ -274,8 +275,24 @@ function insert_data(item, callback) {
 
   admin_common.select_first(query, function (call1) {
     if (call1.code == SUCCESS) {
-      if (item.table_name == "video" || item.table_name == "note") {
+      if (item.table_name == "video") {
         downloadFile(call1.result.video_path, function (callback1) {
+          console.log(call1.result);
+          if (callback1 == 200) {
+            common.insert(call1.result, item.table_name, function (call2) {
+              console.log(call2.status);
+              callback(call2);
+            });
+          } else {
+            callback({
+              code: 400,
+              status: "error",
+              error: "Error in downloading the File"
+            });
+          }
+        });
+      } else if (item.table_name == "note") {
+        downloadFile(call1.result.note_path, function (callback1) {
           console.log(call1.result);
           if (callback1 == 200) {
             common.insert(call1.result, item.table_name, function (call2) {
