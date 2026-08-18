@@ -10,6 +10,7 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 const upload = require("express-fileupload");
+const fs = require("fs");
 
 // Firebase App (the core Firebase SDK) is always required and
 // must be listed before other Firebase SDKs
