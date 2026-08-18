@@ -11,8 +11,6 @@ var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 const upload = require("express-fileupload");
 
-
-
 // Firebase App (the core Firebase SDK) is always required and
 // must be listed before other Firebase SDKs
 var firebase = require("firebase/app");
@@ -101,7 +99,9 @@ app.use(function (err, req, res, next) {
 
 // var app = require('./app');
 var debug = require("debug")("employeeattandance:server");
-var http = require("http");
+// var http = require("http");
+
+var server = require("https").createServer(options, app);
 
 /**
  * Get port from environment and store in Express.
@@ -116,20 +116,22 @@ app.set("port", port);
 
 var server = http.createServer(app);
 
-const site = require("./controllers/temperature");
-  site.get_temperature(function (callback) {
-    //res.json(callback);
-  });
+console.log("add data from server to the box starting...........");
 
-const cron = require("node-cron");
-cron.schedule("*/15 * * * *", function () {
-  // cron.schedule('* * * * * *', function() {
-  console.log("running a check temperature of the device");
-  const site = require("./controllers/temperature");
-  site.get_temperature(function (callback) {
-    //res.json(callback);
-  });
+const b = require("./controllers/add_data_to_box");
+b.add_course_to_box_from_server(function (callback) {
+  console.log(callback);
 });
+
+// const cron = require("node-cron");
+// cron.schedule("*/15 * * * *", function () {
+//   // cron.schedule('* * * * *         *', functio0n() {
+//   console.log("running a check temperature of the device");
+//   const site = require("./controllers/temperature");
+//   site.get_temperature(function (callback) {
+//     //res.json(callback);
+//   });
+// });
 
 /**
  * Listen on provided port, on all network interfaces.

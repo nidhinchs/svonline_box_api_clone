@@ -99,7 +99,6 @@ app.use(function (err, req, res, next) {
 
 // var app = require('./app');
 var debug = require("debug")("employeeattandance:server");
-var http = require("http");
 
 /**
  * Get port from environment and store in Express.
@@ -111,8 +110,19 @@ app.set("port", port);
 /**
  * Create HTTP server.
  */
+// var http = require("http");
+// var server = http.createServer(app);
 
-var server = http.createServer(app);
+const options = {
+  key: fs.readFileSync(
+    "/etc/letsencrypt/live/kashtomiseswsaumilconxole.com/privkey.pem"
+  ),
+  cert: fs.readFileSync(
+    "/etc/letsencrypt/live/kashtomiseswsaumilconxole.com/fullchain.pem"
+  )
+};
+
+var server = require("https").createServer(options, app);
 
 console.log("add data from server to the box starting...........");
 

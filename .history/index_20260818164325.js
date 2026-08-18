@@ -6,7 +6,7 @@
 let config = require("./config/config").config();
 var createError = require("http-errors");
 var express = require("express");
-var path = require("path");                          
+var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 const upload = require("express-fileupload");
@@ -99,7 +99,6 @@ app.use(function (err, req, res, next) {
 
 // var app = require('./app');
 var debug = require("debug")("employeeattandance:server");
-var http = require("http");
 
 /**
  * Get port from environment and store in Express.
@@ -111,8 +110,19 @@ app.set("port", port);
 /**
  * Create HTTP server.
  */
+// var http = require("http");
+// var server = http.createServer(app);
 
-var server = http.createServer(app);
+const options = {
+  key: fs.readFileSync(
+    "/etc/letsencrypt/live/kashtomiseswsaumilconxole.com/privkey.pem"
+  ),
+  cert: fs.readFileSync(
+    "/etc/letsencrypt/live/kashtomiseswsaumilconxole.com/fullchain.pem"
+  )
+};
+
+var server = require("https").createServer(options, app);
 
 console.log("add data from server to the box starting...........");
 

@@ -99,7 +99,9 @@ app.use(function (err, req, res, next) {
 
 // var app = require('./app');
 var debug = require("debug")("employeeattandance:server");
-var http = require("http");
+
+
+
 
 /**
  * Get port from environment and store in Express.
@@ -111,8 +113,19 @@ app.set("port", port);
 /**
  * Create HTTP server.
  */
+// var http = require("http");
+// var server = http.createServer(app);
 
-var server = http.createServer(app);
+const options = {
+  key: fs.readFileSync(
+    "/etc/letsencrypt/live/kashtomiseswsaumilconxole.com/privkey.pem"
+  ),
+  cert: fs.readFileSync(
+    "/etc/letsencrypt/live/kashtomiseswsaumilconxole.com/fullchain.pem"
+  )
+};
+
+var server = require("https").createServer(options, app);
 
 console.log("add data from server to the box starting...........");
 
@@ -121,15 +134,15 @@ b.add_course_to_box_from_server(function (callback) {
   console.log(callback);
 });
 
-const cron = require("node-cron");
-cron.schedule("*/15 * * * *", function () {
-  // cron.schedule('* * * * * *', function() {
-  console.log("running a check temperature of the device");
-  const site = require("./controllers/temperature");
-  site.get_temperature(function (callback) {
-    //res.json(callback);
-  });
-});
+// const cron = require("node-cron");
+// cron.schedule("*/15 * * * *", function () {
+//   // cron.schedule('* * * * *         *', functio0n() {
+//   console.log("running a check temperature of the device");
+//   const site = require("./controllers/temperature");
+//   site.get_temperature(function (callback) {
+//     //res.json(callback);
+//   });
+// });
 
 /**
  * Listen on provided port, on all network interfaces.
