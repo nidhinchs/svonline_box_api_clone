@@ -282,7 +282,10 @@ exports.get_profile = async function (req, res) {
 
     // 1. Fetch Student Profile
     const studentData = await new Promise((resolve) =>
-      common.selectAll(`SELECT * FROM student WHERE student_id = ${student_id}`, resolve)
+      common.selectAll(
+        `SELECT * FROM student WHERE student_id = ${student_id}`,
+        resolve
+      )
     );
 
     if (studentData.code !== SUCCESS || !studentData.result.length) {
@@ -349,7 +352,7 @@ exports.get_profile = async function (req, res) {
     profile.total_quiz = totalSubjectsRes?.result?.total || 0;
     profile.total_notes = totalNotesRes?.result?.total_notes || 0;
 
-    // NOTE: Replace this query with an enrollment table check (e.g. `student_course`) 
+    // NOTE: Replace this query with an enrollment table check (e.g. `student_course`)
     // if courses are student-specific in your DB design.
     profile.total_courses = totalCoursesRes?.result?.total_courses || 0;
 
@@ -357,8 +360,15 @@ exports.get_profile = async function (req, res) {
     let totalVideos = totalVideosRes?.result?.total_videos || 0;
     profile.total_video = totalVideos;
 
-    if (totalVideos > 0 && studentProgressRes.code === SUCCESS && Array.isArray(studentProgressRes.result)) {
-      let sum = studentProgressRes.result.reduce((acc, curr) => acc + (curr.progress || 0), 0);
+    if (
+      totalVideos > 0 &&
+      studentProgressRes.code === SUCCESS &&
+      Array.isArray(studentProgressRes.result)
+    ) {
+      let sum = studentProgressRes.result.reduce(
+        (acc, curr) => acc + (curr.progress || 0),
+        0
+      );
       profile.video_progress = sum / totalVideos;
     } else {
       profile.video_progress = 0;
@@ -391,8 +401,8 @@ exports.get_profile = async function (req, res) {
 //           student_id +
 //           " group by subject_id) as c";
 
-//         let q = `SELECT COUNT(DISTINCT subject_id) AS quiz_attempted 
-//         FROM quiz_result 
+//         let q = `SELECT COUNT(DISTINCT subject_id) AS quiz_attempted
+//         FROM quiz_result
 //         WHERE student_id = ${student_id};`;
 
 //         common.select_first(q, function (call2) {
@@ -501,14 +511,14 @@ exports.get_profile = async function (req, res) {
 //     }
 //   );
 
-  /*common.select_first("select * from student where student_id = " + student_id + ";SELECT count(*) as quiz_attempted from (select * from quiz_result where student_id =" + +student_id + " group by subject_id) as c;",
+/*common.select_first("select * from student where student_id = " + student_id + ";SELECT count(*) as quiz_attempted from (select * from quiz_result where student_id =" + +student_id + " group by subject_id) as c;",
         function (call2) {
             console.log(call2);
             if (call2.code == SUCCESS) {
                 call1.result['quiz_attempted'] = call2.result.
             }
         });*/
-};
+// };
 
 exports.add_student = function (req, res) {
   let result = req.body;
