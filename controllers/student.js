@@ -268,131 +268,238 @@ exports.check_student_status = function (req, res) {
   );
 };
 
-exports.get_profile = function (req, res) {
-  let student_id = req.query.student_id;
-  var total_courses = 0;
-  var total_video = 0;
-  var total_notes = 0;
+exports.get_profile = async function (req, res) {
+  try {
+    let student_id = parseInt(req.query.student_id, 10);
 
-  common.selectAll(
-    "select * from student where student_id =" + student_id,
-    function (call1) {
-      console.log(call1);
-      if (call1.code == SUCCESS) {
-        let query =
-          "SELECT count(*) as quiz_attempted from (select * from quiz_result where student_id =" +
-          student_id +
-          " group by subject_id) as c";
-
-        let q = `SELECT COUNT(DISTINCT subject_id) AS quiz_attempted 
-        FROM quiz_result 
-        WHERE student_id = ${student_id};`;
-
-        common.select_first(q, function (call2) {
-          if (call2.code == SUCCESS) {
-            call1.result[0]["quiz_attempted"] = call2.result.quiz_attempted;
-            common.select_first(
-              "select count(*) as total from subject where is_delete =0 and is_active =1",
-              function (call5) {
-                if (call5.code == SUCCESS) {
-                  call1.result[0]["total_quiz"] = call5.result.total;
-                  console.log(call1);
-                  common.selectAll(
-                    "select max(progress) as progress from student_progress as p where p.type=1 and student_id =" +
-                      student_id +
-                      " group by type_id",
-                    function (call3) {
-                      common.select_first(
-                        "select count(*) as total_videos from video where is_delete=0 and is_active =1",
-                        function (call4) {
-                          if (call4.code == SUCCESS && call3.code == SUCCESS) {
-                            call1.result[0]["total_video"] =
-                              call4.result.total_videos;
-                            console.log("success");
-                            let sum = 0;
-                            call3.result.forEach((progress) => {
-                              console.log(progress);
-                              sum += progress.progress;
-                            });
-                            console.log("sum : " + sum);
-                            console.log("sum : " + call4.result.total_videos);
-                            if (call4.result.total_videos > 0) {
-                              call1.result[0]["video_progress"] =
-                                sum / call4.result.total_videos;
-                            } else {
-                              call1.result[0]["video_progress"] = 0;
-                            }
-                            common.select_first(
-                              "select count(*) as total_notes from note where is_delete =0 and is_active = 1",
-                              function (call6) {
-                                if (call6.code == SUCCESS) {
-                                  call1.result[0]["total_notes"] =
-                                    call6.result.total_notes;
-                                } else {
-                                  call1.result[0]["total_notes"] = 0;
-                                }
-                                common.select_first(
-                                  "select count(*) as total_courses from course where is_delete =0 and is_active = 1",
-                                  function (call6) {
-                                    if (call6.code == SUCCESS) {
-                                      call1.result[0]["total_courses"] =
-                                        call6.result.total_courses;
-                                    } else {
-                                      call1.result[0]["total_courses"] = 0;
-                                    }
-                                    res.json(call1);
-                                  }
-                                );
-                                //res.json(call1);
-                              }
-                            );
-                          } else {
-                            console.log("fail");
-                            call1.result[0]["video_progress"] = 0;
-                            common.select_first(
-                              "select count(*) as total_notes from note where is_delete =0 and is_active = 1",
-                              function (call6) {
-                                if (call6.code == SUCCESS) {
-                                  call1.result[0]["total_notes"] =
-                                    call6.result.total_notes;
-                                } else {
-                                  call1.result[0]["total_notes"] = 0;
-                                }
-                                common.select_first(
-                                  "select count(*) as total_courses from course where is_delete =0 and is_active = 1",
-                                  function (call6) {
-                                    if (call6.code == SUCCESS) {
-                                      call1.result[0]["total_courses"] =
-                                        call6.result.total_courses;
-                                    } else {
-                                      call1.result[0]["total_courses"] = 0;
-                                    }
-                                    res.json(call1);
-                                  }
-                                );
-                                //res.json(call1);
-                              }
-                            );
-                          }
-                        }
-                      );
-                    }
-                  );
-                } else {
-                  call1.result[0]["total_quiz"] = 0;
-                }
-              }
-            );
-          } else {
-            res.json(call1);
-            console.log(call2);
-          }
-        });
-      } else {
-        res.json(call1);
-      }
+    if (isNaN(student_id)) {
+      return res.json({
+        code: "400",
+        status: "fail",
+        message: "Invalid student_id parameter."
+      });
     }
-  );
+
+    // 1. Fetch Student Profile
+    const studentData = await new Promise((resolve) =>
+      common.selectAll(`SELECT * FROM student WHERE student_id = ${student_id}`, resolve)
+    );
+
+    if (studentData.code !== SUCCESS || !studentData.result.length) {
+      return res.json(studentData);
+    }
+
+    let profile = studentData.result[0];
+
+    // 2. Fetch all dependent stats in parallel
+    const [
+      quizAttemptedRes,
+      totalSubjectsRes,
+      studentProgressRes,
+      totalVideosRes,
+      totalNotesRes,
+      totalCoursesRes
+    ] = await Promise.all([
+      // Count distinct subjects attempted in quiz_result
+      new Promise((res) =>
+        common.select_first(
+          `SELECT COUNT(DISTINCT subject_id) AS quiz_attempted FROM quiz_result WHERE student_id = ${student_id}`,
+          res
+        )
+      ),
+      // Active subjects (Used as total_quiz in UI)
+      new Promise((res) =>
+        common.select_first(
+          `SELECT COUNT(*) AS total FROM subject WHERE is_delete = 0 AND is_active = 1`,
+          res
+        )
+      ),
+      // Progress array for videos
+      new Promise((res) =>
+        common.selectAll(
+          `SELECT MAX(progress) AS progress FROM student_progress WHERE type = 1 AND student_id = ${student_id} GROUP BY type_id`,
+          res
+        )
+      ),
+      // Total Videos
+      new Promise((res) =>
+        common.select_first(
+          `SELECT COUNT(*) AS total_videos FROM video WHERE is_delete = 0 AND is_active = 1`,
+          res
+        )
+      ),
+      // Total Notes
+      new Promise((res) =>
+        common.select_first(
+          `SELECT COUNT(*) AS total_notes FROM note WHERE is_delete = 0 AND is_active = 1`,
+          res
+        )
+      ),
+      // Total Courses
+      new Promise((res) =>
+        common.select_first(
+          `SELECT COUNT(*) AS total_courses FROM course WHERE is_delete = 0 AND is_active = 1`,
+          res
+        )
+      )
+    ]);
+
+    // 3. Process aggregates and attach to response
+    profile.quiz_attempted = quizAttemptedRes?.result?.quiz_attempted || 0;
+    profile.total_quiz = totalSubjectsRes?.result?.total || 0;
+    profile.total_notes = totalNotesRes?.result?.total_notes || 0;
+
+    // NOTE: Replace this query with an enrollment table check (e.g. `student_course`) 
+    // if courses are student-specific in your DB design.
+    profile.total_courses = totalCoursesRes?.result?.total_courses || 0;
+
+    // Calculate video progress ratio
+    let totalVideos = totalVideosRes?.result?.total_videos || 0;
+    profile.total_video = totalVideos;
+
+    if (totalVideos > 0 && studentProgressRes.code === SUCCESS && Array.isArray(studentProgressRes.result)) {
+      let sum = studentProgressRes.result.reduce((acc, curr) => acc + (curr.progress || 0), 0);
+      profile.video_progress = sum / totalVideos;
+    } else {
+      profile.video_progress = 0;
+    }
+
+    return res.json(studentData);
+  } catch (error) {
+    return res.json({
+      code: "500",
+      status: "failed",
+      message: "Internal server error",
+      error: error.message
+    });
+  }
+};
+
+// exports.get_profile = function (req, res) {
+//   let student_id = req.query.student_id;
+//   var total_courses = 0;
+//   var total_video = 0;
+//   var total_notes = 0;
+
+//   common.selectAll(
+//     "select * from student where student_id =" + student_id,
+//     function (call1) {
+//       console.log(call1);
+//       if (call1.code == SUCCESS) {
+//         let query =
+//           "SELECT count(*) as quiz_attempted from (select * from quiz_result where student_id =" +
+//           student_id +
+//           " group by subject_id) as c";
+
+//         let q = `SELECT COUNT(DISTINCT subject_id) AS quiz_attempted 
+//         FROM quiz_result 
+//         WHERE student_id = ${student_id};`;
+
+//         common.select_first(q, function (call2) {
+//           if (call2.code == SUCCESS) {
+//             call1.result[0]["quiz_attempted"] = call2.result.quiz_attempted;
+//             common.select_first(
+//               "select count(*) as total from subject where is_delete =0 and is_active =1",
+//               function (call5) {
+//                 if (call5.code == SUCCESS) {
+//                   call1.result[0]["total_quiz"] = call5.result.total;
+//                   console.log(call1);
+//                   common.selectAll(
+//                     "select max(progress) as progress from student_progress as p where p.type=1 and student_id =" +
+//                       student_id +
+//                       " group by type_id",
+//                     function (call3) {
+//                       common.select_first(
+//                         "select count(*) as total_videos from video where is_delete=0 and is_active =1",
+//                         function (call4) {
+//                           if (call4.code == SUCCESS && call3.code == SUCCESS) {
+//                             call1.result[0]["total_video"] =
+//                               call4.result.total_videos;
+//                             console.log("success");
+//                             let sum = 0;
+//                             call3.result.forEach((progress) => {
+//                               console.log(progress);
+//                               sum += progress.progress;
+//                             });
+//                             console.log("sum : " + sum);
+//                             console.log("sum : " + call4.result.total_videos);
+//                             if (call4.result.total_videos > 0) {
+//                               call1.result[0]["video_progress"] =
+//                                 sum / call4.result.total_videos;
+//                             } else {
+//                               call1.result[0]["video_progress"] = 0;
+//                             }
+//                             common.select_first(
+//                               "select count(*) as total_notes from note where is_delete =0 and is_active = 1",
+//                               function (call6) {
+//                                 if (call6.code == SUCCESS) {
+//                                   call1.result[0]["total_notes"] =
+//                                     call6.result.total_notes;
+//                                 } else {
+//                                   call1.result[0]["total_notes"] = 0;
+//                                 }
+//                                 common.select_first(
+//                                   "select count(*) as total_courses from course where is_delete =0 and is_active = 1",
+//                                   function (call6) {
+//                                     if (call6.code == SUCCESS) {
+//                                       call1.result[0]["total_courses"] =
+//                                         call6.result.total_courses;
+//                                     } else {
+//                                       call1.result[0]["total_courses"] = 0;
+//                                     }
+//                                     res.json(call1);
+//                                   }
+//                                 );
+//                                 //res.json(call1);
+//                               }
+//                             );
+//                           } else {
+//                             console.log("fail");
+//                             call1.result[0]["video_progress"] = 0;
+//                             common.select_first(
+//                               "select count(*) as total_notes from note where is_delete =0 and is_active = 1",
+//                               function (call6) {
+//                                 if (call6.code == SUCCESS) {
+//                                   call1.result[0]["total_notes"] =
+//                                     call6.result.total_notes;
+//                                 } else {
+//                                   call1.result[0]["total_notes"] = 0;
+//                                 }
+//                                 common.select_first(
+//                                   "select count(*) as total_courses from course where is_delete =0 and is_active = 1",
+//                                   function (call6) {
+//                                     if (call6.code == SUCCESS) {
+//                                       call1.result[0]["total_courses"] =
+//                                         call6.result.total_courses;
+//                                     } else {
+//                                       call1.result[0]["total_courses"] = 0;
+//                                     }
+//                                     res.json(call1);
+//                                   }
+//                                 );
+//                                 //res.json(call1);
+//                               }
+//                             );
+//                           }
+//                         }
+//                       );
+//                     }
+//                   );
+//                 } else {
+//                   call1.result[0]["total_quiz"] = 0;
+//                 }
+//               }
+//             );
+//           } else {
+//             res.json(call1);
+//             console.log(call2);
+//           }
+//         });
+//       } else {
+//         res.json(call1);
+//       }
+//     }
+//   );
 
   /*common.select_first("select * from student where student_id = " + student_id + ";SELECT count(*) as quiz_attempted from (select * from quiz_result where student_id =" + +student_id + " group by subject_id) as c;",
         function (call2) {
