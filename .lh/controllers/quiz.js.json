@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 9,
+            "activePatchIndex": 10,
             "patches": [
                 {
                     "date": 1697091182048,
@@ -44,6 +44,10 @@
                 {
                     "date": 1787229655751,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -109,10 +109,10 @@\n       res.json(callback);\r\n     });\r\n   } catch (error) {\r\n     res.json({\r\n-      code:\"500\",\r\n-      status: false,\r\n+      code: \"500\",\r\n+      status: \"failed\",\r\n       message: \"Internal server error\",\r\n       error: error.message\r\n     });\r\n   }\r\n"
+                },
+                {
+                    "date": 1787230206397,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -37,9 +37,8 @@\n     console.log(callback);\r\n     res.json(callback);\r\n   });\r\n };\r\n-\r\n exports.get_subject = async function (req, res) {\r\n   try {\r\n     let course_id = parseInt(req.query.course_id, 10);\r\n     let student_id = parseInt(req.query.student_id, 10);\r\n@@ -66,10 +65,10 @@\n       s.is_delete,\r\n       s.modified_by,\r\n       s.modified_date,\r\n       COALESCE(MAX(CASE WHEN sp.type = 1 THEN sp.progress END), 0) AS max_video_progress,\r\n-      COALESCE(qs.obtained_score, 0) AS max_score,\r\n-      COALESCE(qs.attempt_count, 0) AS quiz_attempt_count\r\n+      COALESCE(MAX(qs.obtained_score), 0) AS max_score,\r\n+      COALESCE(MAX(qs.attempt_count), 0) AS quiz_attempt_count\r\n     FROM \r\n       subject s\r\n     LEFT JOIN \r\n       student_progress sp ON s.subject_id = sp.subject_id AND sp.student_id = ${student_id}\r\n"
                 }
             ],
             "date": 1697091182048,

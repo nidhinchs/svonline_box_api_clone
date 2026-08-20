@@ -38,7 +38,6 @@ exports.get_course = function (req, res) {
     res.json(callback);
   });
 };
-
 exports.get_subject = async function (req, res) {
   try {
     let course_id = parseInt(req.query.course_id, 10);
@@ -67,8 +66,8 @@ exports.get_subject = async function (req, res) {
       s.modified_by,
       s.modified_date,
       COALESCE(MAX(CASE WHEN sp.type = 1 THEN sp.progress END), 0) AS max_video_progress,
-      COALESCE(qs.obtained_score, 0) AS max_score,
-      COALESCE(qs.attempt_count, 0) AS quiz_attempt_count
+      COALESCE(MAX(qs.obtained_score), 0) AS max_score,
+      COALESCE(MAX(qs.attempt_count), 0) AS quiz_attempt_count
     FROM 
       subject s
     LEFT JOIN 
