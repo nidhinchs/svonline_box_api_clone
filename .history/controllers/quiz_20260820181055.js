@@ -40,52 +40,131 @@ exports.get_course = function (req, res) {
 };
 
 exports.get_subject = async function (req, res) {
-  let course_id = req.query.course_id;
-  let student_id = req.query.student_id;
+  try {
+    let course_id = parseInt(req.query.course_id, 10);
+    let student_id = parseInt(req.query.student_id, 10);
 
-  let query = `SELECT 
-  s.subject_id,
-  s.course_id,
-  s.subject_name,
-  s.subject_desc,
-  s.note_name,
-  s.note_url,
-  s.created_by,
-  s.created_date,
-  s.ip_address,
-  s.is_active,
-  s.is_delete,
-  s.modified_by,
-  s.modified_date,
-  COALESCE(MAX(CASE WHEN sp.type = 1 THEN sp.progress END), 0) AS max_video_progress,
-  COALESCE(qs.obtained_score, 0) AS max_score,
-  COALESCE(qs.attempt_count, 0) AS quiz_attempt_count
-FROM 
-  subject s
-LEFT JOIN 
-  student_progress sp ON s.subject_id = sp.subject_id AND sp.student_id = ${student_id}
-LEFT JOIN 
-  (
-      SELECT 
-          q.subject_id,
-          q.student_id,
-          MAX(q.obtained_score) AS obtained_score,
-          COUNT(*) AS attempt_count
-      FROM 
-          quiz_result q
-      WHERE 
-          q.student_id = ${student_id}
-      GROUP BY 
-          q.subject_id, q.student_id
-  ) qs ON s.subject_id = qs.subject_id AND sp.student_id = qs.student_id where s.course_id = ${course_id}
-GROUP BY 
-  s.subject_id
-ORDER BY 
-  s.subject_id;`;
-  common.selectAll(query, function (callback) {
-    res.json(callback);
-  });
+    if (isNaN(course_id) || isNaN(student_id)) {
+      return res.json({
+        code: "400",
+        status: "fail",
+        message: "Invalid or missing course_id or student_id parameter."
+      });
+    }
+
+    let query = `SELECT 
+      s.subject_id,
+      s.course_id,
+      s.subject_name,
+      s.subject_desc,
+      s.note_name,
+      s.note_url,
+      s.created_by,
+      s.created_date,
+      s.ip_address,
+      s.is_active,
+      s.is_delete,
+      s.modified_by,
+      s.modified_date,
+      COALESCE(MAX(CASE WHEN sp.type = 1 THEN sp.progress END), 0) AS max_video_progress,
+      COALESCE(qs.obtained_score, 0) AS max_score,
+      COALESCE(qs.attempt_count, 0) AS quiz_attempt_count
+    FROM 
+      subject s
+    LEFT JOIN 
+      student_progress sp ON s.subject_id = sp.subject_id AND sp.student_id = ${student_id}
+    LEFT JOIN 
+      (
+          SELECT 
+              q.subject_id,
+              MAX(q.obtained_score) AS obtained_score,
+              COUNT(*) AS attempt_count
+          FROM 
+              quiz_result q
+          WHERE 
+              q.student_id = ${student_id}
+          GROUP BY 
+              q.subject_id
+      ) qs ON s.subject_id = qs.subject_id
+    WHERE 
+      s.course_id = ${course_id}
+    GROUP BY 
+      s.subject_id,
+      s.course_id,
+      s.subject_name,
+      s.subject_desc,
+      s.note_name,
+      s.note_url,
+      s.created_by,
+      s.created_date,
+      s.ip_address,
+      s.is_active,
+      s.is_delete,
+      s.modified_by,
+      s.modified_date
+    ORDER BY 
+      s.subject_id;`;
+
+    common.selectAll(query, function (callback) {
+      res.json(callback);
+    });
+  } catch (error) {
+    res.json({
+      code: "500",
+      status: "failed",
+      message: "Internal server error",
+      error: error.message
+    });
+  }
 };
+
+// exports.get_subject = async function (req, res) {
+//   let course_id = req.query.course_id;
+//   let student_id = req.query.student_id;
+
+//   let query = `SELECT
+//   s.subject_id,
+//   s.course_id,
+//   s.subject_name,
+//   s.subject_desc,
+//   s.note_name,
+//   s.note_url,
+//   s.created_by,
+//   s.created_date,
+//   s.ip_address,
+//   s.is_active,
+//   s.is_delete,
+//   s.modified_by,
+//   s.modified_date,
+//   COALESCE(MAX(CASE WHEN sp.type = 1 THEN sp.progress END), 0) AS max_video_progress,
+//   COALESCE(qs.obtained_score, 0) AS max_score,
+//   COALESCE(qs.attempt_count, 0) AS quiz_attempt_count
+// FROM
+//   subject s
+// LEFT JOIN
+//   student_progress sp ON s.subject_id = sp.subject_id AND sp.student_id = ${student_id}
+// LEFT JOIN
+//   (
+//       SELECT
+//           q.subject_id,
+//           q.student_id,
+//           MAX(q.obtained_score) AS obtained_score,
+//           COUNT(*) AS attempt_count
+//       FROM
+//           quiz_result q
+//       WHERE
+//           q.student_id = ${student_id}
+//       GROUP BY
+//           q.subject_id, q.student_id
+//   ) qs ON s.subject_id = qs.subject_id AND sp.student_id = qs.student_id where s.course_id = ${course_id}
+// GROUP BY
+//   s.subject_id
+// ORDER BY
+//   s.subject_id;`;
+//   common.selectAll(query, function (callback) {
+//     res.json(callback);
+//   });
+// };
 
 // exports.get_subject = async function (req, res) {
 //   let course_id = req.query.course_id;
@@ -324,7 +403,7 @@ exports.get_result = function (req, res) {
 exports.get_result_detail = function (req, res) {
   let result_id = req.query.result_id;
 
-  common.selectf(
+  common.selectAll(
     "select * from quiz_results where result_id = " + result_id,
     function (call) {
       if (call.code == SUCCESS) {
