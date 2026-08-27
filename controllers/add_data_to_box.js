@@ -20,7 +20,7 @@ let video_urls = [];
 let note_urls = [];
 let update_id = 0;
 
-let baseurl = "http://64.227.184.42:3003/api/";
+let baseurl = "https://kashtomiseswsaumilconxole.com:3003/api/";
 let course_url = "get_course_by_course_id?course_id=";
 let subject_url = "get_subjects_by_course_id?course_id=";
 let video_url = "get_video_by_subject_id?subject_id=";
