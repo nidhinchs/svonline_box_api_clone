@@ -227,23 +227,40 @@ CREATE TABLE `student` (
   `modified_by` int DEFAULT NULL,
   `modified_date` datetime DEFAULT CURRENT_TIMESTAMP,
   `ip_address` varchar(32) DEFAULT NULL
-)
+);
 
+
+-- CREATE TABLE `student_attendance` (
+--   `attendance_id` int NOT NULL,
+--   `student_id` int NOT NULL,
+--   `subject_id` int NOT NULL,
+--   `attendance_date` date NOT NULL,
+--   `attendance_status` varchar(50) DEFAULT NULL,
+--   `is_delete` int DEFAULT NULL,
+--   `is_active` int DEFAULT NULL,
+--   `created_by` int DEFAULT NULL,
+--   `created_date` datetime DEFAULT NULL,
+--   `modified_by` int DEFAULT NULL,
+--   `modified_date` datetime DEFAULT NULL,
+--   `ip_address` int DEFAULT NULL
+-- );
 
 CREATE TABLE `student_attendance` (
-  `attendance_id` int NOT NULL,
-  `student_id` int NOT NULL,
-  `subject_id` int NOT NULL,
-  `attendance_date` date NOT NULL,
-  `attendance_status` varchar(50) DEFAULT NULL,
-  `is_delete` int DEFAULT NULL,
-  `is_active` int DEFAULT NULL,
-  `created_by` int DEFAULT NULL,
-  `created_date` datetime DEFAULT NULL,
-  `modified_by` int DEFAULT NULL,
-  `modified_date` datetime DEFAULT NULL,
-  `ip_address` int DEFAULT NULL
-)
+  `attendance_id` INT NOT NULL AUTO_INCREMENT,
+  `student_id` INT NOT NULL,
+  `arriving_time` DATETIME DEFAULT NULL,
+  `leaving_time` DATETIME DEFAULT NULL,
+  `created_by` VARCHAR(50) DEFAULT NULL,
+  `created_date` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  `modified_by` VARCHAR(50) DEFAULT NULL,
+  `modified_date` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`attendance_id`),
+  KEY `idx_student_created` (`student_id`, `created_date`),
+  CONSTRAINT `fk_student_attendance_student` 
+    FOREIGN KEY (`student_id`) 
+    REFERENCES `student` (`student_id`) 
+    ON DELETE CASCADE
+);
 
 CREATE TABLE `student_log` (
   `log_id` int NOT NULL,
@@ -253,7 +270,24 @@ CREATE TABLE `student_log` (
   `log_date` datetime DEFAULT CURRENT_TIMESTAMP,
   `is_active` int DEFAULT NULL,
   `is_delete` int DEFAULT NULL
-) 
+) ;
+
+CREATE TABLE `student_progress` (
+  `progress_id` int NOT NULL,
+  `box_id` int DEFAULT NULL,
+  `student_id` int DEFAULT NULL,
+  `subject_id` int DEFAULT NULL,
+  `type` int DEFAULT NULL COMMENT '1 - video\r\n2 - note\r\n3 - quiz',
+  `type_id` int DEFAULT NULL,
+  `progress` float DEFAULT NULL,
+  `is_delete` int DEFAULT NULL,
+  `is_active` int DEFAULT NULL,
+  `created_by` int DEFAULT NULL,
+  `created_date` datetime DEFAULT NULL,
+  `modified_by` int DEFAULT NULL,
+  `modified_date` datetime DEFAULT NULL,
+  `ip_address` varchar(32) DEFAULT NULL
+);
 
 DROP TABLE IF EXISTS `quiz_results`;
 

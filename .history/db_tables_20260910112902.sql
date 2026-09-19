@@ -1,7 +1,13 @@
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
 CREATE TABLE `course` (
   `course_id` int NOT NULL,
-  `course_name` varchar(255) NOT NULL,
-  `course_desc` varchar(255) DEFAULT NULL,
+  `course_name` varchar(150) NOT NULL,
+  `course_desc` varchar(1000) DEFAULT NULL,
   `is_delete` int DEFAULT NULL,
   `is_active` int DEFAULT NULL,
   `created_by` int DEFAULT NULL,
@@ -19,7 +25,7 @@ CREATE TABLE `course_update_log` (
   `created_by` int DEFAULT NULL,
   `created_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `ip_address` int DEFAULT NULL
-) ;
+);
 
 CREATE TABLE `db_log` (
   `log_id` int NOT NULL,
@@ -51,7 +57,7 @@ CREATE TABLE `franchise` (
   `modified_by` int DEFAULT NULL,
   `modified_date` datetime DEFAULT CURRENT_TIMESTAMP,
   `ip_address` int DEFAULT NULL
-);
+) ;
 
 CREATE TABLE `hbt` (
   `id` int NOT NULL,
@@ -61,7 +67,7 @@ CREATE TABLE `hbt` (
   `device_name` varchar(50) DEFAULT NULL,
   `storage_space` varchar(50) DEFAULT NULL,
   `tim` varchar(50) DEFAULT NULL
-) ;
+);
 
 CREATE TABLE `note` (
   `note_id` int NOT NULL,
@@ -77,7 +83,7 @@ CREATE TABLE `note` (
   `modified_by` int DEFAULT NULL,
   `modified_date` datetime DEFAULT CURRENT_TIMESTAMP,
   `ip_address` varchar(32) DEFAULT NULL
-);
+) ;
 
 CREATE TABLE `quiz` (
   `quiz_id` int NOT NULL,
@@ -117,27 +123,27 @@ CREATE TABLE `quiz_result` (
 );
 
 CREATE TABLE `quiz_results` (
-`result_id` int
+`created_by` int
+,`created_date` datetime
+,`ip_address` varchar(32)
+,`is_active` int
+,`is_delete` int
+,`modified_by` int
+,`modified_date` datetime
+,`obtained_score` float
+,`result_id` int
+,`student_address` varchar(500)
+,`student_email` varchar(500)
 ,`student_id` int
 ,`student_name` varchar(150)
 ,`student_phone` varchar(20)
-,`student_email` varchar(500)
-,`student_address` varchar(500)
 ,`student_pic` varchar(1500)
-,`total_score` float
-,`obtained_score` float
+,`subject_desc` varchar(1000)
 ,`subject_id` int
 ,`subject_name` varchar(150)
-,`subject_desc` varchar(1000)
-,`total_time` time
 ,`time_to_complete` time
-,`is_active` int
-,`is_delete` int
-,`created_by` int
-,`created_date` datetime
-,`modified_by` int
-,`modified_date` datetime
-,`ip_address` varchar(32)
+,`total_score` float
+,`total_time` time
 );
 
 CREATE TABLE `quiz_result_detail` (
@@ -155,56 +161,36 @@ CREATE TABLE `quiz_result_detail` (
   `ip_address` int DEFAULT NULL
 );
 
-
-CREATE TABLE `subject` (
-  `subject_id` int NOT NULL,
-  `course_id` int NOT NULL,
-  `subject_name` varchar(150) NOT NULL,
-  `subject_desc` varchar(1000) DEFAULT NULL,
-  `note_name` varchar(150) NOT NULL,
-  `note_url` varchar(1500) NOT NULL,
-  `is_delete` int DEFAULT NULL,
-  `is_active` int DEFAULT NULL,
-  `created_by` int DEFAULT NULL,
-  `created_date` datetime DEFAULT NULL,
-  `modified_by` int DEFAULT NULL,
-  `modified_date` datetime DEFAULT CURRENT_TIMESTAMP,
-  `ip_address` varchar(32) DEFAULT NULL
+CREATE TABLE `quiz_result_details` (
+`answer` varchar(500)
+,`created_by` int
+,`created_date` datetime
+,`detail_id` int
+,`ip_address` int
+,`is_active` int
+,`is_delete` int
+,`modified_by` int
+,`modified_date` datetime
+,`option1` varchar(500)
+,`option2` varchar(500)
+,`option3` varchar(500)
+,`option4` varchar(500)
+,`option5` varchar(500)
+,`question` varchar(500)
+,`question_type` int
+,`quiz_id` int
+,`result_id` int
+,`right_answer` varchar(1500)
+,`selected_answer` varchar(1500)
+,`subject_id` int
 );
 
-CREATE TABLE `user` (
-  `user_id` int NOT NULL,
-  `username` varchar(50) NOT NULL,
-  `password` varchar(255) NOT NULL,
-  `email` varchar(150) DEFAULT NULL,
-  `first_name` varchar(150) DEFAULT NULL,
-  `last_name` varchar(150) DEFAULT NULL,
-  `user_type` varchar(50) NOT NULL,
-  `is_delete` int DEFAULT NULL,
-  `is_active` int DEFAULT NULL,
-  `created_by` int DEFAULT NULL,
-  `created_date` datetime DEFAULT NULL,
-  `modified_by` int DEFAULT NULL,
-  `modified_date` datetime DEFAULT CURRENT_TIMESTAMP,
-  `ip_address` varchar(32) DEFAULT NULL
+CREATE TABLE `quiz_scores` (
+`quiz_attempt_count` bigint
+,`score` float
+,`student_id` int
+,`subject_id` int
 );
-
-CREATE TABLE `video` (
-  `video_id` int NOT NULL,
-  `subject_id` int NOT NULL,
-  `video_path` varchar(1000) DEFAULT NULL,
-  `video_name` varchar(500) DEFAULT NULL,
-  `video_extension` varchar(50) DEFAULT NULL,
-  `video_desc` varchar(1000) DEFAULT NULL,
-  `is_delete` int DEFAULT NULL,
-  `is_active` int DEFAULT NULL,
-  `created_by` int DEFAULT NULL,
-  `created_date` datetime DEFAULT NULL,
-  `modified_by` int DEFAULT NULL,
-  `modified_date` datetime DEFAULT CURRENT_TIMESTAMP,
-  `ip_address` varchar(32) DEFAULT NULL
-);
-
 
 CREATE TABLE `student` (
   `student_id` int NOT NULL,
@@ -229,7 +215,6 @@ CREATE TABLE `student` (
   `ip_address` varchar(32) DEFAULT NULL
 );
 
-
 CREATE TABLE `student_attendance` (
   `attendance_id` int NOT NULL,
   `student_id` int NOT NULL,
@@ -243,7 +228,7 @@ CREATE TABLE `student_attendance` (
   `modified_by` int DEFAULT NULL,
   `modified_date` datetime DEFAULT NULL,
   `ip_address` int DEFAULT NULL
-);
+) ;
 
 CREATE TABLE `student_log` (
   `log_id` int NOT NULL,
@@ -253,7 +238,7 @@ CREATE TABLE `student_log` (
   `log_date` datetime DEFAULT CURRENT_TIMESTAMP,
   `is_active` int DEFAULT NULL,
   `is_delete` int DEFAULT NULL
-) 
+);
 
 CREATE TABLE `student_progress` (
   `progress_id` int NOT NULL,
@@ -270,70 +255,203 @@ CREATE TABLE `student_progress` (
   `modified_by` int DEFAULT NULL,
   `modified_date` datetime DEFAULT NULL,
   `ip_address` varchar(32) DEFAULT NULL
-)
+) ;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `subject`
+--
+
+CREATE TABLE `subject` (
+  `subject_id` int NOT NULL,
+  `course_id` int NOT NULL,
+  `subject_name` varchar(150) NOT NULL,
+  `subject_desc` varchar(1000) DEFAULT NULL,
+  `note_name` varchar(150) NOT NULL,
+  `note_url` varchar(1500) NOT NULL,
+  `is_delete` int DEFAULT NULL,
+  `is_active` int DEFAULT NULL,
+  `created_by` int DEFAULT NULL,
+  `created_date` datetime DEFAULT NULL,
+  `modified_by` int DEFAULT NULL,
+  `modified_date` datetime DEFAULT CURRENT_TIMESTAMP,
+  `ip_address` varchar(32) DEFAULT NULL
+);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user`
+--
+
+CREATE TABLE `user` (
+  `user_id` int NOT NULL,
+  `username` varchar(50) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `email` varchar(150) DEFAULT NULL,
+  `first_name` varchar(150) DEFAULT NULL,
+  `last_name` varchar(150) DEFAULT NULL,
+  `user_type` varchar(50) NOT NULL,
+  `is_delete` int DEFAULT NULL,
+  `is_active` int DEFAULT NULL,
+  `created_by` int DEFAULT NULL,
+  `created_date` datetime DEFAULT NULL,
+  `modified_by` int DEFAULT NULL,
+  `modified_date` datetime DEFAULT CURRENT_TIMESTAMP,
+  `ip_address` varchar(32) DEFAULT NULL
+) ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `video`
+--
+
+CREATE TABLE `video` (
+  `video_id` int NOT NULL,
+  `subject_id` int NOT NULL,
+  `video_path` varchar(1000) DEFAULT NULL,
+  `video_name` varchar(500) DEFAULT NULL,
+  `video_extension` varchar(50) DEFAULT NULL,
+  `video_desc` varchar(1000) DEFAULT NULL,
+  `is_delete` int DEFAULT NULL,
+  `is_active` int DEFAULT NULL,
+  `created_by` int DEFAULT NULL,
+  `created_date` datetime DEFAULT NULL,
+  `modified_by` int DEFAULT NULL,
+  `modified_date` datetime DEFAULT CURRENT_TIMESTAMP,
+  `ip_address` varchar(32) DEFAULT NULL
+) ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `quiz_results`
+--
 DROP TABLE IF EXISTS `quiz_results`;
 
 CREATE  VIEW `quiz_results`  AS SELECT `result`.`result_id` AS `result_id`, `result`.`student_id` AS `student_id`, `student`.`student_name` AS `student_name`, `student`.`student_phone` AS `student_phone`, `student`.`student_email` AS `student_email`, `student`.`student_address` AS `student_address`, `student`.`student_pic` AS `student_pic`, `result`.`total_score` AS `total_score`, `result`.`obtained_score` AS `obtained_score`, `result`.`subject_id` AS `subject_id`, `subject`.`subject_name` AS `subject_name`, `subject`.`subject_desc` AS `subject_desc`, `result`.`total_time` AS `total_time`, `result`.`time_to_complete` AS `time_to_complete`, `result`.`is_active` AS `is_active`, `result`.`is_delete` AS `is_delete`, `result`.`created_by` AS `created_by`, `result`.`created_date` AS `created_date`, `result`.`modified_by` AS `modified_by`, `result`.`modified_date` AS `modified_date`, `result`.`ip_address` AS `ip_address` FROM ((`quiz_result` `result` join `student` on((`student`.`student_id` = `result`.`student_id`))) join `subject` on((`subject`.`subject_id` = `result`.`subject_id`))) ;
 
-DROP TABLE IF EXISTS `quiz_results`;
+-- --------------------------------------------------------
 
-CREATE  VIEW `quiz_results`  AS SELECT `result`.`result_id` AS `result_id`, `result`.`student_id` AS `student_id`, `student`.`student_name` AS `student_name`, `student`.`student_phone` AS `student_phone`, `student`.`student_email` AS `student_email`, `student`.`student_address` AS `student_address`, `student`.`student_pic` AS `student_pic`, `result`.`total_score` AS `total_score`, `result`.`obtained_score` AS `obtained_score`, `result`.`subject_id` AS `subject_id`, `subject`.`subject_name` AS `subject_name`, `subject`.`subject_desc` AS `subject_desc`, `result`.`total_time` AS `total_time`, `result`.`time_to_complete` AS `time_to_complete`, `result`.`is_active` AS `is_active`, `result`.`is_delete` AS `is_delete`, `result`.`created_by` AS `created_by`, `result`.`created_date` AS `created_date`, `result`.`modified_by` AS `modified_by`, `result`.`modified_date` AS `modified_date`, `result`.`ip_address` AS `ip_address` FROM ((`quiz_result` `result` join `student` on((`student`.`student_id` = `result`.`student_id`))) join `subject` on((`subject`.`subject_id` = `result`.`subject_id`))) ;
+--
+-- Structure for view `quiz_result_details`
+--
+DROP TABLE IF EXISTS `quiz_result_details`;
 
+CREATE  VIEW `quiz_result_details`  AS SELECT `result`.`detail_id` AS `detail_id`, `result`.`result_id` AS `result_id`, `result`.`quiz_id` AS `quiz_id`, `quiz`.`subject_id` AS `subject_id`, `quiz`.`question` AS `question`, `quiz`.`question_type` AS `question_type`, `quiz`.`answer` AS `answer`, `quiz`.`option1` AS `option1`, `quiz`.`option2` AS `option2`, `quiz`.`option3` AS `option3`, `quiz`.`option4` AS `option4`, `quiz`.`option5` AS `option5`, `result`.`selected_answer` AS `selected_answer`, `result`.`right_answer` AS `right_answer`, `result`.`is_active` AS `is_active`, `result`.`is_delete` AS `is_delete`, `result`.`created_by` AS `created_by`, `result`.`created_date` AS `created_date`, `result`.`modified_by` AS `modified_by`, `result`.`modified_date` AS `modified_date`, `result`.`ip_address` AS `ip_address` FROM (`quiz_result_detail` `result` join `quiz` on((`quiz`.`quiz_id` = `result`.`quiz_id`))) ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `quiz_scores`
+--
 DROP TABLE IF EXISTS `quiz_scores`;
 
 CREATE  VIEW `quiz_scores`  AS SELECT max(`quiz_result`.`obtained_score`) AS `score`, count(0) AS `quiz_attempt_count`, `quiz_result`.`student_id` AS `student_id`, `quiz_result`.`subject_id` AS `subject_id` FROM `quiz_result` GROUP BY `quiz_result`.`student_id`, `quiz_result`.`subject_id` ;
 
+--
+-- Indexes for dumped tables
+--
 
+--
+-- Indexes for table `course`
+--
 ALTER TABLE `course`
   ADD PRIMARY KEY (`course_id`);
 
- ALTER TABLE `course_update_log`
-  ADD PRIMARY KEY (`update_id`); 
+--
+-- Indexes for table `course_update_log`
+--
+ALTER TABLE `course_update_log`
+  ADD PRIMARY KEY (`update_id`);
 
- ALTER TABLE `db_log`
+--
+-- Indexes for table `db_log`
+--
+ALTER TABLE `db_log`
   ADD PRIMARY KEY (`log_id`);
 
-  ALTER TABLE `franchise`
+--
+-- Indexes for table `franchise`
+--
+ALTER TABLE `franchise`
   ADD PRIMARY KEY (`f_id`);
 
+--
+-- Indexes for table `hbt`
+--
 ALTER TABLE `hbt`
   ADD PRIMARY KEY (`id`);
 
-  ALTER TABLE `note`
+--
+-- Indexes for table `note`
+--
+ALTER TABLE `note`
   ADD PRIMARY KEY (`note_id`);
 
-  ALTER TABLE `quiz`
+--
+-- Indexes for table `quiz`
+--
+ALTER TABLE `quiz`
   ADD PRIMARY KEY (`quiz_id`);
 
-  ALTER TABLE `quiz_result`
+--
+-- Indexes for table `quiz_result`
+--
+ALTER TABLE `quiz_result`
   ADD PRIMARY KEY (`result_id`);
 
-  ALTER TABLE `quiz_result_detail`
+--
+-- Indexes for table `quiz_result_detail`
+--
+ALTER TABLE `quiz_result_detail`
   ADD PRIMARY KEY (`detail_id`);
 
-  ALTER TABLE `student`
+--
+-- Indexes for table `student`
+--
+ALTER TABLE `student`
   ADD PRIMARY KEY (`student_id`);
 
-  ALTER TABLE `student_attendance`
+--
+-- Indexes for table `student_attendance`
+--
+ALTER TABLE `student_attendance`
   ADD PRIMARY KEY (`attendance_id`);
 
-  ALTER TABLE `student_log`
+--
+-- Indexes for table `student_log`
+--
+ALTER TABLE `student_log`
   ADD PRIMARY KEY (`log_id`);
 
-  ALTER TABLE `student_progress`
+--
+-- Indexes for table `student_progress`
+--
+ALTER TABLE `student_progress`
   ADD PRIMARY KEY (`progress_id`);
 
-  ALTER TABLE `subject`
+--
+-- Indexes for table `subject`
+--
+ALTER TABLE `subject`
   ADD PRIMARY KEY (`subject_id`);
 
-  ALTER TABLE `user`
+--
+-- Indexes for table `user`
+--
+ALTER TABLE `user`
   ADD PRIMARY KEY (`user_id`);
 
-  ALTER TABLE `video`
+--
+-- Indexes for table `video`
+--
+ALTER TABLE `video`
   ADD PRIMARY KEY (`video_id`);
 
-  --
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -433,5 +551,6 @@ ALTER TABLE `user`
 ALTER TABLE `video`
   MODIFY `video_id` int NOT NULL AUTO_INCREMENT;
 COMMIT;
+
 
 

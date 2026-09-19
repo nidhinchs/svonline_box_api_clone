@@ -230,19 +230,37 @@ CREATE TABLE `student` (
 );
 
 
+-- CREATE TABLE `student_attendance` (
+--   `attendance_id` int NOT NULL,
+--   `student_id` int NOT NULL,
+--   `subject_id` int NOT NULL,
+--   `attendance_date` date NOT NULL,
+--   `attendance_status` varchar(50) DEFAULT NULL,
+--   `is_delete` int DEFAULT NULL,
+--   `is_active` int DEFAULT NULL,
+--   `created_by` int DEFAULT NULL,
+--   `created_date` datetime DEFAULT NULL,
+--   `modified_by` int DEFAULT NULL,
+--   `modified_date` datetime DEFAULT NULL,
+--   `ip_address` int D.
+uEFAULT NULL
+-- );
+
 CREATE TABLE `student_attendance` (
-  `attendance_id` int NOT NULL,
-  `student_id` int NOT NULL,
-  `subject_id` int NOT NULL,
-  `attendance_date` date NOT NULL,
-  `attendance_status` varchar(50) DEFAULT NULL,
-  `is_delete` int DEFAULT NULL,
-  `is_active` int DEFAULT NULL,
-  `created_by` int DEFAULT NULL,
-  `created_date` datetime DEFAULT NULL,
-  `modified_by` int DEFAULT NULL,
-  `modified_date` datetime DEFAULT NULL,
-  `ip_address` int DEFAULT NULL
+  `attendance_id` INT NOT NULL AUTO_INCREMENT,
+  `student_id` INT NOT NULL,
+  `arriving_time` DATETIME DEFAULT NULL,
+  `leaving_time` DATETIME DEFAULT NULL,
+  `created_by` VARCHAR(50) DEFAULT NULL,
+  `created_date` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  `modified_by` VARCHAR(50) DEFAULT NULL,
+  `modified_date` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`attendance_id`),
+  KEY `idx_student_created` (`student_id`, `created_date`),
+  CONSTRAINT `fk_student_attendance_student` 
+    FOREIGN KEY (`student_id`) 
+    REFERENCES `student` (`student_id`) 
+    ON DELETE CASCADE
 );
 
 CREATE TABLE `student_log` (

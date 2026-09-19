@@ -1,7 +1,7 @@
 CREATE TABLE `course` (
   `course_id` int NOT NULL,
-  `course_name` varchar(150) NOT NULL,
-  `course_desc` varchar(1000) DEFAULT NULL,
+  `course_name` varchar(255) NOT NULL,
+  `course_desc` varchar(255) DEFAULT NULL,
   `is_delete` int DEFAULT NULL,
   `is_active` int DEFAULT NULL,
   `created_by` int DEFAULT NULL,
@@ -205,6 +205,124 @@ CREATE TABLE `video` (
   `ip_address` varchar(32) DEFAULT NULL
 );
 
+
+CREATE TABLE `student` (
+  `student_id` int NOT NULL,
+  `student_name` varchar(150) NOT NULL,
+  `student_phone` varchar(20) NOT NULL,
+  `student_email` varchar(500) DEFAULT NULL,
+  `student_address` varchar(500) DEFAULT NULL,
+  `student_pic` varchar(1500) DEFAULT NULL,
+  `student_username` varchar(50) DEFAULT NULL,
+  `student_password` varchar(50) DEFAULT NULL,
+  `start_date` date NOT NULL,
+  `end_date` date NOT NULL,
+  `is_externally_added` tinyint NOT NULL DEFAULT '0',
+  `login_flag` int NOT NULL DEFAULT '0',
+  `unique_id` varchar(250) DEFAULT NULL,
+  `is_delete` int DEFAULT NULL,
+  `is_active` int DEFAULT NULL,
+  `created_by` int DEFAULT NULL,
+  `created_date` datetime DEFAULT NULL,
+  `modified_by` int DEFAULT NULL,
+  `modified_date` datetime DEFAULT CURRENT_TIMESTAMP,
+  `ip_address` varchar(32) DEFAULT NULL
+);
+
+
+-- CREATE TABLE `student_attendance` (
+--   `attendance_id` int NOT NULL,
+--   `student_id` int NOT NULL,
+--   `subject_id` int NOT NULL,
+--   `attendance_date` date NOT NULL,
+--   `attendance_status` varchar(50) DEFAULT NULL,
+--   `is_delete` int DEFAULT NULL,
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--   `is_active` int DEFAULT NULL,
+--   `created_by` int DEFAULT NULL,
+--   `created_date` datetime DEFAULT NULL,
+--   `modified_by` int DEFAULT NULL,
+--   `modified_date` datetime DEFAULT NULL,
+--   `ip_address` int DEFAULT NULL
+-- );
+
+CREATE TABLE `student_attendance` (
+  `attendance_id` INT NOT NULL AUTO_INCREMENT,
+  `student_id` INT NOT NULL,
+  `arriving_time` DATETIME DEFAULT NULL,
+  `leaving_time` DATETIME DEFAULT NULL,
+  `created_by` VARCHAR(50) DEFAULT NULL,
+  `created_date` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  `modified_by` VARCHAR(50) DEFAULT NULL,
+  `modified_date` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`attendance_id`),
+  KEY `idx_student_created` (`student_id`, `created_date`),
+  CONSTRAINT `fk_student_attendance_student` 
+    FOREIGN KEY (`student_id`) 
+    REFERENCES `student` (`student_id`) 
+    ON DELETE CASCADE
+);
+
+CREATE TABLE `student_log` (
+  `log_id` int NOT NULL,
+  `student_id` int NOT NULL,
+  `log_action` varchar(100) NOT NULL,
+  `log_description` varchar(1000) DEFAULT NULL,
+  `log_date` datetime DEFAULT CURRENT_TIMESTAMP,
+  `is_active` int DEFAULT NULL,
+  `is_delete` int DEFAULT NULL
+) ;
+
+CREATE TABLE `student_progress` (
+  `progress_id` int NOT NULL,
+  `box_id` int DEFAULT NULL,
+  `student_id` int DEFAULT NULL,
+  `subject_id` int DEFAULT NULL,
+  `type` int DEFAULT NULL COMMENT '1 - video\r\n2 - note\r\n3 - quiz',
+  `type_id` int DEFAULT NULL,
+  `progress` float DEFAULT NULL,
+  `is_delete` int DEFAULT NULL,
+  `is_active` int DEFAULT NULL,
+  `created_by` int DEFAULT NULL,
+  `created_date` datetime DEFAULT NULL,
+  `modified_by` int DEFAULT NULL,
+  `modified_date` datetime DEFAULT NULL,
+  `ip_address` varchar(32) DEFAULT NULL
+);
+
 DROP TABLE IF EXISTS `quiz_results`;
 
 CREATE  VIEW `quiz_results`  AS SELECT `result`.`result_id` AS `result_id`, `result`.`student_id` AS `student_id`, `student`.`student_name` AS `student_name`, `student`.`student_phone` AS `student_phone`, `student`.`student_email` AS `student_email`, `student`.`student_address` AS `student_address`, `student`.`student_pic` AS `student_pic`, `result`.`total_score` AS `total_score`, `result`.`obtained_score` AS `obtained_score`, `result`.`subject_id` AS `subject_id`, `subject`.`subject_name` AS `subject_name`, `subject`.`subject_desc` AS `subject_desc`, `result`.`total_time` AS `total_time`, `result`.`time_to_complete` AS `time_to_complete`, `result`.`is_active` AS `is_active`, `result`.`is_delete` AS `is_delete`, `result`.`created_by` AS `created_by`, `result`.`created_date` AS `created_date`, `result`.`modified_by` AS `modified_by`, `result`.`modified_date` AS `modified_date`, `result`.`ip_address` AS `ip_address` FROM ((`quiz_result` `result` join `student` on((`student`.`student_id` = `result`.`student_id`))) join `subject` on((`subject`.`subject_id` = `result`.`subject_id`))) ;
@@ -250,5 +368,121 @@ ALTER TABLE `hbt`
 
   ALTER TABLE `student_attendance`
   ADD PRIMARY KEY (`attendance_id`);
+
+  ALTER TABLE `student_log`
+  ADD PRIMARY KEY (`log_id`);
+
+  ALTER TABLE `student_progress`
+  ADD PRIMARY KEY (`progress_id`);
+
+  ALTER TABLE `subject`
+  ADD PRIMARY KEY (`subject_id`);
+
+  ALTER TABLE `user`
+  ADD PRIMARY KEY (`user_id`);
+
+  ALTER TABLE `video`
+  ADD PRIMARY KEY (`video_id`);
+
+  --
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `course`
+--
+ALTER TABLE `course`
+  MODIFY `course_id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `course_update_log`
+--
+ALTER TABLE `course_update_log`
+  MODIFY `update_id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `db_log`
+--
+ALTER TABLE `db_log`
+  MODIFY `log_id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `franchise`
+--
+ALTER TABLE `franchise`
+  MODIFY `f_id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `hbt`
+--
+ALTER TABLE `hbt`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `note`
+--
+ALTER TABLE `note`
+  MODIFY `note_id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `quiz`
+--
+ALTER TABLE `quiz`
+  MODIFY `quiz_id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `quiz_result`
+--
+ALTER TABLE `quiz_result`
+  MODIFY `result_id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `quiz_result_detail`
+--
+ALTER TABLE `quiz_result_detail`
+  MODIFY `detail_id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `student`
+--
+ALTER TABLE `student`
+  MODIFY `student_id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `student_attendance`
+--
+ALTER TABLE `student_attendance`
+  MODIFY `attendance_id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `student_log`
+--
+ALTER TABLE `student_log`
+  MODIFY `log_id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `student_progress`
+--
+ALTER TABLE `student_progress`
+  MODIFY `progress_id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `subject`
+--
+ALTER TABLE `subject`
+  MODIFY `subject_id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `user`
+--
+ALTER TABLE `user`
+  MODIFY `user_id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `video`
+--
+ALTER TABLE `video`
+  MODIFY `video_id` int NOT NULL AUTO_INCREMENT;
+COMMIT;
 
 
