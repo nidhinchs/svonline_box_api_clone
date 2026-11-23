@@ -1,0 +1,21 @@
+{
+  
+  "development": {
+    "import_db": {
+      "port": 25060,
+      "username": "svonline",
+      "password": "svonline@2255",
+      "database": "svonline_local",
+      "host": "db-svonline-do-user-9870855-0.b.db.ondigitalocean.com"
+    },
+    "export_db": {
+      "port": 25060,
+      "username": "svonline",
+      "password": "svonline@2255",
+      "database": "lms_admin",
+      "host": "db-svonline-do-user-9870855-0.b.db.ondigitalocean.com"
+    },
+    "base_path": "/"
+  }
+ 
+}

@@ -1,0 +1,41 @@
+{
+  "server": {
+    "export_db": {
+      "username": "remote_1",
+      "password": "Nidhi$2255",
+      "database": "lms",
+      "host": "143.110.185.24"
+    },
+    "import_db": {
+      "username": "root",
+      "password": "svonline@2255",
+      "database": "lms",
+      "host": "localhost"
+    },
+    "remote_server": {
+      "host": "143.110.185.24",
+      "username": "root",
+      "password": "nidhi@2255Nchs"
+    },
+    "dumpFile": "dump.sql",
+    "base_path": "/"
+  },
+  "development": {
+    "import_db": {
+      "port": 25060,
+      "username": "svonline",
+      "password": "svonline@2255",
+      "database": "svonline_local",
+      "host": "db-svonline-do-user-9870855-0.b.db.ondigitalocean.com"
+    },
+    "export_db": {
+      "port": 25060,
+      "username": "svonline",
+      "password": "svonline@2255",
+      "database": "lms_admin",
+      "host": "db-svonline-do-user-9870855-0.b.db.ondigitalocean.com"
+    },
+    "base_path": "/"
+  }
+ 
+}
